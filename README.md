@@ -5,7 +5,12 @@ STA 350 flashcard material — drill the commands until they're reflex, then app
 to problems that look like real analyst work. Every question tells you whether to
 answer in **R** or **Python**, so you learn both side by side.
 
-Built with **React 19 + Vite + Tailwind CSS v4 + shadcn/ui**.
+Built with **React 19 + Vite + Tailwind CSS v4 + shadcn/ui**, styled after the
+**StatCode** design system generated in Stitch (`design/stitch/`): sidebar app
+shell, Inter + JetBrains Mono, deep-slate/intelligence-blue/emerald palette,
+tonal layers over shadows. Includes full gamification — XP with ranks, daily
+streaks, badges, skill mastery, a challenge of the day, and a (local, simulated)
+leaderboard.
 
 ## Run it
 
@@ -46,20 +51,22 @@ moves appear in your code, with per-concept hints when something's missing.
 ```
 index.html                  Vite entry (fonts, favicon)
 src/main.jsx                React bootstrap
-src/App.jsx                 shell + hash router (#/drills, #/applied, #/progress)
-src/pages/                  Home, Drills, Applied, ProgressPage
-src/components/shared.jsx   chips, toolbar, feedback, solution blocks
+src/App.jsx                 sidebar shell + hash router (#/learn, #/practice, #/leaderboard)
+src/pages/                  Dashboard, Learn, Practice, Leaderboard
+src/components/shared.jsx   chips, code frames, bars, toolbar
 src/components/ui/          shadcn/ui components (Radix-based)
-src/data/drills.js          Section 1 question bank (120 questions)
-src/data/applied.js         Section 2 question bank (100 questions)
+src/data/drills.js          Learn question bank (120 questions)
+src/data/applied.js         Practice question bank (100 questions)
 src/lib/quiz.js             normalization + grading logic
-src/lib/progress.js         localStorage progress store (React hook)
+src/lib/progress.js         localStorage store: answers, XP, streak days, activity
+src/lib/stats.js            ranks, badges, mastery, challenge of the day, leaderboard
 src/index.css               Tailwind v4 theme implementing DESIGN.md tokens
 DESIGN.md                   design tokens (Google design.md format, lints clean)
+design/stitch/              Stitch mocks + source design system
 .mcp.json                   shadcn MCP server config
 ```
 
-The visual system (evergreen = R, burnt amber = Python, slate = SQL; Fraunces /
-Space Grotesk / IBM Plex Mono on warm paper) is defined in `DESIGN.md` — validated
-with `npx @google/design.md lint DESIGN.md` — and wired into Tailwind + the shadcn
-theme variables in `src/index.css`.
+Language coding follows the Stitch mocks: blue = R, emerald = Python, slate = SQL.
+`DESIGN.md` (Google design.md format, validated with
+`npx @google/design.md lint DESIGN.md`) is wired into Tailwind + the shadcn theme
+variables in `src/index.css`.

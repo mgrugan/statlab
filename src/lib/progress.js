@@ -1,43 +1,110 @@
 import { useSyncExternalStore } from "react";
+import { DRILLS } from "@/data/drills";
+import { APPLIED } from "@/data/applied";
 
-/* localStorage-backed progress store, shared across pages via a tiny
-   external store so every view re-renders when an answer is recorded.
-   Same storage key + shape as the v1 vanilla app, so progress carries over. */
+/* localStorage-backed progress store (v2).
+   Shape:
+   {
+     answers:  { [qid]: { tries, status: "unseen"|"correct"|"missed" } },
+     xp:       number,          // awarded once per first-solve, scaled by difficulty
+     attempts: number,          // every graded check (reveals count as misses)
+     correct:  number,          // graded checks that were correct
+     days:     { "YYYY-MM-DD": count },   // activity per day (streak + calendar)
+     log:      [ { t, kind: "solve"|"miss"|"reveal", qid, xp? } ]  // newest first, cap 40
+   }
+   Migrates v1 (flat { [qid]: {tries, status} }) on first load. */
 
-const STORE_KEY = "statlab-progress-v1";
+const KEY_V2 = "statlab-progress-v2";
+const KEY_V1 = "statlab-progress-v1";
+
+const QUESTION_INDEX = {};
+DRILLS.forEach((q) => { QUESTION_INDEX[q.id] = { diff: q.diff, kind: "drill", topic: q.topic, lang: q.lang, label: q.topic }; });
+APPLIED.forEach((q) => { QUESTION_INDEX[q.id] = { diff: q.diff, kind: "applied", topic: q.topic, lang: q.lang, label: q.title }; });
+
+export function xpValue(qid) {
+  const q = QUESTION_INDEX[qid];
+  if (!q) return 0;
+  return (q.kind === "applied" ? 25 : 10) * q.diff;
+}
+export function questionMeta(qid) { return QUESTION_INDEX[qid]; }
+
+export function todayKey(d = new Date()) {
+  const p = (n) => String(n).padStart(2, "0");
+  return `${d.getFullYear()}-${p(d.getMonth() + 1)}-${p(d.getDate())}`;
+}
+
+function emptyState() {
+  return { answers: {}, xp: 0, attempts: 0, correct: 0, days: {}, log: [] };
+}
+
+function migrateV1() {
+  try {
+    const v1 = JSON.parse(localStorage.getItem(KEY_V1));
+    if (!v1 || typeof v1 !== "object") return null;
+    const s = emptyState();
+    for (const [qid, rec] of Object.entries(v1)) {
+      if (!rec || typeof rec !== "object") continue;
+      s.answers[qid] = { tries: rec.tries || 0, status: rec.status || "unseen" };
+      s.attempts += rec.tries || 0;
+      if (rec.status === "correct") {
+        s.correct += 1;
+        s.xp += xpValue(qid);
+      }
+    }
+    return s;
+  } catch { return null; }
+}
+
+function load() {
+  try {
+    const v2 = JSON.parse(localStorage.getItem(KEY_V2));
+    if (v2 && typeof v2 === "object" && v2.answers) return { ...emptyState(), ...v2 };
+  } catch { /* fall through */ }
+  const migrated = migrateV1();
+  if (migrated) { localStorage.setItem(KEY_V2, JSON.stringify(migrated)); return migrated; }
+  return emptyState();
+}
 
 let cache = load();
 const listeners = new Set();
-
-function load() {
-  try { return JSON.parse(localStorage.getItem(STORE_KEY)) || {}; }
-  catch { return {}; }
-}
-
-function emit() {
+function commit(next) {
+  cache = next;
+  localStorage.setItem(KEY_V2, JSON.stringify(cache));
   listeners.forEach((l) => l());
 }
 
-export function record(id, ok) {
-  const cur = cache[id] || { tries: 0, status: "unseen" };
-  const next = {
-    tries: cur.tries + 1,
-    // once solved, stays solved; a miss only sticks if never solved
-    status: ok ? "correct" : cur.status === "correct" ? "correct" : "missed",
+/* Record a graded check (ok) or a reveal (kind: "reveal"). */
+export function record(qid, ok, kind = "check") {
+  const prev = cache.answers[qid] || { tries: 0, status: "unseen" };
+  const firstSolve = ok && prev.status !== "correct";
+  const answers = {
+    ...cache.answers,
+    [qid]: {
+      tries: prev.tries + 1,
+      status: ok ? "correct" : prev.status === "correct" ? "correct" : "missed",
+    },
   };
-  cache = { ...cache, [id]: next };
-  localStorage.setItem(STORE_KEY, JSON.stringify(cache));
-  emit();
+  const day = todayKey();
+  const entry = {
+    t: Date.now(),
+    kind: kind === "reveal" ? "reveal" : ok ? "solve" : "miss",
+    qid,
+    ...(firstSolve ? { xp: xpValue(qid) } : {}),
+  };
+  commit({
+    answers,
+    xp: cache.xp + (firstSolve ? xpValue(qid) : 0),
+    attempts: cache.attempts + 1,
+    correct: cache.correct + (ok ? 1 : 0),
+    days: { ...cache.days, [day]: (cache.days[day] || 0) + 1 },
+    log: [entry, ...cache.log].slice(0, 40),
+  });
 }
 
-export function resetProgress() {
-  cache = {};
-  localStorage.setItem(STORE_KEY, JSON.stringify(cache));
-  emit();
-}
+export function resetProgress() { commit(emptyState()); }
 
-export function statusOf(progress, id) {
-  return (progress[id] && progress[id].status) || "unseen";
+export function statusOf(state, qid) {
+  return (state.answers[qid] && state.answers[qid].status) || "unseen";
 }
 
 export function useProgress() {

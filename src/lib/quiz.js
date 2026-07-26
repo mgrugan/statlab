@@ -1,9 +1,9 @@
 /* Grading + shared question helpers (ported unchanged from the vanilla app) */
 
 export const LANG_META = {
-  r:      { name: "R",      soft: "bg-r-soft text-evergreen",  solid: "bg-evergreen text-primary-foreground" },
-  python: { name: "Python", soft: "bg-py-soft text-amber",     solid: "bg-amber text-primary-foreground" },
-  sql:    { name: "SQL",    soft: "bg-sql-soft text-slate",    solid: "bg-slate text-primary-foreground" },
+  r:      { name: "R",      soft: "bg-blue-tint text-blue",           solid: "bg-blue text-white" },
+  python: { name: "Python", soft: "bg-emerald-soft text-emerald-deep", solid: "bg-emerald text-white" },
+  sql:    { name: "SQL",    soft: "bg-muted text-slate-deep",          solid: "bg-slate-deep text-white" },
 };
 
 export const DIFF_LABEL = ["", "intro", "core", "challenge"];
