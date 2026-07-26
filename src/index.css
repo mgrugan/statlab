@@ -1,0 +1,116 @@
+@import "tailwindcss";
+@import "tw-animate-css";
+
+/* ================================================================
+   StatLab — implements /DESIGN.md tokens
+   Fonts: Fraunces (display) · Space Grotesk (UI) · IBM Plex Mono (code)
+   Palette: evergreen (R) · burnt amber (Python) · slate (SQL) on paper
+   ================================================================ */
+
+:root {
+  /* shadcn semantic variables, mapped to the DESIGN.md palette */
+  --background: #F6F3EC;        /* neutral / warm paper */
+  --foreground: #1C1B18;        /* on-surface ink */
+  --card: #FDFBF6;              /* surface */
+  --card-foreground: #1C1B18;
+  --popover: #FDFBF6;
+  --popover-foreground: #1C1B18;
+  --primary: #1F6E54;           /* evergreen — R */
+  --primary-foreground: #FDFBF6;
+  --secondary: #EDE9DF;         /* soft neutral for secondary surfaces */
+  --secondary-foreground: #1C1B18;
+  --muted: #EDE9DF;
+  --muted-foreground: #6E6A60;
+  --accent: #EDE9DF;
+  --accent-foreground: #1C1B18;
+  --destructive: #B3402F;       /* error */
+  --destructive-foreground: #FDFBF6;
+  --border: #E3DED2;            /* hairline */
+  --input: #E3DED2;
+  --ring: #1F6E54;
+  --radius: 0.55rem;
+
+  /* StatLab brand tokens beyond shadcn's set */
+  --amber: #A8490B;             /* burnt amber — Python */
+  --slate: #39547E;             /* slate blue — SQL */
+  --code-bg: #20241F;
+  --code-fg: #E8E6DD;
+  --r-soft: #E4EEE9;
+  --py-soft: #F6E7DA;
+  --sql-soft: #E3E9F2;
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-destructive: var(--destructive);
+  --color-destructive-foreground: var(--destructive-foreground);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+
+  --color-evergreen: #1F6E54;
+  --color-amber: var(--amber);
+  --color-slate: var(--slate);
+  --color-code-bg: var(--code-bg);
+  --color-code-fg: var(--code-fg);
+  --color-r-soft: var(--r-soft);
+  --color-py-soft: var(--py-soft);
+  --color-sql-soft: var(--sql-soft);
+
+  --radius-sm: calc(var(--radius) - 4px);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-lg: var(--radius);
+  --radius-xl: 14px;
+
+  --font-display: "Fraunces", Georgia, serif;
+  --font-sans: "Space Grotesk", "Trebuchet MS", sans-serif;
+  --font-mono: "IBM Plex Mono", "Courier New", monospace;
+
+  --shadow-raised: 0 1px 2px rgba(28, 27, 24, 0.06), 0 2px 8px rgba(28, 27, 24, 0.05);
+  --shadow-overlay: 0 4px 12px rgba(28, 27, 24, 0.1), 0 12px 32px rgba(28, 27, 24, 0.12);
+}
+
+@layer base {
+  * {
+    border-color: var(--border);
+  }
+  body {
+    background: var(--background);
+    color: var(--foreground);
+    font-family: var(--font-sans);
+    -webkit-font-smoothing: antialiased;
+  }
+  ::selection {
+    background: #cfe3da;
+  }
+}
+
+/* inline code inside prompts */
+.mdlite code {
+  font-family: var(--font-mono);
+  font-size: 0.88em;
+  background: var(--background);
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  padding: 1px 5px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation: none !important;
+    transition: none !important;
+  }
+}

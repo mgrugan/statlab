@@ -4,7 +4,7 @@
  *         accept (regexes tested against whitespace-stripped, quote-normalized input),
  *         a (canonical answer), exp (explanation).
  */
-window.DRILLS = [
+export const DRILLS = [
 
 /* ============================== R DRILLS (55) ============================== */
 

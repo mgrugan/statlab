@@ -5,7 +5,7 @@
  * Fields: id, lang, topic, diff, title, scenario, task,
  *         req: [{re, hint}], sol, exp.
  */
-window.APPLIED = [
+export const APPLIED = [
 
 /* ============================ R APPLIED (50) ============================ */
 

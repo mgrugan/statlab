@@ -5,12 +5,19 @@ STA 350 flashcard material — drill the commands until they're reflex, then app
 to problems that look like real analyst work. Every question tells you whether to
 answer in **R** or **Python**, so you learn both side by side.
 
+Built with **React 19 + Vite + Tailwind CSS v4 + shadcn/ui**.
+
 ## Run it
 
-No build step, no dependencies. Either:
+```bash
+npm install
+npm run dev        # dev server
+npm run build      # production build → dist/
+npm run preview    # preview the production build
+```
 
-- open `index.html` directly in a browser, or
-- serve the folder: `python3 -m http.server 8000` → http://localhost:8000
+Deploys to GitHub Pages automatically on push via `.github/workflows/pages.yml`
+(builds with Vite, publishes `dist/`).
 
 ## What's inside
 
@@ -37,15 +44,22 @@ moves appear in your code, with per-concept hints when something's missing.
 ## Structure
 
 ```
-index.html          app shell
-css/style.css       implements the DESIGN.md token system
-js/app.js           router, quiz engine, grading, progress
-js/data/drills.js   Section 1 question bank
-js/data/applied.js  Section 2 question bank
-DESIGN.md           design tokens (Google design.md format, lints clean)
-.mcp.json           shadcn MCP server config
+index.html                  Vite entry (fonts, favicon)
+src/main.jsx                React bootstrap
+src/App.jsx                 shell + hash router (#/drills, #/applied, #/progress)
+src/pages/                  Home, Drills, Applied, ProgressPage
+src/components/shared.jsx   chips, toolbar, feedback, solution blocks
+src/components/ui/          shadcn/ui components (Radix-based)
+src/data/drills.js          Section 1 question bank (120 questions)
+src/data/applied.js         Section 2 question bank (100 questions)
+src/lib/quiz.js             normalization + grading logic
+src/lib/progress.js         localStorage progress store (React hook)
+src/index.css               Tailwind v4 theme implementing DESIGN.md tokens
+DESIGN.md                   design tokens (Google design.md format, lints clean)
+.mcp.json                   shadcn MCP server config
 ```
 
 The visual system (evergreen = R, burnt amber = Python, slate = SQL; Fraunces /
 Space Grotesk / IBM Plex Mono on warm paper) is defined in `DESIGN.md` — validated
-with `npx @google/design.md lint DESIGN.md`.
+with `npx @google/design.md lint DESIGN.md` — and wired into Tailwind + the shadcn
+theme variables in `src/index.css`.
