@@ -33,9 +33,13 @@ export default function Learn() {
   const solvedInModule = list.filter((x) => statusOf(progress, x.id) === "correct").length;
   const modulePct = list.length ? Math.round((solvedInModule / list.length) * 100) : 0;
 
-  const recent = progress.log
-    .filter((e) => questionMeta(e.qid)?.kind === "drill")
-    .slice(0, 4);
+  const recent = [];
+  for (const e of progress.log) {
+    if (questionMeta(e.qid)?.kind !== "drill") continue;
+    if (recent.some((x) => x.qid === e.qid)) continue;  // newest event per question
+    recent.push(e);
+    if (recent.length === 4) break;
+  }
 
   const resetCard = () => { setAnswer(""); setVerdict(null); setRevealed(false); setLastGraded(null); setEarned(0); };
   const goto = (i) => { update({ idx: i }); resetCard(); inputRef.current?.focus(); };
@@ -211,11 +215,23 @@ export default function Learn() {
                 {recent.map((e, i) => {
                   const dq = DRILLS.find((x) => x.id === e.qid);
                   if (!dq) return null;
+                  // Only show the answer once it's been earned or revealed —
+                  // a plain miss must not spoil the solution.
+                  const answerKnown = e.kind !== "miss" || statusOf(progress, e.qid) === "correct";
                   return (
                     <li key={i} className="px-4 py-3 flex items-start justify-between gap-3">
                       <div className="min-w-0">
-                        <div className="font-mono text-[13px] font-medium truncate">{dq.a.split("\n")[0]}</div>
-                        <div className="text-[12px] text-muted-foreground truncate">{dq.topic}</div>
+                        {answerKnown ? (
+                          <div className="font-mono text-[13px] font-medium truncate">{dq.a.split("\n")[0]}</div>
+                        ) : (
+                          <div className="text-[13px] font-medium truncate text-muted-foreground">
+                            {dq.q.replace(/[`*]/g, "")}
+                          </div>
+                        )}
+                        <div className="text-[12px] text-muted-foreground truncate">
+                          {dq.topic}
+                          {!answerKnown && <span className="text-destructive"> · missed — try it again</span>}
+                        </div>
                       </div>
                       <span className={`label-mono shrink-0 ${e.kind === "solve" ? "text-emerald-deep" : "text-muted-foreground"}`}>
                         {LANG_META[dq.lang].name}
