@@ -28,13 +28,13 @@ Deploys to GitHub Pages automatically on push via `.github/workflows/pages.yml`
 
 | Section | R | Python | SQL bonus |
 |---|---|---|---|
-| **Command Drills** — type the exact command, graded instantly | 55 | 55 | 10 |
-| **Applied Problems** — real-world scenarios, concept-checked code | 50 | 50 | — |
-| **Total per language** | **105** | **105** | 10 |
+| **Command Drills** — type the exact command, graded instantly | 67 | 67 | 10 |
+| **Applied Problems** — real-world scenarios, concept-checked code | 58 | 58 | — |
+| **Total per language** | **125** | **125** | 10 |
 
 - **Command Drills** cover indexing, lists, the apply family, dplyr, tidyr, pandas,
   NumPy, regex, debugging (`traceback()`, `browser()`, `breakpoint()`), testing,
-  simulation, PCA, and more — drawn from the flashcard set plus originals.
+  simulation, PCA, ggplot2/matplotlib/seaborn visualization, and more — drawn from the flashcard set plus originals.
 - **Applied Problems** frame the same tools as work: A/B tests, bootstrap CIs,
   regressions, permutation tests, Monte Carlo integration, joins, pivots, cleaning
   jobs, power simulations.
@@ -55,8 +55,8 @@ src/App.jsx                 sidebar shell + hash router (#/learn, #/practice, #/
 src/pages/                  Dashboard, Learn, Practice, Leaderboard
 src/components/shared.jsx   chips, code frames, bars, toolbar
 src/components/ui/          shadcn/ui components (Radix-based)
-src/data/drills.js          Learn question bank (120 questions)
-src/data/applied.js         Practice question bank (100 questions)
+src/data/drills.js          Learn question bank (144 questions)
+src/data/applied.js         Practice question bank (116 questions)
 src/lib/quiz.js             normalization + grading logic
 src/lib/progress.js         localStorage store: answers, XP, streak days, activity
 src/lib/stats.js            ranks, badges, mastery, challenge of the day, leaderboard

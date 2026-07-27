@@ -23,6 +23,7 @@ export default function Learn() {
   const [revealed, setRevealed] = useState(false);
   const [session, setSession] = useState({ attempts: 0, correct: 0, streak: 0 });
   const [earned, setEarned] = useState(0);
+  const [lastGraded, setLastGraded] = useState(null);
   const inputRef = useRef(null);
 
   const topics = useMemo(() => [...new Set(DRILLS.map((q) => q.topic))].sort(), []);
@@ -36,11 +37,15 @@ export default function Learn() {
     .filter((e) => questionMeta(e.qid)?.kind === "drill")
     .slice(0, 4);
 
-  const resetCard = () => { setAnswer(""); setVerdict(null); setRevealed(false); };
+  const resetCard = () => { setAnswer(""); setVerdict(null); setRevealed(false); setLastGraded(null); setEarned(0); };
   const goto = (i) => { update({ idx: i }); resetCard(); inputRef.current?.focus(); };
 
   const doCheck = () => {
-    if (!q || !answer.trim()) return;
+    const val = answer.trim();
+    if (!q || !val) return;
+    if (verdict === "ok") return;            // already solved this card
+    if (val === lastGraded) return;          // same submission — don't re-record
+    setLastGraded(val);
     const ok = checkDrill(q, answer);
     const firstSolve = ok && statusOf(progress, q.id) !== "correct";
     setEarned(firstSolve ? xpValue(q.id) : 0);
@@ -54,7 +59,7 @@ export default function Learn() {
     if (ok) setRevealed(true);
   };
   const doReveal = () => {
-    if (!q) return;
+    if (!q || revealed) return;              // solved or already revealed — no double penalty
     record(q.id, false, "reveal");
     setSession((s) => ({ ...s, attempts: s.attempts + 1, streak: 0 }));
     setRevealed(true);

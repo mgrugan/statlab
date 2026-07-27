@@ -732,4 +732,152 @@ export const DRILLS = [
  a:"SELECT |/ 2",
  exp:"|/ is PostgreSQL's square-root prefix operator — an oddball the flashcards call out."},
 
+/* ======================== R VISUALIZATION (12) ======================== */
+
+{id:"gr01", lang:"r", topic:"Visualization (ggplot2)", diff:1,
+ q:"Start a ggplot from data frame `df`, mapping `wt` to x and `mpg` to y (no layers yet).",
+ accept:[/^ggplot\(df,aes\(x=wt,y=mpg\)\)$/i, /^ggplot\(df,aes\(wt,mpg\)\)$/i, /^ggplot\(data=df,(mapping=)?aes\(x=wt,y=mpg\)\)$/i],
+ a:"ggplot(df, aes(x = wt, y = mpg))",
+ exp:"ggplot(data, aes(...)) sets up the coordinate system and aesthetic mappings; you then add geoms with +. On its own it draws an empty panel."},
+
+{id:"gr02", lang:"r", topic:"Visualization (ggplot2)", diff:1,
+ q:"Which layer function adds a **scatterplot** (points) layer to a ggplot?",
+ accept:[/^geom_point\(\)$/i, /^\+geom_point\(\)$/i],
+ a:"geom_point()",
+ exp:"Layers are added with +: ggplot(df, aes(wt, mpg)) + geom_point(). Each geom_* function draws one kind of mark."},
+
+{id:"gr03", lang:"r", topic:"Visualization (ggplot2)", diff:1,
+ q:"Which layer function draws a **histogram** of a single numeric variable?",
+ accept:[/^geom_histogram\(\)$/i, /^\+geom_histogram\(\)$/i],
+ a:"geom_histogram()",
+ exp:"geom_histogram() bins a single continuous aesthetic (x). Control the bins with bins = or binwidth = — the default 30 bins always earns a warning."},
+
+{id:"gr04", lang:"r", topic:"Visualization (ggplot2)", diff:1,
+ q:"Which layer function draws **boxplots** (e.g. distribution of y within each level of x)?",
+ accept:[/^geom_boxplot\(\)$/i, /^\+geom_boxplot\(\)$/i],
+ a:"geom_boxplot()",
+ exp:"With a discrete x and continuous y, geom_boxplot() gives one box per group — the fastest visual group comparison."},
+
+{id:"gr05", lang:"r", topic:"Visualization (ggplot2)", diff:1,
+ q:"Which layer function draws a **line chart** (points connected in x order)?",
+ accept:[/^geom_line\(\)$/i, /^\+geom_line\(\)$/i],
+ a:"geom_line()",
+ exp:"geom_line() connects observations ordered by x — the default for time series."},
+
+{id:"gr06", lang:"r", topic:"Visualization (ggplot2)", diff:2,
+ q:"Which layer function draws a **bar chart of counts** for a categorical x (ggplot counts the rows for you)?",
+ accept:[/^geom_bar\(\)$/i, /^\+geom_bar\(\)$/i],
+ a:"geom_bar()",
+ exp:"geom_bar() counts rows per category (stat = \"count\"). If you already computed the heights, use geom_col() instead."},
+
+{id:"gr07", lang:"r", topic:"Visualization (ggplot2)", diff:2,
+ q:"Inside `aes()`, write the argument that **colors points by the factor `species`**.",
+ accept:[/^colou?r=species$/i, /^aes\(colou?r=species\)$/i],
+ a:"color = species",
+ exp:"Mapping color inside aes() gets one color per level plus an automatic legend. (Setting color outside aes() paints everything one fixed color — a classic mix-up.)"},
+
+{id:"gr08", lang:"r", topic:"Visualization (ggplot2)", diff:2,
+ q:"Split a plot into **one panel per level of `cyl`** — write the facet call (formula style).",
+ accept:[/^facet_wrap\(~cyl\)$/i, /^\+facet_wrap\(~cyl\)$/i, /^facet_wrap\(vars\(cyl\)\)$/i],
+ a:"facet_wrap(~ cyl)",
+ exp:"facet_wrap(~ var) makes small multiples — one panel per group, shared axes. facet_grid(rows ~ cols) crosses two variables."},
+
+{id:"gr09", lang:"r", topic:"Visualization (ggplot2)", diff:2,
+ q:"Add axis labels with a single call: x as `\"Weight\"` and y as `\"MPG\"`.",
+ accept:[/^labs\(x="Weight",y="MPG"\)$/i, /^\+labs\(x="Weight",y="MPG"\)$/i, /^labs\(y="MPG",x="Weight"\)$/i],
+ a:"labs(x = \"Weight\", y = \"MPG\")",
+ exp:"labs() sets any label in one place — x, y, title, subtitle, caption, and legend titles (by aesthetic name)."},
+
+{id:"gr10", lang:"r", topic:"Visualization (ggplot2)", diff:2,
+ q:"Add a **fitted linear regression line** (no other smoother) to a scatterplot — write the layer call.",
+ accept:[/^geom_smooth\(method="lm"\)$/i, /^\+geom_smooth\(method="lm"\)$/i, /^geom_smooth\(method="lm",se=(FALSE|F|TRUE|T)\)$/i],
+ a:"geom_smooth(method = \"lm\")",
+ exp:"geom_smooth() defaults to loess; method = \"lm\" forces a straight OLS fit, with a confidence ribbon unless se = FALSE."},
+
+{id:"gr11", lang:"r", topic:"Visualization (ggplot2)", diff:2,
+ q:"Save the **most recent ggplot** to the file `\"plot.png\"`.",
+ accept:[/^ggsave\("plot\.png"\)$/i, /^ggsave\((filename=)?"plot\.png"\)$/i],
+ a:"ggsave(\"plot.png\")",
+ exp:"ggsave() writes the last plot displayed, inferring format from the extension; width/height/dpi arguments control the output size."},
+
+{id:"gr12", lang:"r", topic:"Visualization (ggplot2)", diff:1,
+ q:"Which theme function gives a ggplot a clean, minimal look (no gray panel background)?",
+ accept:[/^theme_minimal\(\)$/i, /^\+theme_minimal\(\)$/i],
+ a:"theme_minimal()",
+ exp:"Complete themes (theme_minimal, theme_bw, theme_classic) restyle the whole plot in one +; theme() tweaks individual elements."},
+
+/* ====================== PYTHON VISUALIZATION (12) ===================== */
+
+{id:"gp01", lang:"python", topic:"Visualization (matplotlib)", diff:1,
+ q:"Import matplotlib's pyplot module under its conventional alias.",
+ accept:[/^importmatplotlib\.pyplotasplt$/i],
+ a:"import matplotlib.pyplot as plt",
+ exp:"plt is the universal alias — pyplot is the stateful plotting interface most tutorials and notebooks use."},
+
+{id:"gp02", lang:"python", topic:"Visualization (matplotlib)", diff:1,
+ q:"Draw a **line plot** of `y` against `x` with pyplot.",
+ accept:[/^plt\.plot\(x,y\)$/i],
+ a:"plt.plot(x, y)",
+ exp:"plt.plot draws connected lines by default — matplotlib's equivalent of geom_line(). Add marker=\"o\" to also show the points."},
+
+{id:"gp03", lang:"python", topic:"Visualization (matplotlib)", diff:1,
+ q:"Draw a **bar chart** of `counts` for the categories `cats`.",
+ accept:[/^plt\.bar\(cats,counts\)$/i],
+ a:"plt.bar(cats, counts)",
+ exp:"plt.bar(x, height) expects the heights precomputed — like ggplot's geom_col(), not geom_bar()."},
+
+{id:"gp04", lang:"python", topic:"Visualization (matplotlib)", diff:1,
+ q:"Label the **x-axis** `\"Weight\"`.",
+ accept:[/^plt\.xlabel\("Weight"\)$/i],
+ a:"plt.xlabel(\"Weight\")",
+ exp:"plt.xlabel / plt.ylabel / plt.title are the pyplot labeling trio — together they do what ggplot's labs() does in one call."},
+
+{id:"gp05", lang:"python", topic:"Visualization (matplotlib)", diff:1,
+ q:"Give the current plot the title `\"MPG vs Weight\"`.",
+ accept:[/^plt\.title\("MPGvsWeight"\)$/i],
+ a:"plt.title(\"MPG vs Weight\")",
+ exp:"plt.title() sets the axes title. (Grading strips spaces — in real code the string keeps them.)"},
+
+{id:"gp06", lang:"python", topic:"Visualization (matplotlib)", diff:1,
+ q:"Render the current figure to the screen.",
+ accept:[/^plt\.show\(\)$/i],
+ a:"plt.show()",
+ exp:"plt.show() displays the figure in scripts; notebooks usually render automatically."},
+
+{id:"gp07", lang:"python", topic:"Visualization (matplotlib)", diff:2,
+ q:"Save the current figure to `\"plot.png\"`.",
+ accept:[/^plt\.savefig\("plot\.png"\)$/i],
+ a:"plt.savefig(\"plot.png\")",
+ exp:"Call savefig BEFORE plt.show() — show() can clear the figure, leaving you a blank file. dpi= controls resolution."},
+
+{id:"gp08", lang:"python", topic:"Visualization (pandas)", diff:2,
+ q:"Quick-plot a **histogram** of the `\"price\"` column of `df` using pandas' plotting shortcut.",
+ accept:[/^df\["price"\]\.hist\(\)$/i, /^df\["price"\]\.plot\.hist\(\)$/i, /^df\["price"\]\.plot\(kind="hist"\)$/i],
+ a:"df[\"price\"].hist()",
+ exp:"pandas wraps matplotlib: Series.hist() / .plot.hist() is the one-liner first look at any numeric column."},
+
+{id:"gp09", lang:"python", topic:"Visualization (pandas)", diff:2,
+ q:"Scatter-plot `mpg` against `wt` straight from DataFrame `df` with the pandas plot accessor.",
+ accept:[/^df\.plot\.scatter\(x="wt",y="mpg"\)$/i, /^df\.plot\(kind="scatter",x="wt",y="mpg"\)$/i],
+ a:"df.plot.scatter(x=\"wt\", y=\"mpg\")",
+ exp:"df.plot.scatter(x=, y=) is pandas' built-in scatter — handy for quick EDA without importing anything else."},
+
+{id:"gp10", lang:"python", topic:"Visualization (seaborn)", diff:1,
+ q:"Import seaborn under its conventional alias.",
+ accept:[/^importseabornassns$/i],
+ a:"import seaborn as sns",
+ exp:"sns for seaborn — the statistical layer on top of matplotlib, and Python's closest cousin to ggplot2."},
+
+{id:"gp11", lang:"python", topic:"Visualization (seaborn)", diff:2,
+ q:"Seaborn scatterplot of `mpg` vs `wt` from `df`, **colored by `species`** (seaborn's word for the color mapping).",
+ accept:[/^sns\.scatterplot\(data=df,x="wt",y="mpg",hue="species"\)$/i],
+ a:"sns.scatterplot(data=df, x=\"wt\", y=\"mpg\", hue=\"species\")",
+ exp:"hue= is seaborn's aes(color=): one color per level plus a legend, no manual loop."},
+
+{id:"gp12", lang:"python", topic:"Visualization (seaborn)", diff:2,
+ q:"Seaborn **boxplots** of `value` within each level of `group`, from DataFrame `df`.",
+ accept:[/^sns\.boxplot\(data=df,x="group",y="value"\)$/i],
+ a:"sns.boxplot(data=df, x=\"group\", y=\"value\")",
+ exp:"sns.boxplot(data, x=categorical, y=numeric) mirrors ggplot's aes(group, value) + geom_boxplot()."},
+
 ];

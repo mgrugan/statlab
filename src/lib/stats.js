@@ -66,7 +66,9 @@ const MASTERY_BUCKETS = [
   { name: "Statistical Modeling",
     match: /hypothesis|regression|anova|correlation|pca|statistic|summary|monte|permutation|bootstrap/i },
   { name: "Programming & Simulation",
-    match: /core|function|apply|vector|list|index|string|regex|debug|test|error|simulation|random|numerical|numpy|import|plot|time series|factor|sql/i },
+    match: /core|function|apply|vector|list|index|string|regex|debug|test|error|simulation|random|numerical|numpy|import|time series|factor|sql/i },
+  { name: "Data Visualization",
+    match: /visual|plotting|ggplot/i },
 ];
 
 export function masteryOf(state) {

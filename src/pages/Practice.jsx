@@ -23,6 +23,7 @@ export default function Practice({ jumpTo }) {
   const [hintN, setHintN] = useState(0);
   const [revealed, setRevealed] = useState(false);
   const [bottomTab, setBottomTab] = useState("console");
+  const [lastGraded, setLastGraded] = useState(null);
 
   const topics = useMemo(() => [...new Set(APPLIED.map((q) => q.topic))].sort(), []);
   const list = applyFilters(APPLIED, filters, (id) => statusOf(progress, id));
@@ -37,11 +38,15 @@ export default function Practice({ jumpTo }) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [jumpTo]);
 
-  const resetCard = () => { setAnswer(""); setResult(null); setHintN(0); setRevealed(false); setBottomTab("console"); };
+  const resetCard = () => { setAnswer(""); setResult(null); setHintN(0); setRevealed(false); setBottomTab("console"); setLastGraded(null); };
   const goto = (i) => { update({ idx: i }); resetCard(); };
 
   const doCheck = () => {
-    if (!q || !answer.trim()) return;
+    const val = answer.trim();
+    if (!q || !val) return;
+    if (result?.ok) return;                  // already solved this card
+    if (val === lastGraded) return;          // same submission — don't re-record
+    setLastGraded(val);
     const res = checkApplied(q, answer);
     const firstSolve = res.ok && statusOf(progress, q.id) !== "correct";
     record(q.id, res.ok);
@@ -50,7 +55,7 @@ export default function Practice({ jumpTo }) {
     if (res.ok) setRevealed(true);
   };
   const doReveal = () => {
-    if (!q) return;
+    if (!q || revealed) return;              // solved or already revealed — no double penalty
     record(q.id, false, "reveal");
     setRevealed(true);
   };

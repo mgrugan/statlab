@@ -111,7 +111,7 @@ export default function Dashboard() {
         <StatTile icon={CheckCircle2} value={counts.applied} label="Problems Solved" delta={`of ${APPLIED.length}`} />
         <StatTile icon={Terminal} value={counts.drill} label="Commands Learned" delta={`of ${DRILLS.length}`} />
         <StatTile icon={Clock3} value={progress.attempts} label="Total Attempts" delta={activeDayCount ? `${activeDayCount} active days` : null} deltaTone="flat" />
-        <StatTile icon={Database} value={220} label="Questions in the Bank" delta="R + Python" deltaTone="flat" />
+        <StatTile icon={Database} value={DRILLS.length + APPLIED.length} label="Questions in the Bank" delta="R + Python" deltaTone="flat" />
       </div>
 
       {/* challenge + right rail */}
