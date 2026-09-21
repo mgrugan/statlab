@@ -34,7 +34,7 @@ export function todayKey(d = new Date()) {
 }
 
 function emptyState() {
-  return { answers: {}, xp: 0, attempts: 0, correct: 0, days: {}, log: [] };
+  return { answers: {}, xp: 0, attempts: 0, correct: 0, days: {}, log: [], lessons: {}, examBest: null };
 }
 
 function migrateV1() {
@@ -102,6 +102,33 @@ export function record(qid, ok, kind = "check") {
 }
 
 export function resetProgress() { commit(emptyState()); }
+
+/* Mark a lesson as read (idempotent — first read awards XP once). */
+export function markLessonRead(id) {
+  if (cache.lessons?.[id]) return;
+  const day = todayKey();
+  commit({
+    ...cache,
+    lessons: { ...(cache.lessons || {}), [id]: Date.now() },
+    xp: cache.xp + 15,
+    days: { ...cache.days, [day]: (cache.days[day] || 0) + 1 },
+    log: [{ t: Date.now(), kind: "lesson", qid: id, xp: 15 }, ...cache.log].slice(0, 40),
+  });
+}
+
+/* Record a finished practice exam; keeps the best score. */
+export function recordExam(score, total) {
+  const day = todayKey();
+  const prev = cache.examBest;
+  const better = !prev || score > prev.score;
+  commit({
+    ...cache,
+    examBest: better ? { score, total, t: Date.now() } : prev,
+    xp: cache.xp + score * 3,
+    days: { ...cache.days, [day]: (cache.days[day] || 0) + 1 },
+    log: [{ t: Date.now(), kind: "exam", qid: `exam:${score}/${total}`, xp: score * 3 }, ...cache.log].slice(0, 40),
+  });
+}
 
 export function statusOf(state, qid) {
   return (state.answers[qid] && state.answers[qid].status) || "unseen";

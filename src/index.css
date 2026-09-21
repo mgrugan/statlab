@@ -1,5 +1,6 @@
 @import "tailwindcss";
 @import "tw-animate-css";
+@import "katex/dist/katex.min.css";
 
 /* ================================================================
    StatLab — StatCode design system (from design/stitch/design-system.md)
@@ -138,3 +139,7 @@
     transition: none !important;
   }
 }
+
+/* KaTeX sizing inside lesson prose */
+.katex { font-size: 1.02em; }
+.katex-display { margin: 0; padding: 2px 0; }

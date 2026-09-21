@@ -62,9 +62,9 @@ export function SectionLabel({ children, className }) {
 }
 
 /* Level-1 card: white, 1px border, no shadow (tonal depth) */
-export function Panel({ className, children }) {
+export function Panel({ className, children, ...props }) {
   return (
-    <div className={cn("bg-card border rounded-lg", className)}>
+    <div className={cn("bg-card border rounded-lg", className)} {...props}>
       {children}
     </div>
   );

@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { LayoutDashboard, GraduationCap, Code2, Trophy, Zap } from "lucide-react";
+import { LayoutDashboard, GraduationCap, Code2, Trophy, Zap, BookOpen, FileText } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useProgress } from "@/lib/progress";
 import { rankFor } from "@/lib/stats";
@@ -7,6 +7,9 @@ import Dashboard from "@/pages/Dashboard";
 import Learn from "@/pages/Learn";
 import Practice from "@/pages/Practice";
 import Leaderboard from "@/pages/Leaderboard";
+import Study from "@/pages/Study";
+import Lesson from "@/pages/Lesson";
+import Exam from "@/pages/Exam";
 
 /* Hash routing (#/learn, #/practice?q=ap12) — works on GitHub Pages
    with no server config. Old v1/v2 routes redirect to their successors. */
@@ -35,6 +38,8 @@ function useHashRoute() {
 
 const NAV = [
   { key: "",            label: "Dashboard",   icon: LayoutDashboard },
+  { key: "study",       label: "Study",       icon: BookOpen },
+  { key: "exam",        label: "Exam",        icon: FileText },
   { key: "learn",       label: "Learn",       icon: GraduationCap },
   { key: "practice",    label: "Practice",    icon: Code2 },
   { key: "leaderboard", label: "Leaderboard", icon: Trophy },
@@ -117,6 +122,9 @@ export default function App() {
           {route.path === "learn" ? <Learn />
             : route.path === "practice" ? <Practice jumpTo={route.params.q} />
             : route.path === "leaderboard" ? <Leaderboard />
+            : route.path === "study" ? <Study />
+            : route.path === "lesson" ? <Lesson id={route.params.id} />
+            : route.path === "exam" ? <Exam />
             : <Dashboard />}
         </main>
       </div>
