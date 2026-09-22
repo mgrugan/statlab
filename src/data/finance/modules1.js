@@ -21,6 +21,9 @@ export const FINANCE_MODULES = [
   minutes: 12,
   summary: "What we are pricing and why it forces us into probability. Payoffs, Jensen's inequality, and the data pitfalls of yfinance.",
   blocks: [
+    { kind: "plain", title: "Start here: what are we even doing?",
+      body: "Someone offers to sell you a contract. The contract says: *in six months, you may buy one share of Google for $165 \u2014 but only if you want to.*\n\nHow much is that contract worth today?\n\nThat is the whole question this course answers. It is hard because the payoff depends on a price six months from now that nobody knows. Our answer will be: **describe that unknown price with a probability model, then average the payoff over all the ways it could turn out.** Everything in Parts 1-5 is either building that model, or checking whether it is honest." },
+
     { kind: "idea", title: "The cast of characters",
       body: "Let $P_t$ be the price of an asset at time $t$. Three kinds matter for this course:\n\n• **Equity** (= stock) — a share of ownership in a company.\n• **Bonds** — sold by institutions to raise money; promise periodic interest payments (*coupons*) plus repayment of the loan at the *maturity date*.\n• **Derivatives** — contracts whose value is *derived* from another asset. The option is our running example." },
 
@@ -30,6 +33,7 @@ export const FINANCE_MODULES = [
     { kind: "math", title: "The payoff function",
       body: "Suppose you hold a European call with strike $K$ expiring at time $T$. At expiration you compare $P_T$ to $K$:\n\n• If $P_T > K$: exercise, buy at $K$, sell at $P_T$, pocket $P_T - K$.\n• If $P_T \\le K$: the option is worthless — you simply don't exercise.\n\nSo the payoff is the **positive part**:",
       tex: ["(P_T-K)^+ \\quad\\text{where}\\quad Y^+=\\begin{cases} Y, & Y>0\\\\ 0, & \\text{otherwise.}\\end{cases}"],
+      diagram: "payoff",
       after: "Ignoring the risk-free rate for now, you should not pay more than the *expected* payoff $\\E\\big((P_T-K)^+\\big)$." },
 
     { kind: "idea", title: "Two ways to get at $P_T$ — and why we pick the second",
@@ -38,6 +42,7 @@ export const FINANCE_MODULES = [
     { kind: "trap", title: "You cannot swap the expectation and the positive part",
       body: "A tempting shortcut is to predict $\\E(P_T)$ and plug it in. That is **wrong**:",
       tex: ["\\E\\big((P_T-K)^+\\big) \\;\\ne\\; \\big(\\E(P_T)-K\\big)^+"],
+      diagram: "jensen",
       after: "In fact $g(x) = x^+$ is a **convex** function, so by **Jensen's inequality**\n\n$$\\E\\big((P_T-K)^+\\big) \\;\\ge\\; \\big(\\E(P_T)-K\\big)^+.$$\n\nIntuition: the option truncates your losses at zero but leaves your gains unbounded. That asymmetry has value, and it is exactly the value a point prediction throws away. A model for $P_T$ will have unspecified parameters, which must be *calibrated* using other considerations." },
 
     { kind: "code", title: "Getting price data",
@@ -76,6 +81,9 @@ NVDAdat.dividends`,
   minutes: 18,
   summary: "The distribution behind the model, and the full derivation of the expected-payoff formula that becomes Black-Scholes.",
   blocks: [
+    { kind: "plain", title: "What is a lognormal distribution?",
+      body: "You already know the **normal** distribution \u2014 the symmetric bell curve.\n\nA **lognormal** distribution is what you get when you take a bell curve and **exponentiate it**. Start with a normal random variable $Y$, then look at $X=e^{Y}$. That $X$ is lognormal.\n\nThree consequences, and they are the only three you need:\n\n\u2022 **It is never negative.** $e^{\\text{anything}}$ is positive, so $X>0$ always. Good \u2014 prices can't be negative.\n\u2022 **It is lopsided (right-skewed).** Most values bunch near the low end with a long tail stretching right. Good \u2014 a stock can triple but can only fall to zero.\n\u2022 **Its logarithm is normal.** So if you ever get stuck, take logs and you are back in familiar bell-curve territory.\n\nThat last point is why the phrase \"$X$ is lognormal\" is *defined* as \"$\\log X$ is normal.\" The name is literal: **log-normal** = the thing whose log is normal." },
+
     { kind: "math", title: "Definition",
       body: "$X$ has the **lognormal$(\\mu,\\sigma^2)$** distribution if $\\log(X)$ is Normal$(\\mu,\\sigma^2)$. Note carefully: $\\mu$ and $\\sigma^2$ are the mean and variance **of the log**, not of $X$.",
       tex: ["\\E(\\log X)=\\mu, \\qquad \\Var(\\log X)=\\sigma^2"],
@@ -84,10 +92,16 @@ NVDAdat.dividends`,
     { kind: "idea", title: "Why lognormal is the natural price model",
       body: "Three reasons, all worth being able to say out loud:\n\n• **Prices can't go negative.** $e^{\\text{anything}} > 0$, so a lognormal price never goes below zero, while a normal price would.\n• **Returns are multiplicative.** Prices compound: a 10% gain then a 10% loss isn't flat. Working on the log scale turns multiplication into addition, which is where all our normal-theory tools live.\n• **It is right-skewed.** A stock can 10× but can only lose 100%. The lognormal has exactly that asymmetry — as $\\sigma$ grows the density's peak slides left while the right tail stretches out." },
 
+    { kind: "plain", title: "What is $\\Phi$?",
+      body: "The formula on the next card is full of $\\Phi(\\cdot)$. It is not as scary as it looks.\n\n$\\Phi$ is the **standard normal CDF** \u2014 the running total of area under the standard bell curve. $\\Phi(z)$ = the probability that a standard normal lands **below** $z$.\n\nSo $\\Phi(0)=0.5$ (half the bell is left of center), $\\Phi(2)\\approx0.977$, $\\Phi(-2)\\approx0.023$. It always returns a number between 0 and 1, because it is a probability.\n\nWhenever you see $\\Phi(\\text{something})$ in an option formula, read it as **\"the probability that things end up on the good side of this threshold.\"** In Python it is `scipy.stats.norm.cdf`." },
+
     { kind: "math", title: "The Claim (the engine of Black-Scholes)",
       body: "Suppose $\\log(P_t)$ has the Normal$(\\xi,\\tau^2)$ distribution, and $K>0$. Then",
       tex: ["\\E\\big((P_t-K)^+\\big)=\\exp\\!\\big(\\xi+\\tau^2/2\\big)\\,\\Phi\\!\\left(\\frac{\\xi+\\tau^2-\\log K}{\\tau}\\right)-K\\,\\Phi\\!\\left(\\frac{\\xi-\\log K}{\\tau}\\right)"],
       after: "where $\\Phi$ is the **standard normal CDF**. Both $\\Phi$ terms are probabilities; the first factor $\\exp(\\xi+\\tau^2/2)$ is exactly $\\E(P_t)$ from the lognormal mean formula." },
+
+    { kind: "plain", title: "Two tools used in the proof",
+      body: "The derivation coming up uses two standard moves. Know what each *does* and the proof reads easily.\n\n**LOTUS** (Law of the Unconscious Statistician) says: to average a function of a random variable, you don't need the distribution of the function \u2014 just integrate the function against the density you already have.\n\n$$\\E(g(X))=\\int g(x)\\,f_X(x)\\,dx$$\n\n**Completing the square** is the high-school algebra trick of rewriting $y^2+by$ as $(y+b/2)^2-b^2/4$. In this proof it gets used on the exponent of a normal density. The payoff: after rearranging, the exponent *looks like a normal density again* \u2014 just with a shifted mean. That shift is where the mysterious extra $+\\tau^2$ in the formula comes from.\n\nYou will almost certainly not be asked to reproduce every line. You should be able to say what each step accomplishes." },
 
     { kind: "math", title: "Proof, step by step",
       body: "Write $Y=\\log(P_t)$, so $Y\\sim N(\\xi,\\tau^2)$ and $P_t=e^Y$.",
@@ -133,6 +147,9 @@ NVDAdat.dividends`,
   minutes: 20,
   summary: "The stochastic process underneath the price model: standard BM, drift and scaling, then GBM and its six properties.",
   blocks: [
+    { kind: "plain", title: "What is a stochastic process?",
+      body: "A **random variable** is one uncertain number \u2014 say tomorrow's closing price.\n\nA **stochastic process** is a whole *collection* of random variables, one for each point in time. Instead of one uncertain number you have an uncertain **path**: the price today, tomorrow, the day after, and so on.\n\nTwo words that will keep coming up:\n\n\u2022 A **realization** (or **path**) is one complete run of the process \u2014 one squiggly line. When you plot a simulated Brownian motion you are looking at *one* draw, not the process itself.\n\u2022 **\"Almost surely\"** just means *with probability 1*. Treat it as \"always, for our purposes.\"\n\nThis module builds the specific process used to model stock prices, in three steps: standard Brownian motion \u2192 add drift and scale \u2192 exponentiate it." },
+
     { kind: "idea", title: "Stochastic process vocabulary",
       body: "A **stochastic process** is a random process indexed by something — usually time. Write $\\{W(t): t\\ge 0\\}$: the set $\\{t \\ge 0\\}$ is the **index space**.\n\n• For **$t$ fixed**, $W(t)$ is a *random variable*.\n• The whole collection $\\{W(t): t\\ge 0\\}$ is an entire **path**, also called a **realization** — one single draw from the sample space. When you plot a simulated Brownian motion you are looking at *one* realization, not the process.\n• **\"Almost surely\"** means *with probability 1*." },
 
@@ -233,6 +250,9 @@ plt.show()`,
   minutes: 12,
   summary: "The two definitions of return, why logs win, the k-period result, and the central limit argument (plus the reason it fails).",
   blocks: [
+    { kind: "plain", title: "What is a return, and why take logs?",
+      body: "A **return** is just the percent change in price. If a stock goes from \\$100 to \\$105, the **simple return** is 5%.\n\nA **log return** is the log of the price ratio: $\\log(105/100)=0.0488$, so about 4.88%. Nearly the same number.\n\nSo why bother with logs? **Because log returns add up and simple returns don't.**\n\nGo from \\$100 \u2192 \\$110 \u2192 \\$99. The simple returns are +10% and \u221210%, which look like they cancel \u2014 but you ended at \\$99, down 1%. The log returns are +0.0953 and \u22120.1054, and those *do* sum to \u22120.0101, the true log return for the whole stretch.\n\nThat additivity is the entire reason finance runs on logs. It also means a multi-day return is a **sum** of daily returns, which is exactly the setup where normal-distribution theory works." },
+
     { kind: "math", title: "The two definitions",
       body: "The **one-period log return**:",
       tex: ["r_t=\\log\\!\\left(\\frac{P_t}{P_{t-1}}\\right)=\\log(P_t)-\\log(P_{t-1})"],
@@ -285,6 +305,9 @@ ldrEQ = np.log(EQdat['Close']).diff().dropna()`,
   minutes: 18,
   summary: "Nonparametric density estimation, the bandwidth, and the bias-variance tradeoff — the tool used to convict the normality assumption.",
   blocks: [
+    { kind: "plain", title: "What is a density, and what does \"nonparametric\" mean?",
+      body: "A **density** is the curve whose *area* gives probability. The bell curve is a density: the area under it between 90 and 110 is the probability of landing in that range. The curve's height alone isn't a probability \u2014 the area is.\n\nNow, two ways to estimate a density from data:\n\n\u2022 **Parametric** \u2014 you *assume* a shape (\"it's a bell curve\") and just estimate the handful of numbers that pin it down (the mean and SD). Simple, but if the shape is wrong, everything downstream is wrong.\n\u2022 **Nonparametric** \u2014 you assume *no* shape and let the data draw the curve. More honest, needs more data.\n\nThis module builds the standard nonparametric method, the **kernel density estimator**. We need it because we want to *check* whether the bell-curve assumption is true \u2014 and you can't check an assumption using a method that already assumes it." },
+
     { kind: "idea", title: "Parametric vs. nonparametric",
       body: "Most model-fitting you've seen is **parametric**: assume a form (normal, exponential), estimate its parameters (often by maximum likelihood). For continuous data, that is *parametric density estimation*.\n\n**Nonparametric density estimation** estimates the distribution **without assuming a parametric form** — a \"smoothing\" of the observed data that lets the data define the shape.\n\nA **histogram** is the simplest nonparametric density estimator. But it has real limitations: the **arbitrariness of the binning** (where do bin edges go?) and its **discontinuous, jagged** nature, when the underlying density is usually assumed smooth. Smooth estimators also have statistical efficiency advantages." },
 

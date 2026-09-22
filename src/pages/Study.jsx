@@ -1,4 +1,4 @@
-import { BookOpen, Table2, GraduationCap, ArrowRight, CheckCircle2, Clock3 } from "lucide-react";
+import { BookOpen, Table2, GraduationCap, ArrowRight, CheckCircle2, Clock3, Trophy } from "lucide-react";
 import { FINANCE_MODULES } from "@/data/finance/modules1";
 import { FINANCE_MODULES_2 } from "@/data/finance/modules2";
 import { PANDAS_MODULES } from "@/data/finance/pandas";
@@ -15,7 +15,7 @@ export const ALL_MODULES = [...FINANCE, ...PANDAS_MODULES];
 
 export function moduleById(id) { return ALL_MODULES.find((m) => m.id === id); }
 
-function ModuleRow({ m, done, checks }) {
+function ModuleRow({ m, done, quiz, checks }) {
   return (
     <a
       href={`#/lesson?id=${m.id}`}
@@ -24,20 +24,26 @@ function ModuleRow({ m, done, checks }) {
     >
       <span className={cn(
         "grid place-items-center size-8 shrink-0 rounded-md label-mono mt-0.5",
-        done ? "bg-emerald-soft text-emerald-deep" : "bg-blue-tint text-blue",
+        quiz?.passed ? "bg-emerald text-white"
+          : done ? "bg-emerald-soft text-emerald-deep"
+          : "bg-blue-tint text-blue",
       )}>
-        {done ? <CheckCircle2 className="size-4" /> : m.id.toUpperCase().replace(/[^0-9]/g, "")}
+        {quiz?.passed ? <Trophy className="size-4" /> : done ? <CheckCircle2 className="size-4" /> : m.id.toUpperCase().replace(/[^0-9]/g, "")}
       </span>
       <span className="min-w-0 flex-1">
         <span className="block text-[14.5px] font-semibold leading-snug">{m.title}</span>
         <span className="block text-[12.5px] text-muted-foreground mt-0.5 leading-relaxed">{m.summary}</span>
-        <span className="flex items-center gap-3 mt-1.5">
+        <span className="flex items-center gap-3 mt-1.5 flex-wrap">
           <span className="label-mono text-muted-foreground">{m.part}</span>
           <span className="flex items-center gap-1 label-mono text-muted-foreground">
             <Clock3 className="size-3" /> {m.minutes} min
           </span>
-          {checks > 0 && (
-            <span className="label-mono text-muted-foreground">{checks} self-check{checks > 1 ? "s" : ""}</span>
+          {quiz?.passed ? (
+            <span className="label-mono text-emerald-deep">quiz passed</span>
+          ) : quiz ? (
+            <span className="label-mono text-amber">quiz {quiz.best}/5 — retake</span>
+          ) : (
+            <span className="label-mono text-muted-foreground">quiz not taken</span>
           )}
         </span>
       </span>
@@ -49,9 +55,10 @@ function ModuleRow({ m, done, checks }) {
 export default function Study() {
   const progress = useProgress();
   const seen = progress.lessons || {};
+  const quizzes = progress.quizzes || {};
 
-  const financeDone = FINANCE.filter((m) => seen[m.id]).length;
-  const pandasDone = PANDAS_MODULES.filter((m) => seen[m.id]).length;
+  const financeDone = FINANCE.filter((m) => quizzes[m.id]?.passed).length;
+  const pandasDone = PANDAS_MODULES.filter((m) => quizzes[m.id]?.passed).length;
   const best = progress.examBest;
 
   const countChecks = (m) => m.blocks.filter((b) => b.kind === "check").length;
@@ -123,13 +130,13 @@ export default function Study() {
             </Badge>
           </div>
           <span className="text-[12px] text-muted-foreground tabular-nums">
-            {financeDone} / {FINANCE.length} read
+            {financeDone} / {FINANCE.length} quizzes passed
           </span>
         </div>
         <Bar pct={Math.round(financeDone / FINANCE.length * 100)} className="rounded-none" />
         <div className="divide-y">
           {FINANCE.map((m) => (
-            <ModuleRow key={m.id} m={m} done={!!seen[m.id]} checks={countChecks(m)} />
+            <ModuleRow key={m.id} m={m} done={!!seen[m.id]} quiz={quizzes[m.id]} checks={countChecks(m)} />
           ))}
         </div>
       </Panel>
@@ -145,13 +152,13 @@ export default function Study() {
             </Badge>
           </div>
           <span className="text-[12px] text-muted-foreground tabular-nums">
-            {pandasDone} / {PANDAS_MODULES.length} read
+            {pandasDone} / {PANDAS_MODULES.length} quizzes passed
           </span>
         </div>
         <Bar pct={Math.round(pandasDone / PANDAS_MODULES.length * 100)} className="rounded-none" />
         <div className="divide-y">
           {PANDAS_MODULES.map((m) => (
-            <ModuleRow key={m.id} m={m} done={!!seen[m.id]} checks={countChecks(m)} />
+            <ModuleRow key={m.id} m={m} done={!!seen[m.id]} quiz={quizzes[m.id]} checks={countChecks(m)} />
           ))}
         </div>
       </Panel>

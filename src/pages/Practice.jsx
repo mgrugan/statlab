@@ -4,9 +4,9 @@ import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { APPLIED } from "@/data/applied";
-import { checkApplied, LANG_META } from "@/lib/quiz";
+import { checkApplied, LANG_META, groupedTopics } from "@/lib/quiz";
 import { record, statusOf, useProgress, xpValue } from "@/lib/progress";
-import { useSectionState, applyFilters } from "@/lib/sectionState";
+import { useSectionState, applyFilters, groupCounts } from "@/lib/sectionState";
 import {
   LangChip, DiffChip, SolvedChip, MdLite, Toolbar, EmptyState,
   Panel, SectionLabel, CodeFrame,
@@ -25,14 +25,15 @@ export default function Practice({ jumpTo }) {
   const [bottomTab, setBottomTab] = useState("console");
   const [lastGraded, setLastGraded] = useState(null);
 
-  const topics = useMemo(() => [...new Set(APPLIED.map((q) => q.topic))].sort(), []);
+  const grouped = useMemo(() => groupedTopics(APPLIED), []);
+  const counts = useMemo(() => groupCounts(APPLIED), []);
   const list = applyFilters(APPLIED, filters, (id) => statusOf(progress, id));
   const q = list[idx < list.length ? idx : 0];
 
   /* deep link (#/practice?q=ap12) from the dashboard challenge card */
   useEffect(() => {
     if (!jumpTo) return;
-    const cleared = { lang: "all", topic: "all", diff: "all", status: "all" };
+    const cleared = { group: "all", lang: "all", topic: "all", diff: "all", status: "all" };
     const i = APPLIED.findIndex((x) => x.id === jumpTo);
     if (i >= 0) update({ filters: cleared, idx: i });
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -85,7 +86,8 @@ export default function Practice({ jumpTo }) {
       <Toolbar
         filters={filters}
         setFilters={(f) => { update({ filters: f, idx: 0 }); resetCard(); }}
-        topics={topics}
+        grouped={grouped}
+        counts={counts}
         langs={LANG_OPTIONS}
         pos={idx < list.length ? idx : 0}
         total={list.length}

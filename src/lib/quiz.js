@@ -46,3 +46,45 @@ export function langCounts(bank) {
   bank.forEach((q) => c[q.lang]++);
   return c;
 }
+
+/* ---------------------------------------------------------------
+   Topic groups. The raw topic list runs to ~60 entries, which makes a
+   flat dropdown useless — so topics are bucketed, and the UI offers the
+   buckets as one-click chips with the dropdown narrowed to the bucket.
+   `test` is checked in order; first match wins.
+   --------------------------------------------------------------- */
+export const TOPIC_GROUPS = [
+  { id: "finance", label: "Stat Finance", note: "this class" },
+  { id: "wrangle", label: "Data Wrangling",
+    test: /dplyr|pandas|reshap|join|merg|select|sort|group|transform|clean|missing|i\/o|date|combin|inspect|frame|explor|factor|row-wise|summary statistics|pipelines/i },
+  { id: "stats", label: "Statistics",
+    test: /hypothesis|regression|anova|correlation|pca|bootstrap|permutation|monte|simulation|statistics|time series|numerical|machine learning/i },
+  { id: "prog", label: "Programming",
+    test: /core|function|apply|vector|list|index|string|regex|debug|test|error|numpy|import|setup/i },
+  { id: "viz", label: "Visualization",
+    test: /visual|plotting/i },
+  { id: "sql", label: "SQL",
+    test: /^sql$/i },
+];
+
+export function groupOf(topic) {
+  if (/^Finance:/i.test(topic)) return "finance";
+  // check the most specific buckets first
+  for (const id of ["sql", "viz", "stats", "wrangle", "prog"]) {
+    const g = TOPIC_GROUPS.find((x) => x.id === id);
+    if (g?.test?.test(topic)) return id;
+  }
+  return "prog";
+}
+
+/* topics present in a bank, bucketed by group and sorted */
+export function groupedTopics(bank) {
+  const out = {};
+  bank.forEach((q) => {
+    const g = groupOf(q.topic);
+    (out[g] = out[g] || new Set()).add(q.topic);
+  });
+  return Object.fromEntries(
+    Object.entries(out).map(([g, set]) => [g, [...set].sort()]),
+  );
+}

@@ -34,7 +34,7 @@ export function todayKey(d = new Date()) {
 }
 
 function emptyState() {
-  return { answers: {}, xp: 0, attempts: 0, correct: 0, days: {}, log: [], lessons: {}, examBest: null };
+  return { answers: {}, xp: 0, attempts: 0, correct: 0, days: {}, log: [], lessons: {}, examBest: null, quizzes: {} };
 }
 
 function migrateV1() {
@@ -113,6 +113,32 @@ export function markLessonRead(id) {
     xp: cache.xp + 15,
     days: { ...cache.days, [day]: (cache.days[day] || 0) + 1 },
     log: [{ t: Date.now(), kind: "lesson", qid: id, xp: 15 }, ...cache.log].slice(0, 40),
+  });
+}
+
+/* Record a module quiz attempt. Passing requires a perfect score; once
+   passed, the module stays passed. XP is awarded only on the first pass. */
+export function recordQuiz(moduleId, score, total) {
+  const prev = cache.quizzes?.[moduleId];
+  const nowPassed = score === total;
+  const firstPass = nowPassed && !prev?.passed;
+  const day = todayKey();
+  commit({
+    ...cache,
+    quizzes: {
+      ...(cache.quizzes || {}),
+      [moduleId]: {
+        passed: prev?.passed || nowPassed,
+        best: Math.max(prev?.best || 0, score),
+        attempts: (prev?.attempts || 0) + 1,
+        t: Date.now(),
+      },
+    },
+    xp: cache.xp + (firstPass ? 50 : 0),
+    days: { ...cache.days, [day]: (cache.days[day] || 0) + 1 },
+    log: firstPass
+      ? [{ t: Date.now(), kind: "quiz", qid: moduleId, xp: 50 }, ...cache.log].slice(0, 40)
+      : cache.log,
   });
 }
 

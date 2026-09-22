@@ -3,9 +3,9 @@ import { Flame, Lightbulb, RotateCcw } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { DRILLS } from "@/data/drills";
-import { checkDrill, LANG_META } from "@/lib/quiz";
+import { checkDrill, LANG_META, groupedTopics } from "@/lib/quiz";
 import { record, statusOf, useProgress, questionMeta, xpValue } from "@/lib/progress";
-import { useSectionState, applyFilters } from "@/lib/sectionState";
+import { useSectionState, applyFilters, groupCounts } from "@/lib/sectionState";
 import {
   LangChip, DiffChip, SolvedChip, MdLite, Toolbar, EmptyState,
   Panel, Bar, SectionLabel,
@@ -26,7 +26,8 @@ export default function Learn() {
   const [lastGraded, setLastGraded] = useState(null);
   const inputRef = useRef(null);
 
-  const topics = useMemo(() => [...new Set(DRILLS.map((q) => q.topic))].sort(), []);
+  const grouped = useMemo(() => groupedTopics(DRILLS), []);
+  const counts = useMemo(() => groupCounts(DRILLS), []);
   const list = applyFilters(DRILLS, filters, (id) => statusOf(progress, id));
   const q = list[idx < list.length ? idx : 0];
 
@@ -92,7 +93,8 @@ export default function Learn() {
       <Toolbar
         filters={filters}
         setFilters={(f) => { update({ filters: f, idx: 0 }); resetCard(); }}
-        topics={topics}
+        grouped={grouped}
+        counts={counts}
         langs={LANG_OPTIONS}
         pos={idx < list.length ? idx : 0}
         total={list.length}

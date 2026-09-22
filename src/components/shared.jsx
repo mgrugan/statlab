@@ -1,10 +1,11 @@
 import { Badge } from "@/components/ui/badge";
 import {
-  Select, SelectContent, SelectItem, SelectTrigger, SelectValue,
+  Select, SelectContent, SelectGroup, SelectItem, SelectLabel,
+  SelectTrigger, SelectValue,
 } from "@/components/ui/select";
 import { Button } from "@/components/ui/button";
-import { CheckCircle2 } from "lucide-react";
-import { LANG_META, mdlite } from "@/lib/quiz";
+import { CheckCircle2, GraduationCap } from "lucide-react";
+import { LANG_META, mdlite, TOPIC_GROUPS } from "@/lib/quiz";
 import { cn } from "@/lib/utils";
 
 /* StatCode badge style: rectangular-ish, tinted background, mono label */
@@ -104,21 +105,82 @@ function FilterSelect({ value, onChange, options, width = "w-[150px]" }) {
   );
 }
 
-export function Toolbar({ filters, setFilters, topics, langs, pos, total, onRandom }) {
-  const set = (k) => (v) => setFilters({ ...filters, [k]: v });
+/* Topic dropdown, grouped under headers so a ~60-entry list stays usable.
+   When a group chip is active the list is narrowed to that group. */
+function TopicSelect({ value, onChange, grouped, group }) {
+  const groups = TOPIC_GROUPS.filter((g) => grouped[g.id]?.length &&
+    (group === "all" || g.id === group));
+  const total = groups.reduce((s, g) => s + grouped[g.id].length, 0);
   return (
-    <div className="flex flex-wrap items-center gap-2 mb-5">
-      <FilterSelect value={filters.lang} onChange={set("lang")} options={langs} width="w-[130px]" />
-      <FilterSelect value={filters.topic} onChange={set("topic")} options={[["all", "All topics"], ...topics.map((t) => [t, t])]} width="w-[180px]" />
-      <FilterSelect value={filters.diff} onChange={set("diff")} options={DIFF_OPTIONS} width="w-[140px]" />
-      <FilterSelect value={filters.status} onChange={set("status")} options={STATUS_OPTIONS} width="w-[120px]" />
-      <Button variant="outline" size="sm" className="rounded-md bg-card text-blue" onClick={onRandom}>
-        Random
-      </Button>
-      <span className="flex-1" />
-      <span className="label-mono text-muted-foreground tabular-nums" data-pos>
-        {total ? `${pos + 1} / ${total}` : "0 matches"}
-      </span>
+    <Select value={value} onValueChange={onChange}>
+      <SelectTrigger size="sm" className="bg-card rounded-md text-[13px] font-medium w-[190px]">
+        <SelectValue />
+      </SelectTrigger>
+      <SelectContent className="max-h-[360px]">
+        <SelectItem value="all">All topics ({total})</SelectItem>
+        {groups.map((g) => (
+          <SelectGroup key={g.id}>
+            <SelectLabel className="label-mono text-muted-foreground">{g.label}</SelectLabel>
+            {grouped[g.id].map((t) => (
+              <SelectItem key={t} value={t}>{t.replace(/^Finance: /, "")}</SelectItem>
+            ))}
+          </SelectGroup>
+        ))}
+      </SelectContent>
+    </Select>
+  );
+}
+
+export function Toolbar({ filters, setFilters, grouped, counts, langs, pos, total, onRandom }) {
+  const set = (k) => (v) => setFilters({ ...filters, [k]: v });
+  const chips = [{ id: "all", label: "All" },
+    ...TOPIC_GROUPS.filter((g) => counts[g.id] > 0)];
+
+  return (
+    <div className="mb-5">
+      {/* group chips — the primary cut, including "this class" */}
+      <div className="flex flex-wrap items-center gap-1.5 mb-2.5">
+        {chips.map((g) => {
+          const active = filters.group === g.id;
+          const isFinance = g.id === "finance";
+          return (
+            <button
+              key={g.id}
+              data-group={g.id}
+              onClick={() => setFilters({ ...filters, group: g.id, topic: "all" })}
+              className={cn(
+                "px-3 py-1.5 rounded-md text-[13px] font-medium transition-colors duration-150 flex items-center gap-1.5",
+                active && isFinance && "bg-emerald text-white",
+                active && !isFinance && "bg-slate-deep text-white",
+                !active && "bg-card border text-muted-foreground hover:text-foreground hover:bg-muted",
+              )}
+            >
+              {isFinance && <GraduationCap className="size-3.5" />}
+              {g.label}
+              {g.id !== "all" && (
+                <span className={cn("label-mono", active ? "opacity-70" : "text-muted-foreground/70")}>
+                  {counts[g.id]}
+                </span>
+              )}
+            </button>
+          );
+        })}
+      </div>
+
+      {/* secondary filters */}
+      <div className="flex flex-wrap items-center gap-2">
+        <TopicSelect value={filters.topic} onChange={set("topic")} grouped={grouped} group={filters.group} />
+        <FilterSelect value={filters.lang} onChange={set("lang")} options={langs} width="w-[132px]" />
+        <FilterSelect value={filters.diff} onChange={set("diff")} options={DIFF_OPTIONS} width="w-[138px]" />
+        <FilterSelect value={filters.status} onChange={set("status")} options={STATUS_OPTIONS} width="w-[122px]" />
+        <Button variant="outline" size="sm" className="rounded-md bg-card text-blue" onClick={onRandom}>
+          Random
+        </Button>
+        <span className="flex-1" />
+        <span className="label-mono text-muted-foreground tabular-nums" data-pos>
+          {total ? `${pos + 1} / ${total}` : "0 matches"}
+        </span>
+      </div>
     </div>
   );
 }

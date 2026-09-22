@@ -13,6 +13,9 @@ export const PANDAS_MODULES = [
   minutes: 10,
   summary: "The two data structures everything else is built on, and how to create them from scratch.",
   blocks: [
+    { kind: "plain", title: "Start here: what is pandas for?",
+      body: "A spreadsheet has rows, columns, and headers. **pandas is that, for Python** \u2014 with the ability to run code over it.\n\nWhy you need it in this course: `yfinance` hands you price data *as a pandas object*, and `statsmodels` and `arch` expect one back. pandas is the connective tissue between \"download prices\" and \"fit a GARCH model.\" Every lecture example passes through it.\n\nThere are exactly two objects to learn. A **Series** is one column. A **DataFrame** is a whole table. That's the entire mental model." },
+
     { kind: "idea", title: "Why pandas",
       body: "pandas is the open-source library for **analysing and manipulating data** in Python. In this course it is the layer between raw price data and every statistical routine you call — `yfinance` hands you a pandas object, and `statsmodels`/`arch` expect one back.\n\nThere are two core datatypes:\n\n• **Series** — a **1-dimensional** labelled array (one column of data).\n• **DataFrame** — a **2-dimensional** labelled table (rows × columns). A DataFrame is essentially a dict of Series sharing an index." },
 

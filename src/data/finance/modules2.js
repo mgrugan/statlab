@@ -10,6 +10,9 @@ export const FINANCE_MODULES_2 = [
   minutes: 20,
   summary: "The rest of the normality toolkit: normal probability plots, the moment-based shape measures, Jarque-Bera and Shapiro-Wilk.",
   blocks: [
+    { kind: "plain", title: "What is a quantile, and what is a p-value?",
+      body: "Two bits of vocabulary this module leans on constantly.\n\n**Quantile / percentile.** The 90th percentile is the value that 90% of the data falls below. \"Quantile\" is the same idea on a 0-to-1 scale. Sorting your data smallest-to-largest gives you the **order statistics**, written $x_{(1)}\\le x_{(2)}\\le\\cdots$ \u2014 and those sorted values *are* the sample quantiles. A **QQ plot** just graphs your sorted data against the sorted values a normal distribution would have produced. Same shape \u27f9 straight line.\n\n**p-value.** Suppose the boring explanation is true (the data really are normal). The p-value is the probability of seeing data at least as weird as yours. **Small p-value = your data would be surprising if the boring explanation were true**, so you reject it. A large p-value means: nothing surprising here, which is *not* the same as proving the boring explanation right." },
+
     { kind: "idea", title: "Normal probability plots",
       body: "A **normal probability plot** compares a **sorted** sample against the percentiles of the **standard normal** distribution. The sorted values $x_{(1)}\\le x_{(2)}\\le\\cdots\\le x_{(n)}$ are the **order statistics**.\n\nIf the sample was drawn from a normal distribution, the plot shows (approximately) a **straight line**. It is a special case of a **quantile-quantile (QQ) plot**." },
 
@@ -40,6 +43,9 @@ plt.show()`,
       tex: ["\\widehat\\gamma_1=\\frac{m_3}{m_2^{3/2}}\\qquad\\text{and}\\qquad \\widehat\\gamma_2=\\frac{m_4}{m_2^{2}}"],
       after: "Note $m_2^{3/2}=\\widehat\\sigma^3$ and $m_2^2=\\widehat\\sigma^4$ — the sample formulas mirror the population ones exactly. These are **biased** estimators, i.e. $\\E(\\widehat\\gamma_1)\\ne\\gamma_1$; unbiased versions apply correction factors.\n\nIn Python: `scipy.stats.skew` and `scipy.stats.kurtosis`, with `bias=False` for the unbiased versions." },
 
+    { kind: "plain", title: "Skewness and kurtosis, without the formulas",
+      body: "Both are just numbers summarizing the *shape* of a distribution.\n\n**Skewness** = lopsidedness. Zero means symmetric. Positive means a longer tail to the right.\n\n**Kurtosis** = how much lives in the tails. The benchmark is the normal distribution, which scores exactly **3**. Higher than 3 means **fatter tails** \u2014 extreme events happen more often than a bell curve predicts. Lower than 3 means thinner tails.\n\nFinancial returns are famously high-kurtosis. Crashes and melt-ups happen far more often than the normal distribution says they should, which is precisely the finding of this Part.\n\nThe test on the next card is simply: *measure both numbers, and check how far they sit from (0, 3).*" },
+
     { kind: "math", title: "The Jarque-Bera test",
       body: "A formal hypothesis test for normality built from exactly those two numbers:",
       tex: ["T=\\frac{n}{6}\\left(\\widehat\\gamma_1^{\\,2}+\\frac{(\\widehat\\gamma_2-3)^2}{4}\\right)"],
@@ -69,6 +75,9 @@ plt.show()`,
   minutes: 18,
   summary: "Autocovariance, the three conditions for stationarity, what stationarity does and does not promise, and the three example models.",
   blocks: [
+    { kind: "plain", title: "What does \"stationary\" actually mean?",
+      body: "Forget the formal definition for a second.\n\nA series is **stationary** if it looks statistically *the same* no matter which stretch of it you examine. Chop out 2019 and chop out 2024, and the two chunks have the same average level, the same typical size of wiggle, and the same pattern of one day relating to the next.\n\nWhy anyone cares: **if the past and the future have the same statistical character, a model fit on history means something tomorrow.** If they don't, you're extrapolating from a world that no longer exists.\n\nStock *prices* are not stationary \u2014 a price near \\$10 in 2015 and near \\$400 today plainly don't share an average. Stock *returns* mostly are \u2014 daily percentage moves in 2015 look much like daily percentage moves today. That single fact is why this course studies returns rather than prices.\n\nOne more term: **covariance** measures whether two quantities move together. Positive means they rise and fall together, negative means one rises as the other falls, zero means no *linear* relationship. **Correlation** is covariance rescaled to sit between \u22121 and 1." },
+
     { kind: "idea", title: "From stochastic process to time series",
       body: "A **stochastic process** is a collection of random variables $\\{X_t(\\omega),\\ t\\in\\mathcal{T}\\}$ where $\\mathcal{T}$ is the **index space** and $\\omega$ is an outcome from the sample space $\\Omega$. Brownian motion was one, with $\\mathcal{T}$ the real line.\n\nA **realization** is the function $X_t(\\omega)$ of $t$ holding $\\omega$ fixed — a set of numbers indexed by $t$.\n\nA **time series** is a stochastic process for which $\\mathcal{T}$ is a set of points in time; technically $\\mathcal{T}=\\{0,\\pm1,\\pm2,\\dots\\}$, though in practice we observe only $t = 0,1,\\dots,n$.\n\nWhy do it: to **forecast** future values (or rather, to produce *predictive distributions* for them), and to **understand the generating process** — for simulation, or to see how variables correlate." },
 
@@ -140,6 +149,9 @@ for t in range(1, n):
   minutes: 18,
   summary: "How to test stationarity (ADF), how to measure serial dependence (ACF), and how to test it formally (Ljung-Box).",
   blocks: [
+    { kind: "plain", title: "What is a hypothesis test doing, and what is the ACF?",
+      body: "**Hypothesis tests only ever give you one kind of answer.** You set up a boring default ($H_0$) and an interesting claim ($H_1$), then ask: would my data be surprising if the boring default were true? If yes (small p-value), you have **strong evidence for the interesting claim**. If no, you learned nothing \u2014 you did *not* prove the default.\n\nThat asymmetry is why the direction of the test matters so much, and this module has two tests where students routinely get the direction backwards. Slow down on both.\n\n**The ACF** (autocorrelation function) answers: *how strongly does today relate to yesterday? to the day before? to a week ago?* One number per **lag**. Lag 0 is always 1 (today is perfectly correlated with itself). If the series has no memory, every other bar sits near zero." },
+
     { kind: "math", title: "The Dickey-Fuller test",
       body: "Hypothesis tests for stationarity are called **unit root tests**, because of the relationship between nonstationarity of autoregressive models and the presence of unit roots in a particular function.\n\nThe simplest version, the **Dickey-Fuller test**, is based on the AR(1) model",
       tex: ["Y_t=\\phi Y_{t-1}+\\epsilon_t"],
@@ -171,6 +183,9 @@ for key, value in result[4].items():
 
     { kind: "key", title: "The headline empirical result",
       body: "Applied to Amgen data:\n\n• **Raw price series $\\{P_t\\}$**: ADF p-value $\\approx 0.95$. We **cannot** claim evidence the data came from a stationary series.\n• **Log daily returns**: ADF p-value $\\approx 2.8\\times10^{-30}$. **Strong evidence** the log returns are drawn from a stationary model.\n\n**You will see this result with any stock series.**\n\n**Why should we have guessed prices aren't stationary?** Stationarity implies **mean reversion** in prices — which would imply a simple way to make money (buy when below the long-run mean, sell when above). We know that is impossible, so prices can't be stationary." },
+
+    { kind: "plain", title: "Reading an ACF plot",
+      body: "An ACF plot is a row of vertical bars, one per **lag**.\n\n\u2022 **Lag 0** is always exactly 1 and carries no information \u2014 today equals today.\n\u2022 **Lag 1** asks how strongly today relates to yesterday, lag 2 to two days ago, and so on.\n\u2022 The **shaded band** is a rough \"nothing to see here\" zone. Bars inside it are consistent with zero correlation; bars poking outside suggest real structure.\n\nWith 20 lags plotted you should *expect* roughly one bar to poke out by chance, so don't over-read a single excursion.\n\nShapes worth recognizing: bars decaying smoothly from a positive value \u27f9 positive AR coefficient. Bars alternating positive/negative \u27f9 negative AR coefficient. Everything inside the band \u27f9 no linear memory." },
 
     { kind: "math", title: "The autocorrelation function",
       body: "For a stationary process, the **ACF** is the standardized ACVF:",
@@ -221,6 +236,9 @@ plt.show()`,
   minutes: 18,
   summary: "What σ really means, why volatility raises option value, realized/annualized volatility, and how to diagnose clustering.",
   blocks: [
+    { kind: "plain", title: "What is volatility?",
+      body: "**Volatility is just how much the price jumps around** \u2014 the standard deviation of returns. High volatility means big daily swings in both directions; low volatility means the price drifts quietly.\n\nTwo things about it drive this whole Part:\n\n\u2022 **It is quoted annually, but measured daily.** You compute the SD of daily returns, then scale up to a year. The scaling factor is $\\sqrt{252}$, not 252, because *variances* add over time while standard deviations grow like the square root. (252 = trading days in a year.)\n\u2022 **It is not constant.** Real markets have calm months and violent months, and the violent ones come in clumps. That clumping is called **volatility clustering**, and the lognormal model of Part 1 flatly fails to produce it. Diagnosing that failure is the job of this module; fixing it is the job of the next one." },
+
     { kind: "idea", title: "What volatility is",
       body: "**Volatility** (\"vol\") refers to the **variability in log returns** — and hence in prices. Increases in price volatility can be caused by unexpected economic news, changes in interest rates, geopolitical tensions, earnings surprises, or shifts in investor sentiment producing rapid buying or selling." },
 
@@ -285,6 +303,9 @@ RVrollwind = ldrEq.rolling(windowsize).std().dropna() * np.sqrt(252)`,
   minutes: 22,
   summary: "Conditional variance models: ARCH(1), ARCH(p), GARCH(p,q), their stationarity conditions, fitting with the arch package, and AIC.",
   blocks: [
+    { kind: "plain", title: "What is conditional variance?",
+      body: "Here is the one idea this whole module rests on.\n\n**Unconditional variance** is the spread of returns over the whole history \u2014 one number, computed once. **Conditional variance** is the spread you'd expect *tomorrow specifically*, given everything you've seen up to today.\n\nThey are different, and the gap matters. Over ten years a stock might have 30% annualized volatility (unconditional). But if the last week has been chaotic, tomorrow's expected volatility is much higher than 30% (conditional). The market has *memory* about turbulence.\n\nEvery model so far let the **mean** depend on the past while holding the variance fixed. ARCH and GARCH flip that: the mean is fixed (usually zero) and the **variance** depends on the past. That is what \"conditionally heteroskedastic\" means \u2014 *heteroskedastic* just means \"non-constant variance,\" and *conditionally* means \"given what we've seen so far.\"\n\nThe trick they use: predict tomorrow's variance from **recent squared returns**. Squaring throws away the direction of a move and keeps only its size \u2014 and size is exactly what variance is about." },
+
     { kind: "math", title: "Conditional mean and conditional variance",
       body: "For a time series $\\{X_t\\}$, define",
       tex: ["\\mu_t=\\E\\big(X_t\\mid\\mathcal{F}_{t-1}\\big),\\qquad \\sigma_t^2=\\Var\\big(X_t\\mid\\mathcal{F}_{t-1}\\big)"],
@@ -348,6 +369,9 @@ model   = arch_model(ldrEq, vol='GARCH', p=1, q=1, rescale=True, mean="Zero")
 results = model.fit()`,
       after: "**Arguments that matter:** `p` (and `q`) set the order; `mean=\"Zero\"` assumes a mean of zero in the fit; `rescale=True` scales the series to improve **numerical performance** — without it you may see a warning, since log returns are relatively small values." },
 
+    { kind: "plain", title: "What is AIC, and what is maximum likelihood?",
+      body: "**Maximum likelihood** is how these models get fit. Among all possible parameter values, pick the ones that make the data you actually observed most probable. That's it.\n\n**AIC** is how you choose between models. Here is the problem it solves: a model with more parameters will *always* fit the training data better, so \"better fit\" alone would always pick the biggest model \u2014 which then fails on new data.\n\nAIC scores a model as\n\n$$\\text{AIC}=\\underbrace{-2\\log(\\text{likelihood})}_{\\text{how well it fits}}+\\underbrace{2(\\#\\text{ parameters})}_{\\text{fine for complexity}}$$\n\nA better fit pushes the first term down; every extra parameter pushes the second term up. **Lower AIC wins.** The absolute value is meaningless \u2014 only differences between models fit to the *same data* matter." },
+
     { kind: "math", title: "Reading the output, and AIC",
       body: "A fitted ARCH(2) on AMGN log returns gives $\\widehat\\omega=0.0798$ (SE 0.009399), $\\widehat\\alpha_1=0.1129$, $\\widehat\\alpha_2=0.1871$. The summary reports, for each parameter,",
       tex: ["t=\\frac{\\widehat\\theta}{\\text{SE}(\\widehat\\theta)}"],
@@ -374,6 +398,9 @@ results = model.fit()`,
   minutes: 16,
   summary: "Continuous compounding, the five Black-Scholes inputs, moneyness, implied volatility, and the asymmetry ARCH/GARCH can't capture.",
   blocks: [
+    { kind: "plain", title: "What is compounding, and what is moneyness?",
+      body: "**Compounding.** Put \\$100 in an account at 5% a year. Paid once a year you have \\$105. Paid monthly, each month earns interest on the previous month's interest, so you end slightly ahead. Pay it *continuously* \u2014 infinitely often \u2014 and the limit is $100\\,e^{0.05}$. That is **continuous compounding**, and it is why $e$ shows up everywhere in finance. Running it backwards (what is a future dollar worth today?) is **discounting**.\n\n**Moneyness** answers: if this option expired right now, would it pay anything? A call lets you buy at the strike $K$. If the stock is already *above* $K$, exercising is profitable \u2014 the option is **in the money**. Below $K$, worthless today \u2014 **out of the money**. Right at $K$ \u2014 **at the money**. For a put, which lets you *sell* at $K$, everything flips.\n\nThe formula packages this as $M=\\log(P_0/K)$, which is just positive when $P_0>K$ and negative when $P_0<K$." },
+
     { kind: "math", title: "Continuous compounding",
       body: "Interest rates are quoted in annual terms — but *how often is the interest compounded?*\n\nCompounded once per year: $P_1=P_0(1+r)$. Compounded $n$ times per year: $P_1=P_0\\big(1+r/n\\big)^n$. Let $n\\to\\infty$:",
       tex: ["\\lim_{n\\to\\infty}\\left(1+\\frac{r}{n}\\right)^{n}=e^{r}"],

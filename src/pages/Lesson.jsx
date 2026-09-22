@@ -1,16 +1,19 @@
 import { useEffect, useState } from "react";
 import {
   Lightbulb, Sigma, Code2, AlertTriangle, KeyRound, HelpCircle,
-  ArrowLeft, ArrowRight, CheckCircle2, XCircle,
+  ArrowLeft, ArrowRight, CheckCircle2, XCircle, MessageCircle,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Panel, SectionLabel, CodeFrame } from "@/components/shared";
 import { Rich, TeX } from "@/components/Math";
+import { Diagram } from "@/components/Diagram";
+import ModuleQuiz from "@/components/ModuleQuiz";
 import { markLessonRead, useProgress } from "@/lib/progress";
 import { ALL_MODULES, moduleById } from "@/pages/Study";
 import { cn } from "@/lib/utils";
 
 const KIND_META = {
+  plain: { icon: MessageCircle, label: "In plain English", tone: "text-emerald-deep bg-emerald-soft" },
   idea: { icon: Lightbulb, label: "Intuition", tone: "text-amber bg-amber-soft" },
   math: { icon: Sigma, label: "The math", tone: "text-blue bg-blue-tint" },
   code: { icon: Code2, label: "Code", tone: "text-emerald-deep bg-emerald-soft" },
@@ -116,6 +119,8 @@ function Block({ block, idx }) {
             <div key={i} className="my-3 py-2 overflow-x-auto"><TeX block>{t}</TeX></div>
           ))}
 
+          {block.diagram && <Diagram name={block.diagram} />}
+
           {block.list && (
             <ol className="mt-3 grid gap-2 list-decimal ml-5 text-[14.5px] leading-relaxed max-w-[74ch]">
               {block.list.map((li, i) => <li key={i} className="pl-1"><Rich text={li} /></li>)}
@@ -165,6 +170,12 @@ export default function Lesson({ id }) {
       <div className="grid gap-4">
         {m.blocks.map((b, i) => <Block key={i} block={b} idx={i} />)}
       </div>
+
+      <ModuleQuiz
+        moduleId={m.id}
+        nextHref={next ? `#/lesson?id=${next.id}` : "#/exam"}
+        nextLabel={next ? "Next module" : "Practice midterm"}
+      />
 
       <div className="flex items-center justify-between gap-3 mt-8 pt-5 border-t">
         {prev ? (
