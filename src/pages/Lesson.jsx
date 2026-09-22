@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import {
   Lightbulb, Sigma, Code2, AlertTriangle, KeyRound, HelpCircle,
   ArrowLeft, ArrowRight, CheckCircle2, XCircle, MessageCircle,
+  ScrollText, Telescope, ChevronDown,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Panel, SectionLabel, CodeFrame } from "@/components/shared";
@@ -16,6 +17,8 @@ const KIND_META = {
   plain: { icon: MessageCircle, label: "In plain English", tone: "text-emerald-deep bg-emerald-soft" },
   idea: { icon: Lightbulb, label: "Intuition", tone: "text-amber bg-amber-soft" },
   math: { icon: Sigma, label: "The math", tone: "text-blue bg-blue-tint" },
+  proof: { icon: ScrollText, label: "Derivation", tone: "text-blue bg-blue-tint" },
+  decode: { icon: Telescope, label: "What the formula tells you", tone: "text-amber bg-amber-soft" },
   code: { icon: Code2, label: "Code", tone: "text-emerald-deep bg-emerald-soft" },
   trap: { icon: AlertTriangle, label: "Exam trap", tone: "text-destructive bg-[#ffdad6]" },
   key: { icon: KeyRound, label: "Key takeaway", tone: "text-slate-deep bg-muted" },
@@ -93,6 +96,80 @@ function Steps({ steps }) {
   );
 }
 
+/* ---- a formula taken apart piece by piece ----
+   The point is not the algebra but the reading: each row says what one piece
+   of the expression is actually measuring, and the closing line reads the
+   whole thing back as an English sentence. */
+function Decode({ block }) {
+  return (
+    <>
+      {block.formula && (
+        <div className="my-4 py-3 px-3 rounded-lg bg-amber-soft/40 border border-amber/25 overflow-x-auto">
+          <TeX block>{block.formula}</TeX>
+        </div>
+      )}
+      <div className="border rounded-lg overflow-hidden my-3">
+        {block.parts.map(([tex, name, says], i) => (
+          <div key={i} className={cn("px-4 py-3", i > 0 && "border-t", i % 2 ? "bg-code-bg-light" : "bg-card")}>
+            <div className="flex flex-wrap items-baseline gap-x-3 gap-y-1">
+              <span className="overflow-x-auto max-w-full"><TeX>{tex}</TeX></span>
+              {/* no label-mono here: it uppercases, which mangles inline math */}
+              <span className="text-[12.5px] font-medium text-muted-foreground tracking-wide">
+                <Rich text={name} />
+              </span>
+            </div>
+            <div className="text-[13.5px] leading-relaxed text-foreground/85 mt-1.5 max-w-[70ch]">
+              <Rich text={says} />
+            </div>
+          </div>
+        ))}
+      </div>
+      {block.reading && (
+        <div className="mt-4 rounded-lg border-l-[3px] border-amber bg-amber-soft/50 px-4 py-3">
+          <div className="label-mono text-amber mb-1.5">Read it out loud</div>
+          <div className="text-[14.5px] leading-relaxed max-w-[70ch] whitespace-pre-line">
+            <Rich text={block.reading} />
+          </div>
+        </div>
+      )}
+    </>
+  );
+}
+
+/* ---- a derivation, folded away until asked for ----
+   The result and the one-line summary of the argument stay visible; the
+   algebra is opt-in, so the page reads as prose until you want the proof. */
+function Proof({ block, idx }) {
+  const [open, setOpen] = useState(false);
+  return (
+    <>
+      {block.claim && (
+        <div className="my-3 py-2 overflow-x-auto"><TeX block>{block.claim}</TeX></div>
+      )}
+      <button
+        onClick={() => setOpen((o) => !o)}
+        data-act="toggle-proof"
+        data-proof={idx}
+        aria-expanded={open}
+        className="flex items-center gap-2 text-[13.5px] font-medium text-blue hover:underline mt-1"
+      >
+        <ChevronDown className={cn("size-4 transition-transform duration-150", !open && "-rotate-90")} />
+        {open ? "Hide the derivation" : `Show the derivation (${block.steps.length} steps)`}
+      </button>
+      {open && (
+        <div className="animate-in fade-in duration-150">
+          {block.setup && (
+            <div className="text-[14.5px] leading-relaxed max-w-[74ch] mt-3 whitespace-pre-line">
+              <Rich text={block.setup} />
+            </div>
+          )}
+          <Steps steps={block.steps} />
+        </div>
+      )}
+    </>
+  );
+}
+
 function Block({ block, idx }) {
   const meta = KIND_META[block.kind];
   const Icon = meta.icon;
@@ -119,6 +196,9 @@ function Block({ block, idx }) {
             <div key={i} className="my-3 py-2 overflow-x-auto"><TeX block>{t}</TeX></div>
           ))}
 
+          {block.kind === "decode" && <Decode block={block} />}
+          {block.kind === "proof" && <Proof block={block} idx={idx} />}
+
           {block.diagram && <Diagram name={block.diagram} />}
 
           {block.list && (
@@ -127,7 +207,7 @@ function Block({ block, idx }) {
             </ol>
           )}
 
-          {block.steps && <Steps steps={block.steps} />}
+          {block.steps && block.kind !== "proof" && <Steps steps={block.steps} />}
 
           {block.code && (
             <CodeFrame filename={block.file || "python"} className="mt-4">

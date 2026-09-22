@@ -55,23 +55,36 @@ export function Rich({ text, className }) {
 /* Order matters: fences before inline code, $$…$$ before $…$, ** before *. */
 const TOKEN = /(```[\s\S]*?```|\$\$[^$]+\$\$|\$[^$]+\$|`[^`\n]+`|\*\*[^*]+\*\*|\*[^*\n]+\*)/g;
 
-function splitRich(text) {
+/* Prose is full of dollar *amounts*, written `\$100`. Those must not open a
+   math span — an odd number of them in one paragraph would pair up with the
+   next real `$` and swallow the text between. So escaped dollars are parked
+   under a sentinel for the duration of tokenizing and put back afterwards:
+   as a plain "$" in prose, as TeX's own "\$" inside math. */
+const ESC = "\u0000";
+/* math keeps TeX's own escape; bold/italic recurse through Rich, so they keep
+   the source form too and get unescaped on the next pass. */
+const KEEP_ESCAPED = new Set(["tex", "dtex", "bold", "em"]);
+
+function splitRich(raw) {
+  const text = raw.split("\\$").join(ESC);
   const out = [];
   let last = 0;
+  const push = (kind, value) =>
+    out.push({ kind, value: value.split(ESC).join(KEEP_ESCAPED.has(kind) ? "\\$" : "$") });
   for (const m of text.matchAll(TOKEN)) {
-    if (m.index > last) out.push({ kind: "text", value: text.slice(last, m.index) });
+    if (m.index > last) push("text", text.slice(last, m.index));
     const t = m[0];
     if (t.startsWith("```")) {
       // drop the fences and an optional language tag on the first line
-      out.push({ kind: "fence", value: t.slice(3, -3).replace(/^[a-zA-Z]*\n/, "").replace(/\n$/, "") });
+      push("fence", t.slice(3, -3).replace(/^[a-zA-Z]*\n/, "").replace(/\n$/, ""));
     }
-    else if (t.startsWith("$$")) out.push({ kind: "dtex", value: t.slice(2, -2) });
-    else if (t.startsWith("$")) out.push({ kind: "tex", value: t.slice(1, -1) });
-    else if (t.startsWith("`")) out.push({ kind: "code", value: t.slice(1, -1) });
-    else if (t.startsWith("**")) out.push({ kind: "bold", value: t.slice(2, -2) });
-    else out.push({ kind: "em", value: t.slice(1, -1) });
+    else if (t.startsWith("$$")) push("dtex", t.slice(2, -2));
+    else if (t.startsWith("$")) push("tex", t.slice(1, -1));
+    else if (t.startsWith("`")) push("code", t.slice(1, -1));
+    else if (t.startsWith("**")) push("bold", t.slice(2, -2));
+    else push("em", t.slice(1, -1));
     last = m.index + t.length;
   }
-  if (last < text.length) out.push({ kind: "text", value: text.slice(last) });
+  if (last < text.length) push("text", text.slice(last));
   return out;
 }
