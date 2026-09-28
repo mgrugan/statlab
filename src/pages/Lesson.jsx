@@ -248,15 +248,22 @@ export default function Lesson({ id }) {
         <p className="text-[14.5px] text-muted-foreground mt-2 leading-relaxed max-w-[70ch]">{m.summary}</p>
       </div>
 
+      {/* the film comes first: watch the whole module, then read it */}
+      <Explainer key={`v-${m.id}`} moduleId={m.id} />
+
+      <div className="flex items-center gap-3 my-6">
+        <span className="h-px flex-1 bg-border" />
+        <span className="label-mono text-muted-foreground">or read it</span>
+        <span className="h-px flex-1 bg-border" />
+      </div>
+
       <div className="grid gap-4 min-w-0">
         {m.blocks.map((b, i) => <Block key={i} block={b} idx={i} />)}
       </div>
 
-      {/* keyed so moving between lessons resets the player and the quiz —
-          without it React reuses the instance and carries playback position,
-          a graded quiz phase and stale picks into the next module */}
-      <Explainer key={`v-${m.id}`} moduleId={m.id} />
-
+      {/* keyed so moving between lessons resets the quiz — without it React
+          reuses the instance and carries a graded phase and stale picks into
+          the next module */}
       <ModuleQuiz
         key={`q-${m.id}`}
         moduleId={m.id}

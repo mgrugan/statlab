@@ -41,7 +41,7 @@ function ModuleRow({ m, done, quiz, checks }) {
           </span>
           {EXPLAINERS[m.id] && (
             <span className="flex items-center gap-1 label-mono text-blue">
-              <Film className="size-3" /> {Math.round(EXPLAINERS[m.id].duration)}s film
+              <Film className="size-3" /> {Math.floor(EXPLAINERS[m.id].duration / 60)} min film
             </span>
           )}
           {quiz?.passed ? (
