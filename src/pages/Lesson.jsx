@@ -8,6 +8,7 @@ import { Button } from "@/components/ui/button";
 import { Panel, SectionLabel, CodeFrame } from "@/components/shared";
 import { Rich, TeX } from "@/components/Math";
 import { Diagram } from "@/components/Diagram";
+import Explainer from "@/components/Explainer";
 import ModuleQuiz from "@/components/ModuleQuiz";
 import { markLessonRead, useProgress } from "@/lib/progress";
 import { ALL_MODULES, moduleById } from "@/pages/Study";
@@ -251,7 +252,13 @@ export default function Lesson({ id }) {
         {m.blocks.map((b, i) => <Block key={i} block={b} idx={i} />)}
       </div>
 
+      {/* keyed so moving between lessons resets the player and the quiz —
+          without it React reuses the instance and carries playback position,
+          a graded quiz phase and stale picks into the next module */}
+      <Explainer key={`v-${m.id}`} moduleId={m.id} />
+
       <ModuleQuiz
+        key={`q-${m.id}`}
         moduleId={m.id}
         nextHref={next ? `#/lesson?id=${next.id}` : "#/exam"}
         nextLabel={next ? "Next module" : "Practice midterm"}
