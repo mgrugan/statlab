@@ -187,7 +187,7 @@ export default function Explainer({ moduleId }) {
   const pct = duration ? (t / duration) * 100 : 0;
 
   return (
-    <Panel className="p-5 md:p-6 mt-6 overflow-hidden" data-explainer={moduleId}>
+    <Panel className="p-5 md:p-6 mt-6 min-w-0 overflow-hidden" data-explainer={moduleId}>
       <div className="flex items-center gap-2.5 mb-3">
         <span className="grid place-items-center size-7 rounded-md bg-slate-deep text-white">
           <Film className="size-3.5" strokeWidth={2} />
@@ -232,7 +232,7 @@ export default function Explainer({ moduleId }) {
       </div>
 
       {/* transport */}
-      <div className="flex items-center gap-3 mt-3">
+      <div className="flex flex-wrap items-center gap-x-3 gap-y-2 mt-3">
         <button
           onClick={toggle}
           data-act="toggle-explainer"
@@ -250,7 +250,7 @@ export default function Explainer({ moduleId }) {
           <RotateCcw className="size-4" />
         </button>
 
-        <div className="flex-1 min-w-0">
+        <div className="flex-1 order-last w-full min-w-[min(100%,220px)] sm:order-none sm:w-auto">
           <input
             type="range"
             min={0}

@@ -176,7 +176,7 @@ function Block({ block, idx }) {
   const Icon = meta.icon;
 
   return (
-    <Panel className="p-5 md:p-6" data-block={block.kind}>
+    <Panel className="p-5 md:p-6 min-w-0" data-block={block.kind}>
       <div className="flex items-center gap-2.5 mb-3">
         <span className={cn("grid place-items-center size-7 rounded-md", meta.tone)}>
           <Icon className="size-3.5" strokeWidth={2} />
@@ -237,7 +237,7 @@ export default function Lesson({ id }) {
   useEffect(() => { markLessonRead(m.id); }, [m.id]);
 
   return (
-    <div className="max-w-[860px]">
+    <div className="max-w-[860px] min-w-0">
       <a href="#/study" className="inline-flex items-center gap-1.5 text-[13px] font-medium text-blue hover:underline mb-4">
         <ArrowLeft className="size-3.5" /> All modules
       </a>
@@ -248,7 +248,7 @@ export default function Lesson({ id }) {
         <p className="text-[14.5px] text-muted-foreground mt-2 leading-relaxed max-w-[70ch]">{m.summary}</p>
       </div>
 
-      <div className="grid gap-4">
+      <div className="grid gap-4 min-w-0">
         {m.blocks.map((b, i) => <Block key={i} block={b} idx={i} />)}
       </div>
 
@@ -264,15 +264,15 @@ export default function Lesson({ id }) {
         nextLabel={next ? "Next module" : "Practice midterm"}
       />
 
-      <div className="flex items-center justify-between gap-3 mt-8 pt-5 border-t">
+      <div className="flex flex-wrap items-center justify-between gap-3 mt-8 pt-5 border-t">
         {prev ? (
           <Button asChild variant="outline" size="sm" className="rounded-md bg-card">
-            <a href={`#/lesson?id=${prev.id}`}><ArrowLeft className="size-3.5" /> {prev.title}</a>
+            <a href={`#/lesson?id=${prev.id}`} className="max-w-full"><ArrowLeft className="size-3.5 shrink-0" /> <span className="truncate">{prev.title}</span></a>
           </Button>
         ) : <span />}
         {next ? (
           <Button asChild size="sm" className="rounded-md bg-blue-bright hover:bg-blue ml-auto" data-act="next-lesson">
-            <a href={`#/lesson?id=${next.id}`}>{next.title} <ArrowRight className="size-3.5" /></a>
+            <a href={`#/lesson?id=${next.id}`} className="max-w-full"><span className="truncate">{next.title}</span> <ArrowRight className="size-3.5 shrink-0" /></a>
           </Button>
         ) : (
           <Button asChild size="sm" className="rounded-md bg-slate-deep hover:bg-navy ml-auto">
