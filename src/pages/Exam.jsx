@@ -1,16 +1,16 @@
 import { useEffect, useMemo, useRef, useState } from "react";
-import { Clock3, Flag, ArrowRight, RotateCcw, CheckCircle2, XCircle } from "lucide-react";
+import { Clock3, Flag, ArrowRight, RotateCcw, FileText, Trophy } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Panel, SectionLabel } from "@/components/shared";
 import { Rich } from "@/components/Math";
-import { EXAM, EXAM_META, EXAM_FIGURES } from "@/data/finance/exam";
+import { EXAMS, examById } from "@/data/finance/exams";
 import { moduleById } from "@/pages/Study";
 import { recordExam, useProgress } from "@/lib/progress";
 import { cn } from "@/lib/utils";
 
 /* ---------------- inline figures ---------------- */
-function Figure({ name }) {
-  const f = EXAM_FIGURES[name];
+function Figure({ name, figures }) {
+  const f = figures[name];
   if (!f) return null;
   return (
     <figure className="my-4 border rounded-lg bg-card p-3">
@@ -62,7 +62,7 @@ function fmt(secs) {
 }
 
 /* ---------------- question card ---------------- */
-function Question({ q, n, picked, onPick, review }) {
+function Question({ q, n, picked, onPick, review, figures }) {
   return (
     <Panel className="p-5 md:p-6" data-q={q.id}>
       <div className="flex items-start gap-3">
@@ -76,7 +76,7 @@ function Question({ q, n, picked, onPick, review }) {
         </span>
         <div className="min-w-0 flex-1">
           <p className="text-[15px] leading-relaxed"><Rich text={q.q} /></p>
-          {q.fig && <Figure name={q.fig} />}
+          {q.fig && <Figure name={q.fig} figures={figures} />}
 
           <div className="grid gap-2 mt-3.5">
             {q.choices.map((c, i) => {
@@ -132,8 +132,12 @@ function Question({ q, n, picked, onPick, review }) {
 }
 
 /* ---------------- main ---------------- */
-export default function Exam() {
+export default function Exam({ id }) {
   const progress = useProgress();
+  const [examId, setExamId] = useState(() => (EXAMS.some((e) => e.id === id) ? id : null));
+  const exam = examById(examId);
+  const { meta: EXAM_META, questions: EXAM, figures } = exam;
+
   const [phase, setPhase] = useState("intro");     // intro | taking | review
   const [answers, setAnswers] = useState({});
   const [left, setLeft] = useState(EXAM_META.minutes * 60);
@@ -141,7 +145,7 @@ export default function Exam() {
 
   const score = useMemo(
     () => EXAM.reduce((s, q) => s + (answers[q.id] === q.answer ? 1 : 0), 0),
-    [answers],
+    [answers, EXAM],
   );
   const answered = Object.keys(answers).length;
 
@@ -161,40 +165,83 @@ export default function Exam() {
   useEffect(() => {
     if (phase === "review" && !submittedRef.current) {
       submittedRef.current = true;
-      recordExam(score, EXAM.length);
+      recordExam(score, EXAM.length, exam.id);
     }
   }, [phase, score]);
 
-  const start = () => { setAnswers({}); setLeft(EXAM_META.minutes * 60); submittedRef.current = false; setPhase("taking"); };
+  const start = (pick) => {
+    if (pick) setExamId(pick);
+    const m = (pick ? examById(pick) : exam).meta.minutes;
+    setAnswers({}); setLeft(m * 60); submittedRef.current = false; setPhase("taking");
+  };
 
-  /* ---------- intro ---------- */
+  /* ---------- paper picker ---------- */
   if (phase === "intro") {
-    const best = progress.examBest;
+    const bests = progress.exams || {};
     return (
-      <div className="max-w-[720px]">
-        <SectionLabel className="text-blue">Practice Exam</SectionLabel>
-        <h1 className="text-2xl font-semibold tracking-tight mt-1">{EXAM_META.title}</h1>
-        <p className="text-[14px] text-muted-foreground mt-1">{EXAM_META.subtitle}</p>
+      <div className="max-w-[760px]">
+        <SectionLabel className="text-blue">Practice Exams</SectionLabel>
+        <h1 className="text-2xl font-semibold tracking-tight mt-1">Three full papers</h1>
+        <p className="text-[14px] text-muted-foreground mt-1.5 leading-relaxed max-w-[68ch]">
+          Each is a complete 33-question midterm under the same rules as the real thing.
+          They cover the same syllabus in the same proportions but test different angles,
+          so all three are worth sitting.
+        </p>
 
-        <Panel className="p-5 md:p-6 mt-5">
-          <SectionLabel className="mb-3">Instructions</SectionLabel>
-          <ul className="grid gap-2 text-[14.5px] leading-relaxed list-disc ml-5">
-            {EXAM_META.rules.map((r, i) => <li key={i} className="pl-1">{r}</li>)}
+        <div className="grid gap-3 mt-5">
+          {EXAMS.map((e, i) => {
+            const b = bests[e.id];
+            const pct = b ? Math.round((b.score / b.total) * 100) : null;
+            return (
+              <Panel key={e.id} className="p-5" data-exam={e.id}>
+                <div className="flex flex-wrap items-start gap-4">
+                  {/* `b?.score === b?.total` is true when b is undefined, which
+                      awarded a trophy to papers that had never been attempted */}
+                  <span className={cn(
+                    "grid place-items-center size-10 shrink-0 rounded-md",
+                    b && b.score === b.total ? "bg-emerald text-white" : "bg-blue-tint text-blue",
+                  )}>
+                    {b && b.score === b.total ? <Trophy className="size-5" /> : <FileText className="size-5" />}
+                  </span>
+                  <div className="min-w-0 flex-1">
+                    <h2 className="text-[16px] font-semibold">{e.meta.title}</h2>
+                    <p className="text-[13px] text-muted-foreground mt-0.5">
+                      {e.questions.length} questions · {e.meta.minutes} minutes ·{" "}
+                      {e.questions.length * e.meta.pointsPer} points
+                    </p>
+                    <p className="text-[12.5px] mt-1.5 tabular-nums">
+                      {b ? (
+                        <span className={cn(pct >= 80 ? "text-emerald-deep" : pct >= 60 ? "text-amber" : "text-destructive")}>
+                          Best {b.score}/{b.total} ({pct}%) · {b.attempts} attempt{b.attempts > 1 ? "s" : ""}
+                        </span>
+                      ) : (
+                        <span className="text-muted-foreground">Not attempted yet</span>
+                      )}
+                    </p>
+                  </div>
+                  <Button
+                    onClick={() => start(e.id)}
+                    data-act={`begin-${e.id}`}
+                    className={cn("rounded-md shrink-0", i === 0 ? "bg-slate-deep hover:bg-navy" : "bg-blue-bright hover:bg-blue")}
+                  >
+                    {b ? "Retake" : "Begin"} <ArrowRight className="size-3.5" />
+                  </Button>
+                </div>
+              </Panel>
+            );
+          })}
+        </div>
+
+        <Panel className="p-5 mt-4">
+          <SectionLabel className="mb-3">Rules, on every paper</SectionLabel>
+          <ul className="grid gap-2 text-[14px] leading-relaxed list-disc ml-5">
+            {EXAMS[0].meta.rules.map((r, i) => <li key={i} className="pl-1">{r}</li>)}
           </ul>
-          <div className="mt-5 pt-4 border-t text-[13px] text-muted-foreground leading-relaxed">
-            These questions are <strong className="text-foreground">original</strong> — written to
-            match the topic mix, phrasing style and difficulty of the 2025 midterm, not to reproduce
-            it. Every question links back to the module that covers it when you review.
-          </div>
-          <div className="flex flex-wrap items-center gap-3 mt-5">
-            <Button onClick={start} className="rounded-md bg-slate-deep hover:bg-navy" data-act="begin">
-              Begin exam <ArrowRight className="size-3.5" />
-            </Button>
-            {best && (
-              <span className="text-[13px] text-muted-foreground tabular-nums">
-                Best so far: <b className="text-foreground">{best.score}/{best.total}</b>
-              </span>
-            )}
+          <div className="mt-4 pt-4 border-t text-[13px] text-muted-foreground leading-relaxed">
+            All 99 questions are <strong className="text-foreground">original</strong> — written to
+            match the topic mix, phrasing style and difficulty of the real midterm, not to reproduce
+            it. Each paper splits 8 / 7 / 9 / 6 / 3 across Parts 1 to 5, and every question links
+            back to the module that covers it when you review.
           </div>
         </Panel>
       </div>
@@ -208,6 +255,7 @@ export default function Exam() {
       {/* sticky status bar */}
       <div className="sticky top-14 z-10 -mx-4 md:-mx-8 px-4 md:px-8 py-3 bg-background/95 backdrop-blur border-b mb-5">
         <div className="flex flex-wrap items-center gap-3">
+          <span className="label-mono text-muted-foreground shrink-0" data-paper>{EXAM_META.title}</span>
           {review ? (
             <>
               <span className="text-[15px] font-semibold tabular-nums">
@@ -217,11 +265,12 @@ export default function Exam() {
                 </span>
               </span>
               <span className="flex-1" />
-              <Button onClick={start} size="sm" variant="outline" className="rounded-md bg-card" data-act="retake">
+              <Button onClick={() => start(exam.id)} size="sm" variant="outline" className="rounded-md bg-card" data-act="retake">
                 <RotateCcw className="size-3.5" /> Retake
               </Button>
-              <Button asChild size="sm" className="rounded-md bg-blue-bright hover:bg-blue">
-                <a href="#/study">Back to modules</a>
+              <Button onClick={() => { setPhase("intro"); setExamId(null); }} size="sm"
+                      className="rounded-md bg-blue-bright hover:bg-blue" data-act="other-papers">
+                Other papers
               </Button>
             </>
           ) : (
@@ -276,6 +325,7 @@ export default function Exam() {
         {EXAM.map((q, i) => (
           <Question
             key={q.id}
+            figures={figures}
             q={q}
             n={i + 1}
             picked={answers[q.id] ?? null}

@@ -124,7 +124,7 @@ export default function App() {
             : route.path === "leaderboard" ? <Leaderboard />
             : route.path === "study" ? <Study />
             : route.path === "lesson" ? <Lesson id={route.params.id} />
-            : route.path === "exam" ? <Exam />
+            : route.path === "exam" ? <Exam id={route.params.id} />
             : <Dashboard />}
         </main>
       </div>

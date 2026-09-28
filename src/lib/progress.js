@@ -34,7 +34,7 @@ export function todayKey(d = new Date()) {
 }
 
 function emptyState() {
-  return { answers: {}, xp: 0, attempts: 0, correct: 0, days: {}, log: [], lessons: {}, examBest: null, quizzes: {} };
+  return { answers: {}, xp: 0, attempts: 0, correct: 0, days: {}, log: [], lessons: {}, examBest: null, exams: {}, quizzes: {} };
 }
 
 function migrateV1() {
@@ -143,16 +143,23 @@ export function recordQuiz(moduleId, score, total) {
 }
 
 /* Record a finished practice exam; keeps the best score. */
-export function recordExam(score, total) {
+export function recordExam(score, total, examId = "one") {
   const day = todayKey();
   const prev = cache.examBest;
   const better = !prev || score > prev.score;
+  // per-paper best, so each practice midterm keeps its own record; examBest
+  // stays as the best across all of them (and predates the multi-exam split)
+  const prevThis = cache.exams?.[examId];
+  const bestThis = !prevThis || score > prevThis.score
+    ? { score, total, t: Date.now(), attempts: (prevThis?.attempts || 0) + 1 }
+    : { ...prevThis, attempts: (prevThis.attempts || 0) + 1 };
   commit({
     ...cache,
     examBest: better ? { score, total, t: Date.now() } : prev,
+    exams: { ...(cache.exams || {}), [examId]: bestThis },
     xp: cache.xp + score * 3,
     days: { ...cache.days, [day]: (cache.days[day] || 0) + 1 },
-    log: [{ t: Date.now(), kind: "exam", qid: `exam:${score}/${total}`, xp: score * 3 }, ...cache.log].slice(0, 40),
+    log: [{ t: Date.now(), kind: "exam", qid: `exam:${examId}:${score}/${total}`, xp: score * 3 }, ...cache.log].slice(0, 40),
   });
 }
 

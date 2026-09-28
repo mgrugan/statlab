@@ -157,7 +157,7 @@ export const EXAM = [
     "By fitting a GARCH model to past returns and forecasting one step ahead",
   ],
   answer: 1,
-  why: "Implied volatility runs the pricing formula **backwards**: take the market price as given and solve for the $\\sigma$ that reproduces it. Option (a) describes *realized/historical* volatility and (d) a *forecast* — both are estimates from past data, not from current option prices." },
+  why: "Implied volatility runs the pricing formula **backwards**: take the market price as given and solve for the $\\sigma$ that reproduces it. The “average of past squared returns” choice describes *realized/historical* volatility, and the GARCH choice describes a *forecast* — both are estimates from past data, not from current option prices." },
 
 { id: "x15", ref: "f6", topic: "Normality tests",
   q: "The Jarque-Bera test statistic is $T=\\frac{n}{6}\\big(\\widehat\\gamma_1^{\\,2}+(\\widehat\\gamma_2-3)^2/4\\big)$. Under the null hypothesis, what is its asymptotic distribution?",
@@ -191,7 +191,7 @@ export const EXAM = [
     "No conclusion is possible because the comparison uses the standard normal rather than the best-fitting normal",
   ],
   answer: 1,
-  why: "The points bend **below** the line on the left and **above** it on the right: extreme sample values are more extreme than normal theory predicts, i.e. **heavy tails**. Option (d) is tempting, but changing $\\mu$ or $\\sigma$ only shifts and scales the line — it cannot bend it." },
+  why: "The points bend **below** the line on the left and **above** it on the right: extreme sample values are more extreme than normal theory predicts, i.e. **heavy tails**. Blaming a wrong $\\mu$ or $\\sigma$ is tempting, but changing either only shifts and scales the line — neither can bend it." },
 
 /* ---------------------------------------------------- Part 3: time series */
 { id: "x18", ref: "f7", topic: "Stationarity",
@@ -276,7 +276,7 @@ export const EXAM = [
     "The series is drawn from a normal distribution",
   ],
   answer: 0,
-  why: "$H_0$ is that **all** autocorrelations up to lag $H$ are zero; $H_1$ is that **at least one** is nonzero. It is a joint test across lags, which is why it detects dependence no single lag makes obvious. (Option (d) is Jarque-Bera / Shapiro-Wilk territory.)" },
+  why: "$H_0$ is that **all** autocorrelations up to lag $H$ are zero; $H_1$ is that **at least one** is nonzero. It is a joint test across lags, which is why it detects dependence no single lag makes obvious. (Anything about normality is Jarque-Bera / Shapiro-Wilk territory, not Ljung-Box.)" },
 
 { id: "x26", ref: "f8", topic: "Significance",
   q: "Ljung-Box on a long series of log daily returns yields very small p-values, indicating significant autocorrelation. Why does this not amount to a money-making opportunity?",
