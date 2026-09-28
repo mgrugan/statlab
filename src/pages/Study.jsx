@@ -1,8 +1,9 @@
-import { BookOpen, Table2, GraduationCap, ArrowRight, CheckCircle2, Clock3, Trophy } from "lucide-react";
+import { BookOpen, Table2, GraduationCap, ArrowRight, CheckCircle2, Clock3, Trophy, Film } from "lucide-react";
 import { FINANCE_MODULES } from "@/data/finance/modules1";
 import { FINANCE_MODULES_2 } from "@/data/finance/modules2";
 import { PANDAS_MODULES } from "@/data/finance/pandas";
 import { EXAM, EXAM_META } from "@/data/finance/exam";
+import { EXPLAINERS } from "@/data/finance/explainers";
 import { useProgress } from "@/lib/progress";
 import { Panel, SectionLabel } from "@/components/shared";
 import { Badge } from "@/components/ui/badge";
@@ -38,6 +39,11 @@ function ModuleRow({ m, done, quiz, checks }) {
           <span className="flex items-center gap-1 label-mono text-muted-foreground">
             <Clock3 className="size-3" /> {m.minutes} min
           </span>
+          {EXPLAINERS[m.id] && (
+            <span className="flex items-center gap-1 label-mono text-blue">
+              <Film className="size-3" /> {Math.round(EXPLAINERS[m.id].duration)}s film
+            </span>
+          )}
           {quiz?.passed ? (
             <span className="label-mono text-emerald-deep">quiz passed</span>
           ) : quiz ? (
