@@ -3,7 +3,7 @@ import { Clock3, Flag, ArrowRight, RotateCcw, FileText, Trophy } from "lucide-re
 import { Button } from "@/components/ui/button";
 import { Panel, SectionLabel } from "@/components/shared";
 import { Rich } from "@/components/Math";
-import { EXAMS, examById } from "@/data/finance/exams";
+import { EXAMS, PRACTICE_EXAMS, examById } from "@/data/finance/exams";
 import { moduleById } from "@/pages/Study";
 import { recordExam, useProgress } from "@/lib/progress";
 import { cn } from "@/lib/utils";
@@ -14,6 +14,10 @@ function Figure({ name, figures }) {
   if (!f) return null;
   return (
     <figure className="my-4 border rounded-lg bg-card p-3">
+      {/* the 2025 paper prints the Python that produced the plot above it */}
+      {f.code && (
+        <pre className="font-mono text-[11px] leading-snug text-code-fg bg-code-bg rounded-lg p-3 mb-3 overflow-x-auto whitespace-pre">{f.code}</pre>
+      )}
       <svg viewBox={f.viewBox} className="w-full max-w-[420px] mx-auto block" role="img" aria-label={f.caption}>
         {/* axes */}
         <line x1="40" y1="215" x2="395" y2="215" stroke="var(--border)" strokeWidth="1.5" />
@@ -28,12 +32,26 @@ function Figure({ name, figures }) {
                 strokeDasharray={p.dash || undefined} strokeLinecap="round" />
         ))}
 
+        {/* a plotted series, given as pre-projected "x,y x,y …" */}
+        {f.series?.map((s, i) => (
+          <polyline key={i} points={s.points} fill="none" stroke={s.stroke}
+                    strokeWidth={s.width || 1.3} strokeDasharray={s.dash || undefined}
+                    strokeLinejoin="round" />
+        ))}
+
+        {/* scatter, e.g. the points of a normal probability plot */}
+        {f.dots?.map(([x, y], i) => (
+          <circle key={i} cx={x} cy={y} r="2.3" fill="var(--blue-bright)" />
+        ))}
+
         {f.acf && (
           <>
             <line x1="40" y1="120" x2="395" y2="120" stroke="var(--muted-foreground)" strokeWidth="1" />
             <rect x="40" y="108" width="355" height="24" fill="var(--blue-bright)" opacity="0.12" />
             {f.acf.map((v, i) => {
-              const x = 52 + i * 22;
+              /* keep the original 22px spacing for short ACFs, and squeeze
+                 longer ones so the last lag still lands inside the axes */
+              const x = 52 + i * Math.min(22, 340 / Math.max(1, f.acf.length - 1));
               const y = 120 - v * 100;
               return (
                 <g key={i}>
@@ -44,6 +62,15 @@ function Figure({ name, figures }) {
             })}
           </>
         )}
+
+        {f.legend?.map((l, i) => (
+          <g key={i}>
+            <line x1="266" y1={26 + i * 15} x2="292" y2={26 + i * 15} stroke={l.stroke}
+                  strokeWidth="2" strokeDasharray={l.dash || undefined} />
+            <text x="298" y={29 + i * 15} fontSize="10" fill="var(--muted-foreground)"
+                  fontFamily="var(--font-mono)">{l.label}</text>
+          </g>
+        ))}
 
         <text x="217" y="236" textAnchor="middle" fontSize="11" fill="var(--muted-foreground)"
               fontFamily="var(--font-mono)">{f.xlabel}</text>
@@ -61,10 +88,13 @@ function fmt(secs) {
   return `${m}:${String(s).padStart(2, "0")}`;
 }
 
-/* ---------------- question card ---------------- */
+/* ---------------- question card ----------------
+   min-w-0 on the card matters: grid items size to their content by
+   default, so the wide code listing in Figure 1 would otherwise widen
+   the whole page rather than scrolling inside its own box. */
 function Question({ q, n, picked, onPick, review, figures }) {
   return (
-    <Panel className="p-5 md:p-6" data-q={q.id}>
+    <Panel className="p-5 md:p-6 min-w-0" data-q={q.id}>
       <div className="flex items-start gap-3">
         <span className={cn(
           "grid place-items-center size-7 shrink-0 rounded-md label-mono mt-0.5",
@@ -181,11 +211,11 @@ export default function Exam({ id }) {
     return (
       <div className="max-w-[760px]">
         <SectionLabel className="text-blue">Practice Exams</SectionLabel>
-        <h1 className="text-2xl font-semibold tracking-tight mt-1">Three full papers</h1>
+        <h1 className="text-2xl font-semibold tracking-tight mt-1">Four full papers</h1>
         <p className="text-[14px] text-muted-foreground mt-1.5 leading-relaxed max-w-[68ch]">
-          Each is a complete 33-question midterm under the same rules as the real thing.
-          They cover the same syllabus in the same proportions but test different angles,
-          so all three are worth sitting.
+          Last year's actual midterm, transcribed question for question with the professor's
+          own answer key, plus three original papers under the same rules. They cover the same
+          syllabus in the same proportions but test different angles, so all four are worth sitting.
         </p>
 
         <div className="grid gap-3 mt-5">
@@ -204,7 +234,14 @@ export default function Exam({ id }) {
                     {b && b.score === b.total ? <Trophy className="size-5" /> : <FileText className="size-5" />}
                   </span>
                   <div className="min-w-0 flex-1">
-                    <h2 className="text-[16px] font-semibold">{e.meta.title}</h2>
+                    <h2 className="text-[16px] font-semibold flex flex-wrap items-center gap-2">
+                      {e.meta.title}
+                      {e.meta.verbatim && (
+                        <span className="label-mono text-[10px] rounded px-1.5 py-0.5 bg-amber-soft text-amber">
+                          the real paper
+                        </span>
+                      )}
+                    </h2>
                     <p className="text-[13px] text-muted-foreground mt-0.5">
                       {e.questions.length} questions · {e.meta.minutes} minutes ·{" "}
                       {e.questions.length * e.meta.pointsPer} points
@@ -235,13 +272,18 @@ export default function Exam({ id }) {
         <Panel className="p-5 mt-4">
           <SectionLabel className="mb-3">Rules, on every paper</SectionLabel>
           <ul className="grid gap-2 text-[14px] leading-relaxed list-disc ml-5">
-            {EXAMS[0].meta.rules.map((r, i) => <li key={i} className="pl-1">{r}</li>)}
+            {PRACTICE_EXAMS[0].meta.rules.map((r, i) => <li key={i} className="pl-1">{r}</li>)}
           </ul>
           <div className="mt-4 pt-4 border-t text-[13px] text-muted-foreground leading-relaxed">
-            All 99 questions are <strong className="text-foreground">original</strong> — written to
-            match the topic mix, phrasing style and difficulty of the real midterm, not to reproduce
-            it. Each paper splits 8 / 7 / 9 / 6 / 3 across Parts 1 to 5, and every question links
-            back to the module that covers it when you review.
+            <strong className="text-foreground">Real Midterm One — 2025</strong> is the paper as it
+            was sat: the questions, the choices and their order are transcribed unchanged, and the
+            key is the professor's own. Six of its questions offer three choices rather than four,
+            because that is how it was printed.
+            <br /><br />
+            The other 99 questions are <strong className="text-foreground">original</strong> —
+            written to match the topic mix, phrasing style and difficulty of the real midterm, not
+            to reproduce it. Each of those papers splits 8 / 7 / 7 / 6 / 5 across Parts 1 to 5, and
+            every question on all four links back to the module that covers it when you review.
           </div>
         </Panel>
       </div>
