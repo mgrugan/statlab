@@ -20,11 +20,13 @@ export const EXAM_B_META = {
   minutes: 75,
   pointsPer: 3,
   rules: [
-    "33 questions, 3 points each (99 points total).",
+    "33 questions, 3 points each (99 points total). Exactly one correct response each.",
     "75 minutes. The timer starts when you click Begin.",
-    "Notes, books, and calculators are not allowed on the real exam — try it that way.",
+    "Covers Parts 1 through 5 of the lecture notes.",
+    "No calculator, laptop, tablet, phone or written notes — so nothing here needs arithmetic you cannot do in your head.",
+    "You are not expected to memorize formulas (Black-Scholes, the GARCH equation, and so on). Where a formula is needed it is given; what is tested is what it is for and how it achieves that.",
+    "You will not be asked about Python syntax or to debug code — only to read output.",
     "\"iid\" stands for \"independent and identically distributed.\"",
-    "Each question has exactly one correct response.",
   ],
 };
 
@@ -81,14 +83,14 @@ export const EXAM_B = [
   why: "$\\log(P_t/P_{t-k})=\\log P_t-\\log P_{t-k}$. Inserting and subtracting every intermediate log price telescopes the sum, leaving one-period log returns. No approximation and no independence assumption is needed — it is an algebraic identity. **Simple** returns compound multiplicatively instead." },
 
 { id: "b6", ref: "f4", topic: "Volatility scaling",
-  q: "Daily log returns have a sample standard deviation of $0.015$. Assuming 252 trading days, what is the annualized volatility?",
+  q: "Why does the standard deviation of a $k$-period log return scale with $\\sqrt{k}$ rather than with $k$?",
   choices: [
-    "About $3.78$",
-    "About $0.238$",
-    "About $0.015$",
-    "About $0.945$",
+    "Because volatility is estimated with error, and that error grows over time",
+    "Because the **variances** of independent one-period returns add, and the standard deviation is the square root of the variance",
+    "Because log returns are bounded below, which dampens the growth",
+    "Because the mean also grows with $\\sqrt{k}$, and the two must match",
   ], answer: 1,
-  why: "Variance scales with $k$, so the **standard deviation** scales with $\\sqrt{k}$: $0.015\\sqrt{252}\\approx0.238$, i.e. about 24%. Multiplying by 252 gives $3.78$ — a 378% annual volatility, which should immediately read as impossible." },
+  why: "Independence makes **variances** additive, so the $k$-period variance is $k\\sigma^2$. Taking the square root to return to the original units gives $\\sigma\\sqrt{k}$ — there is no finance in that step, it is a units conversion. Standard deviations themselves do **not** add, because a square root does not distribute over a sum. Note the mean does scale with $k$ in full, which is why a trend eventually outruns the noise." },
 
 { id: "b7", ref: "f2", topic: "Lognormal",
   q: "Which is the strongest reason to model prices as lognormal rather than normal?",
@@ -222,15 +224,15 @@ export const EXAM_B = [
   ], answer: 2,
   why: "For ADF the **null** is a unit root and the **alternative** is stationarity — the reverse of most tests you meet. A small p-value therefore rejects the unit root and supports stationarity. Small p is the *good* news here." },
 
-{ id: "b20", ref: "f8", topic: "Unit root tests",
-  q: "An ADF test returns a p-value of $0.41$. Which conclusion is correct?",
+{ id: "b20", ref: "f12", topic: "Market indices",
+  q: "The DJIA weights its components by **current share price**. One member announces a 2-for-1 stock split. What happens to that firm's influence on the index?",
   choices: [
-    "Strong evidence the series is stationary",
-    "Strong evidence the series is not stationary",
-    "The series definitely has a unit root",
-    "We failed to find evidence that the series is stationary",
+    "It is unchanged, because the company's total value is unchanged",
+    "It doubles, because there are now twice as many shares",
+    "It is unchanged, because the index divisor absorbs the split entirely",
+    "It is **halved**, even though the company's total value is unchanged",
   ], answer: 3,
-  why: "A large p-value means no evidence for the alternative (stationarity). That is **not** evidence against it — failing to reject a null never establishes the null. \u201cStrong evidence the series is not stationary\u201d is the direction error this question is built to catch." },
+  why: "Under price weighting a firm's weight is its **share price**, which is an essentially arbitrary number. A 2-for-1 split halves the price overnight while the business is worth exactly the same, so its influence halves for no economic reason — the major criticism of the DJIA. Market-cap weighting (price × shares outstanding), used by the **S&P 500**, is immune: the share count doubles and the product is unchanged." },
 
 { id: "b21", ref: "f8", topic: "ACF", fig: "acfslow",
   q: "The autocorrelation function below was computed from a single series. What does it most suggest?",
@@ -252,15 +254,15 @@ export const EXAM_B = [
   ], answer: 1,
   why: "It is a **portmanteau** test: the null is no autocorrelation anywhere in the first $H$ lags. Rejecting tells you autocorrelation exists *somewhere* in that range but not which lag — for that you read the ACF plot." },
 
-{ id: "b23", ref: "f7", topic: "White noise",
-  q: "Which statement about white noise is correct?",
+{ id: "b23", ref: "f12", topic: "VIX",
+  q: "What does the **VIX** measure?",
   choices: [
-    "A white noise process cannot be stationary",
-    "White noise and iid mean the same thing",
-    "White noise assumptions are weaker than iid: uncorrelated does not imply independent",
-    "White noise requires normally distributed values",
+    "The average implied volatility across all individual US equities",
+    "The spread between the S&P 500 and the Dow Jones Industrial Average",
+    "The **implied volatility** of options written on the S&P 500 index",
+    "The realized volatility of the S&P 500 over the preceding 30 days",
   ], answer: 2,
-  why: "White noise needs a constant mean, constant variance, and zero autocovariance at every non-zero lag. Independence is a stronger requirement than zero correlation, so iid implies white noise but not conversely. Both white noise and iid processes are stationary, and neither requires normality." },
+  why: "The CBOE sells options whose underlying “asset” is the value of the S&P 500 itself, and the VIX tracks their **implied** volatility. Because the index is broad-based, that says something about the future variability investors anticipate for **the market as a whole** — so it is **forward-looking**, which is why it is nicknamed the *fear index*. Realized volatility over past data is the backward-looking quantity it is most often confused with." },
 
 { id: "b24", ref: "f8", topic: "Significance",
   q: "Ljung-Box on several thousand daily log returns gives small p-values at $H=10$ and $H=20$. Does this contradict market efficiency?",
@@ -334,15 +336,15 @@ export const EXAM_B = [
   why: "Returns have a mean near zero, so $X_t^2$ is a direct proxy for that period's variance, and squaring removes the sign — exactly what you want when the question is about magnitude. The ACF of $X_t$ typically shows nothing; the ACF of $X_t^2$ is strongly significant." },
 
 /* ============================= Part 5 — Black-Scholes (3) */
-{ id: "b31", ref: "f11", topic: "Compounding",
-  q: "\\$2000 is invested at an annual rate of 4% with continuous compounding. What is the value after 3 years?",
+{ id: "b31", ref: "f11", topic: "Discounting",
+  q: "The Black-Scholes price of a European call is $e^{-rt}\\,\\E\\big((P_t-K)^+\\big)$ rather than $\\E\\big((P_t-K)^+\\big)$ alone. What is the $e^{-rt}$ factor doing?",
   choices: [
-    "$2000\\,e^{0.04}\\approx\\$2081.62$",
-    "$2000(1.04)^3\\approx\\$2249.73$",
-    "$2000\\,e^{0.12}\\approx\\$2254.99$",
-    "$2000(1+0.04\\times3)=\\$2240.00$",
+    "Converting the volatility from a daily basis to an annual one",
+    "Correcting for the skewness of the lognormal distribution",
+    "**Discounting** the expected payoff, because money spent on the option today could instead have earned the risk-free rate",
+    "Adjusting for the possibility that the option expires worthless",
   ], answer: 2,
-  why: "Continuous compounding gives $P_t=P_0e^{rt}=2000e^{0.04\\times3}=2000e^{0.12}$. The first option is annual compounding and the third is simple interest — both under-state it, since more frequent compounding always pays more. The last forgets to multiply the rate by the 3-year horizon." },
+  why: "$\\E\\big((P_t-K)^+\\big)$ is what you expect to receive **at time $t$**, but you pay for the option **today** — and that money could otherwise have been put into a risk-free investment returning $r$. Multiplying by $e^{-rt}$ converts the future amount to its value today. The chance of expiring worthless is already inside the expectation, via the positive part." },
 
 { id: "b32", ref: "f11", topic: "Moneyness",
   q: "A **put** option has $P_0=\\$80$ and $K=\\$95$. What is its moneyness status?",
