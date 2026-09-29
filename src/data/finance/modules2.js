@@ -490,9 +490,9 @@ results = model.fit()`,
 {
   id: "f11",
   part: "Part 5",
-  title: "Black-Scholes, Moneyness, and the Leverage Effect",
-  minutes: 16,
-  summary: "Continuous compounding, the five Black-Scholes inputs, moneyness, implied volatility, and the asymmetry ARCH/GARCH can't capture.",
+  title: "Black-Scholes, Risk-Neutral Pricing, and Implied Volatility",
+  minutes: 24,
+  summary: "Continuous compounding, the five inputs, discounting, the real-world and risk-neutral measures, moneyness, implied volatility, and why IV exceeds HV.",
   blocks: [
     { kind: "plain", title: "What is compounding, and what is moneyness?",
       body: "**Compounding.** Put \\$100 in an account at 5% a year. Paid once a year you have \\$105. Paid monthly, each month earns interest on the previous month's interest, so you end slightly ahead. Pay it *continuously* \u2014 infinitely often \u2014 and the limit is $100\\,e^{0.05}$. That is **continuous compounding**, and it is why $e$ shows up everywhere in finance. Running it backwards (what is a future dollar worth today?) is **discounting**.\n\n**Moneyness** answers: if this option expired right now, would it pay anything? A call lets you buy at the strike $K$. If the stock is already *above* $K$, exercising is profitable \u2014 the option is **in the money**. Below $K$, worthless today \u2014 **out of the money**. Right at $K$ \u2014 **at the money**. For a put, which lets you *sell* at $K$, everything flips.\n\nThe formula packages this as $M=\\log(P_0/K)$, which is just positive when $P_0>K$ and negative when $P_0<K$." },
@@ -505,7 +505,32 @@ results = model.fit()`,
     { kind: "math", title: "The Black-Scholes formula in usable form",
       body: "Start from the Claim of Module 2 and substitute the GBM parameters $\\xi=\\log(P_0)+\\nu t$ and $\\tau^2=\\sigma^2t$:",
       tex: ["\\E\\big((P_t-K)^+\\big)=P_0\\exp\\!\\big(\\nu t+\\sigma^2t/2\\big)\\,\\Phi\\!\\left(\\frac{M+\\nu t+\\sigma^2t}{\\sigma\\sqrt{t}}\\right)-K\\,\\Phi\\!\\left(\\frac{M+\\nu t}{\\sigma\\sqrt{t}}\\right)"],
-      after: "where $M=\\log(P_0/K)$.\n\n**Why those substitutions?** Under the lognormal pricing model, GBM property 4 gives $\\E(\\log P_t)=\\log(P_0)+\\nu t$ and $\\Var(\\log P_t)=\\sigma^2t$, i.e. $\\log P_t\\sim N\\big(\\log(P_0)+\\nu t,\\ \\sigma^2t\\big)$. So $\\xi$ and $\\tau^2$ *are* those two quantities." },
+      after: "where $M=\\log(P_0/K)$.\n\n**Why those substitutions?** Under the lognormal pricing model, GBM property 4 gives $\\E(\\log P_t)=\\log(P_0)+\\nu t$ and $\\Var(\\log P_t)=\\sigma^2t$, i.e. $\\log P_t\\sim N\\big(\\log(P_0)+\\nu t,\\ \\sigma^2t\\big)$. So $\\xi$ and $\\tau^2$ *are* those two quantities.\n\nThis equation lies at the heart of the **Black-Scholes-Merton theory for option pricing**, and pertains to **European-style** options. But it is not yet the price — two things are still missing, and the next three cards supply them." },
+
+    { kind: "trap", title: "The expected payoff is not the price — discount it",
+      body: "There is one more wrinkle. $\\E\\big((P_t-K)^+\\big)$ is what you expect to *receive at time $t$*. But money you pay **today** could instead have been put in a risk-free investment earning $r$.\n\nSo the expected payoff has to be **discounted** back to today, by the continuous-compounding factor $e^{-rt}$.",
+      tex: ["\\text{price}=e^{-rt}\\,\\E\\big((P_t-K)^+\\big)"],
+      after: "**Concretely:** at $r=0.05$, \\$100 received in six months is worth $100\\times e^{-0.05\\times0.5}=\\$97.53$ today.\n\nLeaving the $e^{-rt}$ off is an easy mark to drop — it makes every option look slightly too expensive." },
+
+    { kind: "plain", title: "Two ways to set $\\nu$, and why it matters",
+      body: "Of the five inputs, $\\nu$ is the awkward one. There are **two ways of thinking about setting it, and the distinction is central to quantitative finance.**\n\n**The real-world (physical) measure, written $\\mathbb{P}$.** Calibrate $\\nu$ to the drift you actually observe in market data. Estimate the real rate of return $\\mu$, then set $\\nu=\\mu-\\sigma^2/2$.\n\n**The risk-neutral measure, written $\\mathbb{Q}$.** Ask instead: *if investors did not care about risk at all, at what rate should the price grow?* Answer: at the **risk-free rate** $r$ — anything else would create an **arbitrage**, a trivial way to make money. So set $\\mu=r$, giving $\\nu=r-\\sigma^2/2$.\n\nBlack-Scholes uses the second one. The next two cards explain why that is allowed." },
+
+    { kind: "idea", title: "Risk-neutral, risk-averse, risk-seeking",
+      body: "**A game.** I flip a fair coin. Heads, you win \\$100; tails, you win nothing. How much would you pay to play?\n\nThe expected value is \\$50. So:\n\n• Pay **less than \\$50** — you are **risk-averse**. You need a discount to accept the uncertainty.\n• Pay **more than \\$50** — you are **risk-seeking**.\n• Pay **exactly \\$50** — you are **risk-neutral**.\n\nFormally: an investor is **risk-neutral** if they have no concern over risk (volatility) at all — their only consideration is the expected value of the investment.\n\nReal investors are mostly risk-averse. So why is it legitimate to price options as if everyone were risk-neutral?" },
+
+    { kind: "key", title: "Why risk-neutral pricing is allowed",
+      body: "This is the insight Black and Scholes had, and it is worth being able to state.\n\n• Under idealized conditions you can set up a **trading strategy** pairing trades of the option with trades of its underlying asset so that the return is **risk-free** — the variance of the return is zero.\n• If that is possible, the strategy's rate of return **must equal the risk-free rate**. Otherwise there is an arbitrage opportunity.\n• Because the strategy carries **zero risk**, its fair price cannot depend on how risk-averse or risk-seeking real investors are. **The risk preferences of the market are irrelevant.**\n• Therefore, since the option's price is independent of investor risk preferences, we may **act as if** we live in a simplified universe where everyone is perfectly risk-neutral — and there the mathematics is simpler.",
+      after: "So in the list of inputs, **$\\nu$ is replaced by $r$**: instead of estimating a drift, we need an estimate of the risk-free rate of return." },
+
+    { kind: "code", title: "Getting the risk-free rate", lang: "python", file: "riskfree.py",
+      body: "Typically a **13-week treasury bill** — a bond sold by the US Government — is assumed to be risk-free. Its rate is available on `yfinance` under the symbol `^IRX`, and serves as $r$ on a given date.",
+      code: `import yfinance as yf
+
+IRXdat = yf.Ticker("^IRX").history(start="2000-01-01", end="2025-12-31")
+
+# quoted in percent, so divide by 100 before using it as r
+r = IRXdat["Close"].iloc[-1] / 100`,
+      after: "Plotted over 2000-2025 this is strikingly non-constant: above 6% in 2000, essentially **zero** from 2009-2015 and again in 2020-2021, back above 5% by 2023. Treating $r$ as a fixed constant is a convenience, not a fact." },
 
     { kind: "decode", title: "Reading Black-Scholes one input at a time",
       body: "You have the formula. Now the question that actually gets asked in interviews and on exams: **if I nudge this input, which way does the price move, and why?** Every answer is visible in the expression once you know where to look.",
@@ -557,19 +582,131 @@ results = model.fit()`,
       after: "Sanity check the call case: if the spot is already above the strike, exercising *today* would pay off — hence \"in the money.\" For a put you profit when the spot is *below* the strike, so everything reverses." },
 
     { kind: "idea", title: "Implied volatility",
-      body: "Of the five inputs, $\\sigma$ is the one nobody observes. Two ways to get it:\n\n• **Historical / realized volatility** — estimate $\\sigma$ from past returns (Module 9).\n• **Implied volatility** — run the formula *backwards*: take the option's **market price** as given and **solve for the volatility that equates the Black-Scholes price to the market price**.\n\nImplied vol is therefore the market's collective forecast of future volatility, expressed in the language of the model. It is not computed by averaging past squared returns, and it is not a standard deviation of option prices across strikes — those are classic distractors." },
+      body: "Once we adopt the risk-neutral approach, $K$, $t$, $P_0$ and $r$ are all known — so **the only unknown input left is the volatility $\\sigma$.** Two ways to get it:\n\n• **Historical / realized volatility** — estimate $\\sigma$ from past returns (Module 9).\n• **Implied volatility** — “invert” the relationship: look up the current market price of an option, then ask *what value of the volatility would have led to an option with the same properties having this price?*\n\nImplied vol is therefore the market's collective forecast of future volatility, expressed in the language of the model. It is not computed by averaging past squared returns, and it is not a standard deviation of option prices across strikes — those are classic distractors." },
+
+    { kind: "code", title: "Pricing and inverting with `vollib`", lang: "python", file: "vollib_demo.py",
+      body: "The `vollib` package computes Black-Scholes prices, and inverts them for implied volatility. Note the round trip: price with $\\sigma=0.2$, feed that price back, and $\\sigma$ comes back out.",
+      code: `from vollib.black_scholes import black_scholes
+from vollib.black_scholes.implied_volatility import implied_volatility
+
+flag = "c"      # 'c' for call, 'p' for put
+S, K, t = 100, 110, 0.5        # spot, strike, years to expiry
+r, sigma = 0.05, 0.2           # risk-free rate, volatility
+
+price = black_scholes(flag, S, K, t, r, sigma)
+# -> 2.9065
+
+iv = implied_volatility(2.91, S, K, t, r, flag)
+# -> 0.2001`,
+      after: "Current options data are also on `yfinance`: `tkr.options` lists the available expiration dates, and `tkr.option_chain(date)[0]` / `[1]` hold the **calls** and the **puts** for that date. Those data frames include an `impliedVolatility` column directly." },
+
+    { kind: "key", title: "Implied volatility exceeds historical volatility",
+      body: "A question worth being able to answer: *implied volatility will not be well approximated by the historical volatility. Why not, and which is larger?*\n\n• **Historical (realized) volatility** is the actual observed variability of past log returns. It is calculated under $\\mathbb{P}$, the **real-world measure**.\n• **Implied volatility** is calculated directly from the **market price**. That price must include compensation for the risk of extreme market fluctuations — real investors are risk-averse, even though the pricing model pretends otherwise.\n\nSo the price observed in the market is **higher** than the risk-neutral assumption alone would give. Inverting a higher price returns a higher volatility.",
+      after: "**The result: $\\text{IV}>\\text{HV}$.** The gap is the market's risk premium, showing up as an inflated $\\sigma$ because that is the only free parameter the formula has to absorb it." },
 
     { kind: "idea", title: "The leverage effect",
-      body: "The **leverage effect** is another observed property of log returns: **volatility tends to increase following negative returns** more than it does following positive returns of the same magnitude. Markets fall faster than they rise, and the turbulence after a drop is worse.\n\nThe traditional explanation is about financial leverage — as a firm's equity value falls, its debt-to-equity ratio rises, making the equity riskier — though the empirical effect is stronger than that story alone justifies.\n\n**Why this matters for our models:** ARCH and GARCH are built on **squared** past values, $X_{t-i}^2$. Squaring destroys the sign, so $-5\\%$ and $+5\\%$ have *identical* effects on the forecast variance. By construction, standard GARCH **cannot** capture the leverage effect.\n\nModels that can handle **asymmetric volatility effects** include **APARCH** (Asymmetric Power ARCH) and other asymmetric extensions such as EGARCH and GJR-GARCH." },
+      body: "The **leverage effect** is another observed property of log returns: **volatility tends to increase following negative returns** more than it does following positive returns of the same magnitude. Markets fall faster than they rise, and the turbulence after a drop is worse.\n\n**The source of this effect is not completely understood**, but there are two theories — and it is worth knowing which is which.\n\n• **The leverage story.** As equity prices fall, firms' **debt-to-equity ratios** rise, so companies are more *leveraged* and their stock is riskier. **This is where the name comes from** — but it is not the favoured explanation.\n• **The volatility-feedback story, which is more widely accepted.** When uncertainty hits the market — a news event, say — expected future volatility rises. Because investors are **risk-averse**, they refuse to hold stocks in this newly volatile environment unless they are compensated with a larger expected return. And to generate a higher *future* return, the current price must **immediately drop**.\n\n**Why this matters for our models:** ARCH and GARCH are built on **squared** past values, $X_{t-i}^2$. Squaring destroys the sign, so $-5\\%$ and $+5\\%$ have *identical* effects on the forecast variance. By construction, standard GARCH **cannot** capture the leverage effect.\n\nModels that can handle **asymmetric volatility effects** include **APARCH** (Asymmetric Power ARCH) and other asymmetric extensions such as EGARCH and GJR-GARCH." },
 
-    { kind: "idea", title: "Stock market indices",
-      body: "Indices such as the **S&P 500** serve as a **summary measure of the overall performance of the stock market** (or a defined segment of it). They are not regulatory instruments, and while index moves are correlated with component moves, the index is fundamentally a *summary* — a weighted aggregate of its constituents." },
+    { kind: "key", title: "Where this goes next",
+      body: "The leverage effect is easiest to *see* at the level of the whole market rather than one stock, which needs two more ideas: **market indices** and the **VIX**. Those, and the regression that measures the asymmetry, are Module 12." },
 
     { kind: "check",
       q: "Which model has the ability to capture **asymmetric** volatility effects?",
       choices: ["ARIMA", "GARCH", "APARCH", "VAR"],
       answer: 2,
       explain: "**APARCH** (Asymmetric Power ARCH) is designed for asymmetry. Standard **GARCH** cannot be the answer — it depends on $X_{t-i}^2$, and squaring erases the sign of the return, so positive and negative shocks of equal size move the conditional variance identically. ARIMA and VAR model the conditional *mean*, not the variance." },
+  ],
+},
+
+/* ===================================================================== */
+{
+  id: "f12",
+  part: "Part 5",
+  title: "Market Indices, the VIX, and the Leverage Effect",
+  minutes: 20,
+  summary: "How indices are built and weighted, the VIX as the market's implied volatility, and the regression that measures the asymmetry in the leverage effect.",
+  blocks: [
+    { kind: "plain", title: "What is a market index?",
+      body: "A **market index** is a summary measure — often a weighted average — of the performance of a number of stocks that make up the index.\n\nIndices are closely tracked as indicators of the overall behaviour and movement of financial markets, and are often used as a measure of the strength of the economy.\n\nThe key word is **summary**. An index is not a company, not something you can trade directly, and not a regulatory instrument. It is an aggregate number computed from its constituents — and *how* that aggregate is computed turns out to matter a great deal." },
+
+    { kind: "idea", title: "The Dow Jones: price-weighted, and why that is a problem",
+      body: "The most commonly quoted index is the **Dow Jones Industrial Average (DJIA)**. Its popularity is somewhat historical — it has been around since **1896**. It comprises **30 major US corporations**, chosen to be “representative” of the entire economy, and its membership has changed many times over the years.\n\nThe DJIA weights its stocks by their **current stock price**.",
+      after: "**This is a major criticism of the index.** A stock's weight depends on its share price, which is an essentially arbitrary number — a company can change it at will.\n\nThe cleanest illustration: a **2-for-1 split** halves the share price overnight while leaving the company exactly as valuable as it was. Under price weighting, that firm's influence on the index is **also halved** — for no economic reason whatsoever." },
+
+    { kind: "idea", title: "Market-cap weighting: the S&P 500 and the NASDAQ",
+      body: "Most modern indices instead weight components by **market capitalization** — the current share price multiplied by the total number of shares outstanding, i.e. the total value of all the company's stock.\n\nThat is immune to the split problem: halving the price doubles the share count, and the product is unchanged.\n\n• The **S&P 500** is the standard example. It includes 500 of the largest US companies, so it covers far more stocks and is **more representative of the entire market than the DJIA**.\n• The **NASDAQ Composite** reflects the performance of all stocks listed on the NASDAQ exchange, and is **dominated by tech companies**.",
+      after: "Yahoo Finance's world-indices table lists the symbol for each index, which is what `yfinance` wants. The S&P 500 is `^SPX`." },
+
+    { kind: "code", title: "Pulling an index", lang: "python", file: "index.py",
+      body: "Indices are fetched exactly like stocks — the symbol just starts with a caret.",
+      code: `import yfinance as yf
+import numpy as np
+
+SPXdat = yf.Ticker("^SPX").history(start="2000-01-01", end="2025-12-31")
+SPXldr = np.log(SPXdat["Close"]).diff().dropna()   # log daily returns`,
+      after: "Over 2000-2025 the S&P 500 runs from roughly 1,400 to about 6,800, with the dot-com decline, the 2008 crash and the 2020 drop all clearly visible." },
+
+    { kind: "plain", title: "What is the VIX?",
+      body: "The Chicago Board of Exchange (CBOE) sells **options on the S&P 500 index** — so you can buy calls and puts whose underlying “asset” is the *value of the index itself* rather than any single company.\n\n**Why would anyone want those?** Two reasons. To **protect against market drops**, and because they are based on the entire market or economy as a whole rather than on one company.\n\nNow recall implied volatility from Module 11. Since the S&P 500 is broad-based, **the implied volatility of its options is of particular interest**: it says something about what investors are anticipating for the future variability of *the market as a whole*.\n\nThere is a market index that tracks exactly that quantity, and it is widely reported. It is the **VIX**." },
+
+    { kind: "idea", title: "The fear index",
+      body: "The VIX is often called the **“fear index”**, because it is larger in times when investors are nervous about the future of the financial markets and are anticipating increased volatility.\n\nRead it as: *the market's current forecast of its own near-future turbulence, in the language of Black-Scholes.*",
+      after: "Its history makes the name obvious. Through calm stretches the VIX sits around 10-20. It spiked above **80** in the 2008 financial crisis and again in **March 2020**, with smaller peaks at every period of market stress in between. On `yfinance` the symbol is `^VIX`." },
+
+    { kind: "math", title: "The VIX against the market",
+      body: "Here is the plot that matters. Compare the **day-to-day change in the VIX** with the **log return on the S&P 500 on the same day**.\n\nThe first, more evident, feature is a strong **negative relationship**: on days the market falls, expected future volatility jumps; on days it rises, expected volatility eases.",
+      diagram: "vixspx",
+      after: "This is the leverage effect, seen at the level of the whole market instead of one stock. Note what it is **not**: it is not a statement that volatility is high when prices are *low*. It is about **changes** — today's move against today's change in expected volatility." },
+
+    { kind: "idea", title: "Two theories, and which one is favoured",
+      body: "**The source of this effect is not completely understood.** Two explanations compete, and the exam-relevant point is knowing which is which.\n\n**1. The leverage story.** As equity prices fall, **debt-to-equity ratios** increase — companies are more *leveraged* — which makes their stock riskier. **This is where the name “leverage effect” comes from.**\n\n**2. The volatility-feedback story — more widely accepted.** When uncertainty hits the market (a news event, say), this increases uncertainty and raises the volatility expected in the future. Because investors are **risk-averse**, they refuse to hold stocks in this newly volatile environment unless they receive a larger expected return. And to generate a higher future return, **the current stock price must immediately drop.**",
+      after: "So the effect keeps the name of the theory that does *not* best explain it — a small piece of trivia that makes an easy exam question." },
+
+    { kind: "math", title: "Measuring the asymmetry with an interaction term",
+      body: "The negative slope is the obvious feature. There is a second, subtler one: **the slope is not the same for up days and down days.**\n\nTo test that, fit a regression of the change in VIX on the S&P 500 log return, plus an **interaction** between that return and an indicator for the return being non-negative:",
+      tex: ["\\Delta\\text{VIX}_t=\\beta_0+\\beta_1\\,r_t+\\beta_2\\,\\big(r_t\\times \\mathbf{1}\\{r_t\\ge0\\}\\big)+\\epsilon_t"],
+      after: "**The role of the interaction term** is to allow the slope of the relationship between the change in VIX and the log daily return to **shift** when the log daily return is $\\ge 0$.\n\nIn other words: $\\beta_1$ is the slope on down days, and $\\beta_1+\\beta_2$ is the slope on up days. If $\\beta_2$ is indistinguishable from zero, there is no asymmetry." },
+
+    { kind: "code", title: "Fitting it with the formula API", lang: "python", file: "leverage.py",
+      body: "`statsmodels` includes an “R-like” formula interface, where `:` means an interaction:",
+      code: `import pandas as pd
+import statsmodels.formula.api as smf
+
+df = pd.DataFrame({"VIXchange": VIXchange,
+                   "SPXldr":    SPXldr,
+                   "PosRet":    SPXldr >= 0})
+
+modelfit = smf.ols(formula="VIXchange ~ SPXldr + SPXldr:PosRet", data=df).fit()
+modelfit.summary()`,
+      after: "**The result:** the estimated coefficient on the interaction term is about **37.71**, and it is **statistically significant**.\n\nSo the slope is genuinely **not the same** for log returns below zero and log returns at or above zero. The asymmetry in the slope, although small, is another important feature associated with the leverage effect." },
+
+    { kind: "key", title: "Reading the asymmetry in plain terms",
+      body: "• Significant **negative** events lead to an increase in the VIX, and a decrease in prices.\n• A similar statement holds for **positive** events, which lead to a decrease in the VIX — but **the effect on the price is not as large**.\n\n**Investors react more strongly to negative events than they do to positive ones.** That single sentence is the content of the whole regression." },
+
+    { kind: "trap", title: "Why look at the S&P 500 rather than one stock?",
+      body: "It is important to note that **this behaviour is not seen only in the S&P 500.** The leverage effect is a general property of equity returns.\n\nWe view it through the S&P 500 for two practical reasons:\n\n• It **averages over a large number of stocks**, and hence has less of the variability associated with a single equity — the pattern is easier to see through less noise.\n• Historical information on the VIX is **easy to obtain**.\n\nDo not conclude from these plots that the effect is somehow an index-level phenomenon. It is not." },
+
+    { kind: "check",
+      q: "The DJIA weights its component stocks by **current stock price**. Why is this criticized?",
+      choices: [
+        "Because it makes the index too sensitive to small companies",
+        "Because a stock split changes a firm's weight in the index without changing the firm's value",
+        "Because share prices are not published frequently enough",
+        "Because it requires knowing the number of shares outstanding",
+      ],
+      answer: 1,
+      explain: "A 2-for-1 split halves the share price overnight while the company is worth exactly the same, yet under price weighting its influence on the index is halved too — an arbitrary change. **Market-cap** weighting (price × shares outstanding), used by the S&P 500, is immune: halving the price doubles the share count and the product is unchanged. Note the last option describes market-cap weighting, not price weighting." },
+
+    { kind: "check",
+      q: "In the regression $\\Delta\\text{VIX}_t=\\beta_0+\\beta_1 r_t+\\beta_2(r_t\\times\\mathbf{1}\\{r_t\\ge0\\})+\\epsilon_t$, what does a significant $\\beta_2$ tell you?",
+      choices: [
+        "The VIX and the S&P 500 are uncorrelated",
+        "The relationship between VIX changes and returns has a different slope on up days than on down days",
+        "The VIX is autocorrelated",
+        "The residuals are not normally distributed",
+      ],
+      answer: 1,
+      explain: "The interaction lets the slope **shift** when $r_t\\ge0$: $\\beta_1$ is the slope on down days and $\\beta_1+\\beta_2$ the slope on up days. A significant $\\beta_2$ — about 37.71 in the fitted model — means those slopes genuinely differ, which is the asymmetry of the leverage effect. It says nothing about autocorrelation or residual normality, and the strong negative $\\beta_1$ already rules out “uncorrelated”." },
   ],
 },
 

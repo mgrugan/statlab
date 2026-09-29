@@ -96,8 +96,19 @@ export default compile({
         "$M=\\log(P_0/K)$ is the **moneyness** — the only place $P_0$ and $K$ ever meet.",
         "Why those substitutions? GBM property 4 gives $\\log P_t\\sim N\\big(\\log P_0+\\nu t,\\ \\sigma^2t\\big)$ — so $\\xi$ and $\\tau^2$ **are** those two quantities.",
         "This is the heart of **Black-Scholes-Merton** theory, for **European-style** options.",
+        "But this is the expected **payoff**, not yet the **price** — two things are still missing.",
       ],
-      say: "Substituting the geometric Brownian motion parameters into the Claim gives the Black Scholes formula. M is the moneyness, log of P zero over K, and it's the only place the spot price and the strike ever meet. Why those particular substitutions? Because GBM property four says the log price is normal with mean log P zero plus nu t, and variance sigma squared t. So xi and tau squared simply are those two quantities. This equation is the heart of Black Scholes Merton theory, for European style options." }),
+      say: "Substituting the geometric Brownian motion parameters into the Claim gives the Black Scholes formula. M is the moneyness, log of P zero over K, and it's the only place the spot price and the strike ever meet. Why those substitutions? Because GBM property four says the log price is normal with mean log P zero plus nu t, and variance sigma squared t. This equation is the heart of Black Scholes Merton theory, for European style options. But careful: this is the expected payoff, not yet the price. Two things are still missing, and the next chapter supplies them." }),
+
+    formula({ dur: 26, tone: "amber",
+      heading: "Missing piece one: discount it",
+      tex: "\\text{price}=e^{-rt}\\,\\E\\big((P_t-K)^+\\big)",
+      notes: [
+        "$\\E\\big((P_t-K)^+\\big)$ is what you expect to receive **at time $t$**.",
+        "Money paid **today** could instead have earned the risk-free rate $r$ — so discount it back.",
+        "At $r=0.05$, \\$100 in six months is worth $100e^{-0.05\\times0.5}=\\$97.53$ today.",
+      ],
+      say: "Missing piece one: discount it. The expectation is what you expect to receive at time t. But money you pay today could instead have been put into a risk free investment earning r. So the expected payoff has to be discounted back to today, by e to the minus r t. Concretely, at a five percent rate, a hundred dollars in six months is worth ninety seven dollars and fifty three cents today. Leaving that factor off makes every option look slightly too expensive." }),
 
     points({ dur: 30, heading: "Five inputs — and only three are facts", tone: "blue",
       items: [
@@ -106,7 +117,32 @@ export default compile({
         "So the formula is a machine for converting your **beliefs** about drift and volatility into a price.",
         "That is precisely why the statistics of Parts 2 to 4 matter to what looks like a pricing formula.",
       ],
-      say: "There are five inputs, and only three of them are facts. Known today: the strike, the time to expiration, and the current spot price. Not known: the drift and the volatility. Those have to be estimated or calibrated from somewhere. So the formula is really a machine for converting your beliefs about drift and volatility into a price. And that is precisely why the statistics of Parts two through four matter to something that looks like a pure pricing formula." }),
+      say: "There are five inputs, and only three of them are facts. Known today: the strike, the time to expiration, and the current spot price. Not known: the drift and the volatility. Those have to be estimated or calibrated. So the formula is really a machine for converting your beliefs about drift and volatility into a price." }),
+
+    points({ dur: 30, heading: "Missing piece two: which $\\nu$?", tone: "slate",
+      items: [
+        "**The real-world (physical) measure $\\mathbb{P}$** — calibrate $\\nu$ to the drift actually observed in market data. Estimate $\\mu$, then set $\\nu=\\mu-\\sigma^2/2$.",
+        "**The risk-neutral measure $\\mathbb{Q}$** — ask what rate the price *should* grow at if nobody cared about risk. Answer: the **risk-free rate** $r$, or there is an arbitrage. So $\\nu=r-\\sigma^2/2$.",
+        "The distinction is **central to quantitative finance**, and Black-Scholes takes the second road.",
+      ],
+      say: "Missing piece two: which nu? There are two ways of thinking about setting it, and the distinction is central to quantitative finance. The first is the real world, or physical, measure, written P. Calibrate nu to the drift you actually observe in market data: estimate the real rate of return mu, then set nu to mu minus sigma squared over two. The second is the risk neutral measure, written Q. Ask instead what rate the price should grow at if nobody cared about risk at all. The answer is the risk free rate, because anything else would create an arbitrage. So nu is r minus sigma squared over two. Black Scholes takes the second road." }),
+
+    points({ dur: 24, heading: "First, what “risk-neutral” even means", tone: "amber",
+      items: [
+        "A game: I flip a fair coin. Heads you win \\$100, tails nothing. What would you pay to play?",
+        "The expected value is \\$50. Pay **under** \\$50 and you are **risk-averse**; **over**, **risk-seeking**; **exactly** \\$50, **risk-neutral**.",
+        "A risk-neutral investor has no concern for volatility at all — only the expected value matters.",
+      ],
+      say: "First, what risk neutral even means. Here's a game. I flip a fair coin; heads you win a hundred dollars, tails you win nothing. What would you pay to play? The expected value is fifty dollars. Pay under fifty and you are risk averse. Pay over fifty and you are risk seeking. Pay exactly fifty and you are risk neutral. Formally, a risk neutral investor has no concern for volatility at all. Their only consideration is the expected value." }),
+
+    points({ dur: 30, heading: "Why pretending everyone is risk-neutral is *allowed*", tone: "emerald",
+      items: [
+        "Real investors are mostly **risk-averse**. So this looks like the wrong assumption.",
+        "But Black and Scholes saw that under idealized conditions, option trades can be paired with trades in the underlying to give a **risk-free** return.",
+        "A zero-risk strategy must earn exactly $r$, or there is an arbitrage — and its fair price **cannot depend on anyone's risk preferences**.",
+        "So the price is independent of those preferences, and we may act **as if** everyone were risk-neutral.",
+      ],
+      say: "So why is pretending everyone is risk neutral allowed, when real investors are mostly risk averse? Here's the insight. Under idealized conditions you can pair trades of an option with trades of its underlying asset so that the return is risk free. A strategy with zero risk must earn exactly the risk free rate, or there is an arbitrage. And because it carries no risk, its fair price cannot depend on how risk averse anyone is. The risk preferences of the market are irrelevant. So the option's price is independent of those preferences, and we may act as if everyone were perfectly risk neutral." }),
 
     /* ---------- 3. moneyness ---------- */
     title({ n: 3, title: "Moneyness", tone: "amber", chapter: "Moneyness",
@@ -239,7 +275,7 @@ export default compile({
 
     plot({ dur: 32, chapter: "The leverage effect",
       caption: "Volatility rises **more after falls** than after rises of the same size. Watch the conditional volatility jump after the red bars and barely move after the green ones.",
-      say: "The leverage effect says volatility tends to rise more following negative returns than following positive returns of the same magnitude. Markets fall faster than they rise, and the turbulence after a drop is worse. Watch the conditional volatility underneath: it jumps sharply after the red bars, the down days, and barely moves after equally large green ones. The traditional explanation is about financial leverage — as a firm's equity falls, its debt to equity ratio rises, making the equity riskier — though the empirical effect is stronger than that story alone justifies.",
+      say: "The leverage effect says volatility tends to rise more following negative returns than following positive returns of the same magnitude. Markets fall faster than they rise, and the turbulence after a drop is worse. Watch the conditional volatility underneath: it jumps sharply after the red bars, the down days, and barely moves after equally large green ones. The source of this effect is not completely understood. The leverage story — that falling equity raises debt to equity ratios and makes stocks riskier — is where the name comes from, but it is not the favoured explanation. Module twelve takes up the one that is.",
       note: "red = down days · volatility reacts asymmetrically",
       draw({ ctx, W, H, t, dur, data, axes }) {
         const top = { l: 60, r: 22, t: 46, b: H / 2 + 10 };

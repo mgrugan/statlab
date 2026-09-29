@@ -13,5 +13,6 @@ import f8 from "./films/f8";
 import f9 from "./films/f9";
 import f10 from "./films/f10";
 import f11 from "./films/f11";
+import f12 from "./films/f12";
 
-export const EXPLAINERS = { f1, f2, f3, f4, f5, f6, f7, f8, f9, f10, f11 };
+export const EXPLAINERS = { f1, f2, f3, f4, f5, f6, f7, f8, f9, f10, f11, f12 };

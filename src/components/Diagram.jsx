@@ -50,6 +50,43 @@ const T = (props) => <text fontSize="11.5" {...props} />;
 /* ---------------------------------------------------------- */
 const DIAGRAMS = {
 
+
+  /* f12 - change in VIX against the S&P 500's log return, with the
+     asymmetric fit: a steeper slope on down days than on up days */
+  vixspx: {
+    caption: "Change in VIX vs. S&P 500 log daily return: strongly negative, and steeper on down days.",
+    render: () => {
+      const r = rng(20260922);
+      const cx = 220, cy = 100;          // origin in svg space
+      const sx = 2600, sy = 5.2;         // scale: return -> px, dVIX -> px
+      const pts = [];
+      for (let i = 0; i < 520; i++) {
+        const ret = gauss(r) * 0.011;                 // daily log return
+        const slope = ret < 0 ? -190 : -152;          // the asymmetry
+        const d = slope * ret + gauss(r) * 0.95;      // change in VIX
+        const X = cx + ret * sx, Y = cy - d * sy;
+        if (X > 48 && X < 392 && Y > 20 && Y < 176) pts.push([X, Y]);
+      }
+      const fit = (ret) => cy - (ret < 0 ? -190 : -152) * ret * sy;
+      return (
+        <>
+          <Axes xlabel="Log daily return on SPX" ylabel="Change in VIX" />
+          <line x1="48" y1={cy} x2="392" y2={cy} stroke={C.border} strokeDasharray="3 3" />
+          <line x1={cx} y1="20" x2={cx} y2="176" stroke={C.border} strokeDasharray="3 3" />
+          {pts.map(([X, Y], i) => (
+            <circle key={i} cx={X} cy={Y} r="1.5" fill={C.blue} opacity="0.42" />
+          ))}
+          {/* the fitted relationship, kinked at zero */}
+          <line x1={cx - 0.052 * sx} y1={fit(-0.052)} x2={cx} y2={cy} stroke={C.red} strokeWidth="2.4" />
+          <line x1={cx} y1={cy} x2={cx + 0.052 * sx} y2={fit(0.052)} stroke={C.emerald} strokeWidth="2.4" />
+          <L x="60" y="34" fill={C.red}>down days: steeper</L>
+          <L x="392" y="170" textAnchor="end" fill={C.emerald}>up days: shallower</L>
+          <T x="238" y="38" fill={C.ink} fontWeight="600">Market falls → VIX jumps</T>
+        </>
+      );
+    },
+  },
+
   /* f1 — the call payoff, and where its value comes from */
   payoff: {
     caption: "Call payoff $(P_T-K)^+$: losses truncate at zero, gains do not.",

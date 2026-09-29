@@ -519,14 +519,14 @@ f11: [
     ], answer: 0,
     why: "$K$, $t$ and $P_0$ are all observable today — they are contract terms and a market quote. The drift $\\nu$ and volatility $\\sigma$ describe the *future* behaviour of the price and must be estimated or calibrated. That is precisely why a pricing formula needs the statistics of Parts 2-4." },
 
-  { q: "Why is standard GARCH structurally unable to capture the leverage effect?",
+  { q: "Under the **risk-neutral measure** $\\mathbb{Q}$, what should the log-scale drift $\\nu$ be set to?",
     choices: [
-      "Because GARCH assumes the conditional mean is zero",
-      "Because GARCH depends on $X_{t-i}^2$, and squaring discards the sign of the return",
-      "Because GARCH requires the returns to be normally distributed",
-      "Because the leverage effect concerns the mean, not the variance",
-    ], answer: 1,
-    why: "The leverage effect is the *asymmetry* — volatility rises more after negative returns than after equally sized positive ones. But $(-0.05)^2=(+0.05)^2$, so a model built on squared past returns treats the two identically by construction. Asymmetric extensions such as APARCH, EGARCH and GJR-GARCH exist to break that symmetry." },
+      "$\\nu=r-\\sigma^2/2$, where $r$ is the risk-free rate",
+      "$\\nu=r$, the risk-free rate itself",
+      "$\\nu=\\mu$, the observed drift in market data",
+      "$\\nu=0$, since risk-neutral investors expect no growth",
+    ], answer: 0,
+    why: "Risk-neutrality says the price should grow at the **risk-free rate**, or there would be an arbitrage — so the *price-scale* drift is $\\mu=r$. But the formula takes the **log-scale** drift, and $\\mu=\\nu+\\sigma^2/2$, so $\\nu=r-\\sigma^2/2$. Setting $\\nu=r$ directly is the trap: it confuses the two scales. Calibrating to the observed drift instead is the **real-world** measure $\\mathbb{P}$." },
 
   { q: "An option's market price implies a volatility of 38%, while the realized volatility over the past year was 25%. What does the gap most directly represent?",
     choices: [
@@ -866,6 +866,54 @@ p7: [
       "That `.last()` and `.mean()` are interchangeable here",
     ], answer: 1,
     why: "Log returns telescope: $\\log(P_{\\text{end}}/P_{\\text{start}})$ equals the sum of the daily log returns in between. So computing it from month-end prices and summing daily values agree exactly — the $k$-period identity $r_t(k)=\\sum r_{t-i}$ expressed in pandas. `.mean()` would give the *average* daily return, a different quantity." },
+],
+
+/* =============================================================== f12 */
+f12: [
+  { q: "The DJIA is **price-weighted**. A component announces a 2-for-1 stock split. What happens?",
+    choices: [
+      "The company's weight in the index is unchanged, since its market value is unchanged",
+      "The company's weight in the index is halved, even though the company is worth the same",
+      "The company is removed from the index until the split settles",
+      "The index level doubles",
+    ], answer: 1,
+    why: "Price weighting makes a firm's influence depend on its **share price**, which is an arbitrary number a company can change at will. A 2-for-1 split halves the price overnight while the business is worth exactly the same, so its weight halves for no economic reason — the central criticism of the DJIA. **Market-cap** weighting (price × shares outstanding), used by the S&P 500, is immune: the share count doubles and the product is unchanged." },
+
+  { q: "What does the VIX actually measure?",
+    choices: [
+      "The realized volatility of the S&P 500 over the past 30 days",
+      "The implied volatility of options written on the S&P 500 index",
+      "The number of S&P 500 constituents that fell on a given day",
+      "The spread between the S&P 500 and the DJIA",
+    ], answer: 1,
+    why: "The CBOE sells options whose underlying “asset” is the value of the S&P 500 index, and the VIX tracks the **implied volatility** of those options. So it is **forward-looking** — what investors anticipate for future variability of the market as a whole — which is why it is nicknamed the *fear index*. Realized volatility over past data is the backward-looking quantity it is most often confused with." },
+
+  { q: "Plotting the daily **change in the VIX** against the same day's **S&P 500 log return** shows what?",
+    choices: [
+      "No discernible relationship",
+      "A strong positive relationship",
+      "A strong negative relationship",
+      "A relationship that is positive for small moves and negative for large ones",
+    ], answer: 2,
+    why: "The dominant feature is a strong **negative** relationship: on days the market falls, expected future volatility jumps; on days it rises, expected volatility eases. This is the leverage effect seen at the level of the whole market. Note it concerns **changes** — it is not a claim that volatility is high whenever prices are low." },
+
+  { q: "Which explanation of the leverage effect is the **more widely accepted** one?",
+    choices: [
+      "Falling equity prices raise debt-to-equity ratios, making stocks riskier",
+      "Rising uncertainty raises expected future volatility, and risk-averse investors will only hold stocks at a higher expected return — so the price must drop now",
+      "Trading volume rises after bad news, mechanically increasing measured volatility",
+      "Short-selling restrictions prevent prices from adjusting symmetrically",
+    ], answer: 1,
+    why: "The debt-to-equity story is where the **name** comes from, but the volatility-feedback story is the more widely accepted explanation: a shock raises expected volatility, risk-averse investors demand a larger expected return to hold the asset, and generating a higher *future* return requires the current price to fall **immediately**. So the effect is named after the theory that does not best explain it." },
+
+  { q: "In the regression $\\Delta\\text{VIX}_t=\\beta_0+\\beta_1 r_t+\\beta_2\\big(r_t\\times\\mathbf{1}\\{r_t\\ge0\\}\\big)+\\epsilon_t$, what is the interaction term doing?",
+    choices: [
+      "Letting the **slope** differ between days with $r_t<0$ and days with $r_t\\ge0$",
+      "Letting the **intercept** differ between up days and down days",
+      "Correcting for autocorrelation in the VIX series",
+      "Testing whether the residuals are normally distributed",
+    ], answer: 0,
+    why: "The interaction multiplies the return by an indicator, so it shifts the **slope** rather than the level: $\\beta_1$ is the slope on down days and $\\beta_1+\\beta_2$ on up days. Fitted on S&P 500 data the coefficient is about **37.71** and statistically significant — evidence the relationship really is asymmetric. An indicator entering on its own, without the return, would shift the intercept instead." },
 ],
 
 };
