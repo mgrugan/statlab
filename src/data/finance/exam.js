@@ -114,8 +114,8 @@ export const EXAM = [
 { id: "x9", ref: "f5", topic: "KDE",
   q: "In the kernel density estimator $\\widehat f_h(x)=\\frac{1}{nh}\\sum_{i=1}^{n}K\\big((x-x_i)/h\\big)$, what role does $h$ play?",
   choices: [
-    "It controls the smoothness of the resulting density estimate",
-    "It rescales the estimate so that it integrates to one",
+    "It controls the smoothness of the density estimate",
+    "It rescales the estimate so that it integrates to exactly one",
     "It sets the number of kernels that are summed",
     "It determines which kernel function is used",
   ], answer: 0,
@@ -166,9 +166,9 @@ export const EXAM = [
   q: "How is the *implied volatility* of an option calculated?",
   choices: [
     "By averaging historical squared daily returns over a fixed window and multiplying by 252",
-    "By solving for the volatility that equates the Black-Scholes price to the option's market price",
+    "By solving for the volatility that reproduces the observed market price",
     "By computing the standard deviation of option prices across different strike prices",
-    "By fitting a GARCH model to past returns and forecasting one step ahead",
+    "By fitting a GARCH model to the past returns and forecasting one step ahead",
   ], answer: 1,
   why: "Implied volatility runs the pricing formula **backwards**: take the market price as given and solve for the $\\sigma$ that reproduces it. The “average of past squared returns” choice describes *realized/historical* volatility, and the GARCH choice describes a *forecast* — both are estimates from past data, not from current option prices." },
 
@@ -187,7 +187,7 @@ export const EXAM = [
   choices: [
     "There is strong evidence the sample was not drawn from a normal distribution",
     "There is strong evidence the sample was drawn from a normal distribution",
-    "The sample was definitely drawn from a normal distribution",
+    "The sample was definitely drawn from a normal distribution, since 0.42 is far above 0.05",
     "We failed to find strong evidence that the sample was not drawn from a normal distribution",
   ], answer: 3,
   why: "A large p-value means you **failed to reject** $H_0$ — never that you proved it. Hypothesis tests deliver strong evidence only *for the alternative*, so the only honest phrasing is that no evidence against normality was found." },
@@ -217,10 +217,10 @@ export const EXAM = [
 { id: "x19", ref: "f11", topic: "Risk-neutral pricing",
   q: "Black-Scholes prices an option **as if** every investor were risk-neutral. Why is that legitimate, given that real investors are mostly risk-averse?",
   choices: [
-    "Because the compensation for risk is already built into the strike price",
-    "Because risk aversion affects only the drift, and the drift cancels out of the payoff",
-    "Because a position in the option can be paired with the underlying to earn a risk-free return, and the fair price of a risk-free strategy cannot depend on anyone's risk preferences",
-    "Because risk-averse and risk-seeking investors happen to cancel each other out in a large market",
+    "Because the compensation investors demand for bearing risk is already built into the option's strike price",
+    "Because risk aversion affects only the drift of the price process, and the drift cancels out of the payoff",
+    "Because a hedged option position is risk-free, and a risk-free price cannot depend on risk preferences",
+    "Because risk-averse and risk-seeking investors happen to cancel one another out in a large, liquid market",
   ], answer: 2,
   why: "This is the Black-Scholes insight. Under idealized conditions you can pair trades of the option with trades of its underlying so the return is risk-free — zero variance. Such a strategy must earn exactly the risk-free rate or there is an **arbitrage**, and because it carries no risk its fair price cannot depend on how risk-averse anyone is. Since the price is independent of risk preferences, we may act as if everyone were risk-neutral, where the mathematics is simpler." },
 
@@ -239,8 +239,8 @@ export const EXAM = [
   choices: [
     "Implied is typically **higher**, because the market price also compensates for the risk of extreme moves",
     "Implied is typically **lower**, because option markets are more liquid than the underlying",
-    "They are equal by construction, since both estimate the same $\\sigma$",
-    "Implied is typically **lower**, because realized volatility is measured with error",
+    "They are equal by construction, since both are estimates of the same underlying $\\sigma$",
+    "Implied is typically **lower**, because realized volatility is measured with error and biased upward",
   ], answer: 0,
   why: "Realized volatility is the actual observed variability of past log returns, computed under the **real-world measure** $\\mathbb{P}$. Implied volatility is backed out of the **market price**, and that price must include compensation for the risk of extreme fluctuations — real investors are risk-averse even though the pricing model pretends otherwise. A higher price inverts to a higher volatility, so $\\text{IV}>\\text{HV}$." },
 
@@ -288,9 +288,9 @@ export const EXAM = [
 { id: "x26", ref: "f8", topic: "Significance",
   q: "Ljung-Box on a long series of log daily returns yields very small p-values, indicating significant autocorrelation. Why does this not amount to a money-making opportunity?",
   choices: [
-    "Because the p-values must be wrong if the series is stationary",
-    "Because statistical significance is not practical significance — transaction costs would swamp the small gains",
-    "Because the test is invalid for financial data",
+    "Because the p-values must be wrong if the series is genuinely stationary and mean-reverting",
+    "Because statistical significance is not the same as practical significance",
+    "Because the Ljung-Box test is not valid for heavy-tailed financial data",
     "Because autocorrelation in returns cannot be exploited by any strategy in principle",
   ], answer: 1,
   why: "With thousands of observations, even tiny correlations become statistically detectable. The correlations are real but minute, and **transaction costs would swamp any small gains** — the standing distinction between statistical and practical significance." },
@@ -329,20 +329,20 @@ export const EXAM = [
 { id: "x30", ref: "f9", topic: "Volatility clustering",
   q: "Why is the ACF of the **squared** log returns a sensible diagnostic for volatility clustering?",
   choices: [
-    "Squaring makes the series stationary",
-    "Log returns have mean near zero, so squared returns approximate the squared distance from the mean — what variance measures",
-    "Because the squared series is normally distributed",
-    "Squaring removes the autocorrelation present in the raw returns",
+    "Squaring makes an otherwise non-stationary return series stationary",
+    "Squared returns approximate the squared distance from the mean, i.e. variance",
+    "Because the squared series is normally distributed, which the raw returns are not",
+    "Squaring removes the autocorrelation already present in the raw return series",
   ], answer: 1,
   why: "Since $\\E(r_t)\\approx0$, $r_t^2\\approx(r_t-\\mu)^2$, and $\\E[(X-\\mu)^2]=\\Var(X)$. So correlation among squared returns at various lags *is* correlation in the variance at those lags. No clustering ⟹ no correlation at any lag." },
 
 { id: "x31", ref: "f10", topic: "ARCH",
   q: "Consider the ARCH(1) model $X_t=\\epsilon_t\\sqrt{\\omega+\\alpha_1X_{t-1}^2}$ with $\\alpha_1<1$. Which is true of $\\{X_t\\}$?",
   choices: [
-    "It is nonstationary for every $\\alpha_1>0$",
-    "It is an iid sequence",
+    "It is nonstationary for every $\\alpha_1>0$, since the variance grows without bound",
+    "It is an iid sequence, since the autocorrelations all vanish",
     "It is white noise with mean zero, yet the squared series is autocorrelated",
-    "It is autocorrelated at lag 1 with correlation $\\alpha_1$",
+    "It is autocorrelated at lag 1, with autocorrelation equal to $\\alpha_1$",
   ], answer: 2,
   why: "With $\\alpha_1<1$ the process is stationary and is **white noise** with mean 0 and variance $\\omega/(1-\\alpha_1)$, so $\\text{Corr}(X_t,X_{t+h})=0$ for $h\\ne0$. But it is **not iid** — the squares are dependent. Uncorrelated-but-dependent is the entire point of the model." },
 

@@ -75,9 +75,9 @@ export const EXAM_B = [
 { id: "b5", ref: "f4", topic: "Returns",
   q: "Why is the $k$-period log return $r_t(k)$ equal to $r_t+r_{t-1}+\\cdots+r_{t-k+1}$?",
   choices: [
-    "Because the log of a ratio is a difference of logs, so the intermediate terms cancel",
-    "Because log returns are always small enough to approximate",
-    "Because prices are assumed independent across periods",
+    "Because the log of a ratio is a difference of logs, so intermediate terms cancel",
+    "Because log returns are always small enough for the approximation to hold",
+    "Because prices are assumed to be independent from one period to the next",
     "It is not — that identity holds for simple returns, not log returns",
   ], answer: 0,
   why: "$\\log(P_t/P_{t-k})=\\log P_t-\\log P_{t-k}$. Inserting and subtracting every intermediate log price telescopes the sum, leaving one-period log returns. No approximation and no independence assumption is needed — it is an algebraic identity. **Simple** returns compound multiplicatively instead." },
@@ -85,10 +85,10 @@ export const EXAM_B = [
 { id: "b6", ref: "f4", topic: "Volatility scaling",
   q: "Why does the standard deviation of a $k$-period log return scale with $\\sqrt{k}$ rather than with $k$?",
   choices: [
-    "Because volatility is estimated with error, and that error grows over time",
-    "Because the **variances** of independent one-period returns add, and the standard deviation is the square root of the variance",
-    "Because log returns are bounded below, which dampens the growth",
-    "Because the mean also grows with $\\sqrt{k}$, and the two must match",
+    "Because volatility is estimated with error, and that estimation error grows steadily over time",
+    "Because the **variances** of independent returns add, not the standard deviations",
+    "Because log returns are bounded below, which dampens the growth over longer horizons",
+    "Because the mean return also grows with $\\sqrt{k}$, so the two quantities must match",
   ], answer: 1,
   why: "Independence makes **variances** additive, so the $k$-period variance is $k\\sigma^2$. Taking the square root to return to the original units gives $\\sigma\\sqrt{k}$ — there is no finance in that step, it is a units conversion. Standard deviations themselves do **not** add, because a square root does not distribute over a sum. Note the mean does scale with $k$ in full, which is why a trend eventually outruns the noise." },
 
@@ -105,9 +105,9 @@ export const EXAM_B = [
 { id: "b8", ref: "f1", topic: "Options",
   q: "An American call and a European call are written on the same stock with the same strike and expiry. Which statement is correct?",
   choices: [
-    "Their relative value depends on which continent they trade on",
+    "Their relative value depends on which continent they are traded on, US or Europe",
     "The European option is worth at least as much, since it is simpler to price",
-    "They always have exactly the same value",
+    "They always have exactly the same value, since the strike and expiry match",
     "The American option is worth at least as much, since early exercise is an extra right",
   ], answer: 3,
   why: "The distinction is **when** you may exercise, not geography. Early exercise is an additional right, and extra rights cannot reduce value — so the American option is worth at least as much as its European twin. Black-Scholes prices the European case precisely because removing that choice makes the mathematics tractable." },
@@ -166,10 +166,10 @@ export const EXAM_B = [
 { id: "b14", ref: "f6", topic: "Normality tests",
   q: "Why is the Shapiro-Wilk test generally preferred to Jarque-Bera for assessing normality?",
   choices: [
-    "It runs faster on large samples",
+    "It runs much faster on large samples and requires no tuning constants",
     "It is built from the order statistics themselves, so it has more power",
-    "It does not require a null hypothesis",
-    "It reports the probability that the data are normal",
+    "It does not require a null hypothesis to be specified in advance",
+    "It reports the probability that the data really are normally distributed",
   ], answer: 1,
   why: "Jarque-Bera compresses the whole sample into two numbers — skewness and kurtosis — and discards the rest, which costs it power. Shapiro-Wilk's statistic uses the sorted values $x_{(i)}$ directly, so it can detect departures that leave the third and fourth moments looking normal." },
 
@@ -198,9 +198,9 @@ export const EXAM_B = [
   q: "An ARCH(1) process with $0\\le\\alpha<1$ has $\\text{Corr}(X_t,X_{t+h})=0$ for all $h\\ne0$. What does that tell you?",
   choices: [
     "The process is uncorrelated but not necessarily independent",
-    "The process is not stationary",
-    "The conditional variance must be constant",
-    "The process is iid",
+    "The process cannot be stationary for any nonzero $\\alpha$",
+    "The conditional variance must therefore be constant over time",
+    "The process must therefore be an iid sequence",
   ], answer: 0,
   why: "Zero correlation rules out a **linear** relationship, not every relationship. In an ARCH process the levels are uncorrelated while the **squares** are clearly dependent. Uncorrelated $\\ne$ independent — the single most important distinction in Part 4." },
 
@@ -238,9 +238,9 @@ export const EXAM_B = [
   q: "The autocorrelation function below was computed from a single series. What does it most suggest?",
   choices: [
     "A series with a unit root, or very close to one",
-    "A seasonal pattern with period 4",
-    "White noise",
-    "A stationary AR(1) with small $\\phi$",
+    "A seasonal pattern repeating every four lags",
+    "White noise with no structure at any lag",
+    "A stationary AR(1) with a small value of $\\phi$",
   ], answer: 0,
   why: "The bars stay high and decay only slightly across many lags. A stationary AR decays **geometrically** — visibly shrinking by a constant factor — while white noise shows nothing outside the band. Near-flat, slowly decaying autocorrelation is the visual signature of a unit root." },
 
@@ -267,10 +267,10 @@ export const EXAM_B = [
 { id: "b24", ref: "f8", topic: "Significance",
   q: "Ljung-Box on several thousand daily log returns gives small p-values at $H=10$ and $H=20$. Does this contradict market efficiency?",
   choices: [
-    "No — the Ljung-Box test is not valid on financial data",
-    "Yes, but only if the autocorrelations are negative",
-    "Yes — predictable returns are incompatible with efficiency",
-    "No — with a large $n$, tiny correlations become detectable but remain too small to trade through transaction costs",
+    "No — the Ljung-Box test is not valid on heavy-tailed financial data",
+    "Yes, but only if the estimated autocorrelations turn out to be negative",
+    "Yes — predictable returns are flatly incompatible with market efficiency",
+    "No — the correlations are real but too small to trade profitably",
   ], answer: 3,
   why: "This is the distinction between **statistical** and **practical** significance. Thousands of observations make minute correlations detectable; acting on them would be swamped by transaction costs. Real, detectable, and useless." },
 
@@ -278,10 +278,10 @@ export const EXAM_B = [
 { id: "b25", ref: "f9", topic: "Volatility clustering",
   q: "What does *volatility clustering* refer to?",
   choices: [
-    "Large changes tend to be followed by large changes, and small by small, regardless of sign",
-    "Returns are positively autocorrelated at short lags",
-    "Several stocks in the same sector move together",
-    "Volatility is higher at the start of each trading day",
+    "Large changes tend to be followed by large changes, regardless of sign",
+    "Returns themselves are positively autocorrelated at short lags",
+    "Several stocks in the same sector tend to move up and down together",
+    "Volatility is reliably higher at the start of each trading day",
   ], answer: 0,
   why: "Clustering is about **magnitude**, not direction and not cross-sectional co-movement. The phrase \u201cregardless of sign\u201d is doing real work: it is why the diagnostic is the ACF of **squared** returns rather than the returns themselves." },
 
@@ -298,20 +298,20 @@ export const EXAM_B = [
 { id: "b27", ref: "f10", topic: "GARCH",
   q: "A GARCH(1,1) is fitted and returns $\\alpha_1=0.11$, $\\beta_1=0.92$. What should you report?",
   choices: [
-    "Nothing unusual — only $\\alpha_1<1$ is required",
-    "A well-behaved fit with moderate persistence",
-    "$\\alpha_1+\\beta_1=1.03>1$, so the stationarity condition fails and the unconditional variance is undefined",
-    "The model is invalid because $\\beta_1>\\alpha_1$",
+    "Nothing unusual — only $\\alpha_1<1$ is required for a valid fit",
+    "A well-behaved fit with moderate volatility persistence",
+    "$\\alpha_1+\\beta_1=1.03>1$, so the stationarity condition fails",
+    "The model is invalid because $\\beta_1>\\alpha_1$, which is not allowed",
   ], answer: 2,
   why: "Stationarity requires $\\sum(\\alpha_i+\\beta_i)<1$, and $0.11+0.92=1.03$ fails it. Shocks to volatility never fully decay and $\\omega/(1-\\alpha-\\beta)$ is not a valid variance. Fitted equity models often sit just *below* 1 — crossing it is worth flagging." },
 
 { id: "b28", ref: "f10", topic: "GARCH",
   q: "Why can a GARCH(1,1) capture strong volatility persistence with far fewer parameters than an ARCH model?",
   choices: [
-    "Because it also models the conditional mean",
-    "Because it uses a different likelihood function",
+    "Because it also models the conditional mean of the returns",
+    "Because it uses a completely different likelihood function",
     "Because it allows negative coefficients, giving extra flexibility",
-    "Because the $\\beta\\sigma_{t-1}^2$ term recycles the smoother past-variance series, whereas squared returns are noisier predictors",
+    "Because $\\beta\\sigma_{t-1}^2$ recycles the smoother past-variance series",
   ], answer: 3,
   why: "$X_t$ carries the extra randomness of $\\epsilon_t$, so $X_{t-i}^2$ is a noisy proxy for volatility, while $\\sigma_{t-j}^2$ is the smoothed quantity itself. Regressing on the cleaner signal carries information forward efficiently — one $\\beta$ does the work of many $\\alpha$ lags. GARCH requires $\\beta_j\\ge0$, so \u201cnegative coefficients\u201d is simply false." },
 
@@ -341,7 +341,7 @@ export const EXAM_B = [
   choices: [
     "Converting the volatility from a daily basis to an annual one",
     "Correcting for the skewness of the lognormal distribution",
-    "**Discounting** the expected payoff, because money spent on the option today could instead have earned the risk-free rate",
+    "**Discounting** the expected payoff back to what it is worth today",
     "Adjusting for the possibility that the option expires worthless",
   ], answer: 2,
   why: "$\\E\\big((P_t-K)^+\\big)$ is what you expect to receive **at time $t$**, but you pay for the option **today** — and that money could otherwise have been put into a risk-free investment returning $r$. Multiplying by $e^{-rt}$ converts the future amount to its value today. The chance of expiring worthless is already inside the expectation, via the positive part." },
