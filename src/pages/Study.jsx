@@ -172,7 +172,9 @@ export default function Study() {
               </Button>
               {best && (
                 <span className="text-[13px] text-muted-foreground tabular-nums">
-                  Best: <b className="text-foreground">{best.score}/{EXAM.length}</b> ({Math.round(best.score / EXAM.length * 100)}%)
+                  {/* best.total is the paper that was actually sat, which is the
+                      right denominator now that the papers are separate records */}
+                  Best: <b className="text-foreground">{best.score}/{best.total}</b> ({Math.round(best.score / best.total * 100)}%)
                 </span>
               )}
             </div>
