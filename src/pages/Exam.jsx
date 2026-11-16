@@ -277,11 +277,11 @@ export default function Exam({ id }) {
           </ul>
           <div className="mt-4 pt-4 border-t text-[13px] text-muted-foreground leading-relaxed">
             Four papers, {PRACTICE_EXAMS.reduce((n, e) => n + e.questions.length, 0)} questions, all{" "}
-            <strong className="text-foreground">original</strong> and written against Lectures 9 to 18
-            and the professor's own review sheet for this exam. No question appears on two papers, each
-            paper covers all six Parts in the same proportions, and every question links back to the
-            module that covers it when you review. Paper C leans on reading code and output; Paper D is
-            the hardest.
+            <strong className="text-foreground">original</strong> and written against{" "}
+            <strong className="text-foreground">Parts 6 through 11</strong> and the professor's own
+            review sheet for this exam. No question appears on two papers, each paper covers all six
+            Parts in the same proportions, and every question links back to the module that covers it
+            when you review. Paper C leans on reading code and output; Paper D is the hardest.
             <br /><br />
             The Midterm One papers (Parts 1-5, including last year's real exam) are no longer listed,
             since that material is not on this exam. They remain in the repository.

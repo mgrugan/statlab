@@ -285,7 +285,7 @@ car_sales.plot(x="Make", y="Odometer (KM)")   # plot one column against another`
   summary: "The specific pandas idioms this course actually uses: datetime indexes, diff, rolling windows, resampling, shift.",
   blocks: [
     { kind: "key", title: "The one line you'll write most often",
-      body: "Almost every figure in Lectures 1-7 starts here:\n\n```python\nEQdat = yf.Ticker(\"AMGN\").history(start=\"2015-01-01\", end=\"2026-08-01\")\nldrEQ = np.log(EQdat['Close']).diff().dropna()\n```\n\nEvery piece is pandas:\n• `history()` returns a **DataFrame indexed by date** (a `DatetimeIndex`).\n• `EQdat['Close']` selects one column → a **Series**.\n• `.diff()` subtracts each element from the one before → $\\log P_t-\\log P_{t-1}$.\n• `.dropna()` removes the leading `NaN` that differencing necessarily creates." },
+      body: "Almost every figure in Parts 1-5 starts here:\n\n```python\nEQdat = yf.Ticker(\"AMGN\").history(start=\"2015-01-01\", end=\"2026-08-01\")\nldrEQ = np.log(EQdat['Close']).diff().dropna()\n```\n\nEvery piece is pandas:\n• `history()` returns a **DataFrame indexed by date** (a `DatetimeIndex`).\n• `EQdat['Close']` selects one column → a **Series**.\n• `.diff()` subtracts each element from the one before → $\\log P_t-\\log P_{t-1}$.\n• `.dropna()` removes the leading `NaN` that differencing necessarily creates." },
 
     { kind: "code", title: "diff, pct_change, and shift",
       lang: "python", file: "changes.py",

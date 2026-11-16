@@ -3,7 +3,7 @@ import { FINANCE_MODULES } from "@/data/finance/modules1";
 import { FINANCE_MODULES_2 } from "@/data/finance/modules2";
 import { FINANCE_MODULES_3 } from "@/data/finance/modules3";
 import { PANDAS_MODULES } from "@/data/finance/pandas";
-import { EXAM, EXAM_META } from "@/data/finance/exam";
+import { PRACTICE_EXAMS } from "@/data/finance/exams";
 import { EXPLAINERS } from "@/data/finance/explainers";
 import { useProgress } from "@/lib/progress";
 import { Panel, SectionLabel } from "@/components/shared";
@@ -18,6 +18,47 @@ export const MIDTERM_TWO_PARTS = ["Part 6", "Part 7", "Part 8", "Part 9", "Part 
 export const ALL_MODULES = [...FINANCE, ...PANDAS_MODULES];
 
 export function moduleById(id) { return ALL_MODULES.find((m) => m.id === id); }
+
+/* The course is organised by Part, not by lecture — a Part can run across
+   two or three lectures, and the exam is specified in Parts. So group the
+   modules the same way the syllabus and the midterm do. */
+function byPart(modules) {
+  const order = [], groups = new Map();
+  for (const m of modules) {
+    if (!groups.has(m.part)) { groups.set(m.part, []); order.push(m.part); }
+    groups.get(m.part).push(m);
+  }
+  return order.map((part) => ({ part, modules: groups.get(part) }));
+}
+
+/* one short line per Part, so the grouping says what the Part is about */
+const PART_BLURB = {
+  "Part 1": "Options, payoffs, and what we are actually pricing.",
+  "Part 2": "Is it normal? Density estimation and the normality tests.",
+  "Part 3": "Stationarity, autocorrelation, and the unit root tests.",
+  "Part 4": "Volatility that moves: clustering, ARCH and GARCH.",
+  "Part 5": "Black-Scholes, implied volatility, and the leverage effect.",
+  "Part 6": "The Poisson process — when rare events arrive.",
+  "Part 7": "Mean models, least squares, and the Merton jump diffusion.",
+  "Part 8": "Maximum likelihood: the method behind every fit.",
+  "Part 9": "What the MLE gives you, and the Delta Method.",
+  "Part 10": "Choosing between models without fooling yourself.",
+  "Part 11": "The double exponential jump diffusion model.",
+};
+
+function PartHeading({ part, modules, done }) {
+  return (
+    <div className="flex items-baseline justify-between gap-3 px-4 py-2 bg-muted/60 border-y">
+      <div className="flex items-baseline gap-2.5 min-w-0">
+        <span className="label-mono text-blue shrink-0">{part}</span>
+        <span className="text-[12.5px] text-muted-foreground truncate">{PART_BLURB[part]}</span>
+      </div>
+      <span className="label-mono text-muted-foreground shrink-0 tabular-nums">
+        {done}/{modules.length}
+      </span>
+    </div>
+  );
+}
 
 function ModuleRow({ m, done, quiz, checks }) {
   return (
@@ -38,7 +79,7 @@ function ModuleRow({ m, done, quiz, checks }) {
         <span className="block text-[14.5px] font-semibold leading-snug">{m.title}</span>
         <span className="block text-[12.5px] text-muted-foreground mt-0.5 leading-relaxed">{m.summary}</span>
         <span className="flex items-center gap-3 mt-1.5 flex-wrap">
-          <span className="label-mono text-muted-foreground">{m.part}</span>
+          {/* the Part is the group heading above, so it is not repeated here */}
           <span className="flex items-center gap-1 label-mono text-muted-foreground">
             <Clock3 className="size-3" /> {m.minutes} min
           </span>
@@ -66,20 +107,28 @@ export default function Study() {
   const seen = progress.lessons || {};
   const quizzes = progress.quizzes || {};
 
-  const financeDone = FINANCE.filter((m) => quizzes[m.id]?.passed).length;
   const pandasDone = PANDAS_MODULES.filter((m) => quizzes[m.id]?.passed).length;
   const best = progress.examBest;
 
   const countChecks = (m) => m.blocks.filter((b) => b.kind === "check").length;
+  const passed = (ms) => ms.filter((m) => quizzes[m.id]?.passed).length;
+
+  const two = byPart(FINANCE_MODULES_3);
+  const one = byPart([...FINANCE_MODULES, ...FINANCE_MODULES_2]);
+  const twoMods = FINANCE_MODULES_3;
+  const oneMods = [...FINANCE_MODULES, ...FINANCE_MODULES_2];
+  const examQs = PRACTICE_EXAMS.reduce((n, e) => n + e.questions.length, 0);
 
   return (
     <div className="grid gap-6">
       <div>
-        <SectionLabel className="text-blue">Midterm One Prep</SectionLabel>
+        <SectionLabel className="text-blue">Midterm Two Prep</SectionLabel>
         <h1 className="text-2xl font-semibold tracking-tight mt-1">Statistical Methods in Finance</h1>
         <p className="text-[13.5px] text-muted-foreground mt-1.5 max-w-[68ch] leading-relaxed">
-          Everything from Lectures 1&ndash;7 (Parts 1&ndash;5), rebuilt as an interactive module.
-          Each lesson pairs the <strong className="text-foreground">intuition</strong> with the{" "}
+          Organised by <strong className="text-foreground">Part</strong>, the way the syllabus and
+          the exam are. <strong className="text-foreground">Parts 6&ndash;11</strong> are on this
+          midterm; Parts 1&ndash;5 are below, still here for reference. Each lesson pairs the{" "}
+          <strong className="text-foreground">intuition</strong> with the{" "}
           <strong className="text-foreground">math</strong> (full derivations), the{" "}
           <strong className="text-foreground">code</strong> you should be able to reproduce
           unaided, and the <strong className="text-foreground">exam traps</strong> that separate
@@ -98,19 +147,22 @@ export default function Study() {
           </div>
           <div className="p-5 md:p-6">
             <div className="flex flex-wrap items-center gap-2 mb-2">
-              <h2 className="text-lg font-semibold tracking-tight">{EXAM_META.title}</h2>
+              <h2 className="text-lg font-semibold tracking-tight">Practice Midterm Two</h2>
               <Badge className="rounded-sm border-transparent label-mono bg-blue-tint text-blue">
-                {EXAM.length} questions
+                {PRACTICE_EXAMS.length} papers
               </Badge>
               <Badge className="rounded-sm border-transparent label-mono bg-muted text-muted-foreground">
-                {EXAM_META.minutes} min
+                {PRACTICE_EXAMS[0].meta.minutes} min each
               </Badge>
             </div>
             <p className="text-[13.5px] text-muted-foreground leading-relaxed max-w-[60ch]">
-              Same format as the real thing &mdash; {EXAM.length} multiple-choice questions,{" "}
-              {EXAM_META.pointsPer} points each, {EXAM_META.minutes} minutes, one correct answer per
-              question. These questions are <strong className="text-foreground">original</strong>,
-              written to match the 2025 paper&apos;s topic mix and difficulty rather than repeat it.
+              Same format as the real thing &mdash; {PRACTICE_EXAMS[0].questions.length}{" "}
+              multiple-choice questions, {PRACTICE_EXAMS[0].meta.pointsPer} points each,{" "}
+              {PRACTICE_EXAMS[0].meta.minutes} minutes, one correct answer per question. All{" "}
+              {examQs} questions across the {PRACTICE_EXAMS.length} papers are{" "}
+              <strong className="text-foreground">original</strong>, and each paper covers{" "}
+              <strong className="text-foreground">Parts 6 through 11</strong> in the same
+              proportions the exam does.
             </p>
             <div className="flex flex-wrap items-center gap-3 mt-4">
               <Button asChild size="sm" className="rounded-md bg-slate-deep hover:bg-navy">
@@ -128,24 +180,60 @@ export default function Study() {
         </div>
       </Panel>
 
-      {/* finance modules */}
+      {/* Parts 6-11 — what this midterm covers */}
       <Panel className="overflow-hidden">
         <div className="flex items-center justify-between gap-3 px-4 py-3 border-b bg-code-bg-light">
           <div className="flex items-center gap-2.5">
             <BookOpen className="size-4 text-blue" strokeWidth={1.75} />
-            <h2 className="text-[15px] font-semibold">Statistical Finance</h2>
+            <h2 className="text-[15px] font-semibold">On Midterm Two</h2>
             <Badge variant="outline" className="rounded-sm label-mono text-muted-foreground">
-              Parts 1&ndash;5
+              Parts 6&ndash;11
             </Badge>
           </div>
           <span className="text-[12px] text-muted-foreground tabular-nums">
-            {financeDone} / {FINANCE.length} quizzes passed
+            {passed(twoMods)} / {twoMods.length} quizzes passed
           </span>
         </div>
-        <Bar pct={Math.round(financeDone / FINANCE.length * 100)} className="rounded-none" />
-        <div className="divide-y">
-          {FINANCE.map((m) => (
-            <ModuleRow key={m.id} m={m} done={!!seen[m.id]} quiz={quizzes[m.id]} checks={countChecks(m)} />
+        <Bar pct={Math.round(passed(twoMods) / twoMods.length * 100)} className="rounded-none" />
+        <div>
+          {two.map(({ part, modules }) => (
+            <div key={part}>
+              <PartHeading part={part} modules={modules} done={passed(modules)} />
+              <div className="divide-y">
+                {modules.map((m) => (
+                  <ModuleRow key={m.id} m={m} done={!!seen[m.id]} quiz={quizzes[m.id]} checks={countChecks(m)} />
+                ))}
+              </div>
+            </div>
+          ))}
+        </div>
+      </Panel>
+
+      {/* Parts 1-5 — Midterm One material, kept for reference */}
+      <Panel className="overflow-hidden">
+        <div className="flex items-center justify-between gap-3 px-4 py-3 border-b bg-code-bg-light">
+          <div className="flex items-center gap-2.5">
+            <BookOpen className="size-4 text-muted-foreground" strokeWidth={1.75} />
+            <h2 className="text-[15px] font-semibold">Earlier material</h2>
+            <Badge variant="outline" className="rounded-sm label-mono text-muted-foreground">
+              Parts 1&ndash;5 &middot; not on this exam
+            </Badge>
+          </div>
+          <span className="text-[12px] text-muted-foreground tabular-nums">
+            {passed(oneMods)} / {oneMods.length} quizzes passed
+          </span>
+        </div>
+        <Bar pct={Math.round(passed(oneMods) / oneMods.length * 100)} className="rounded-none" />
+        <div>
+          {one.map(({ part, modules }) => (
+            <div key={part}>
+              <PartHeading part={part} modules={modules} done={passed(modules)} />
+              <div className="divide-y">
+                {modules.map((m) => (
+                  <ModuleRow key={m.id} m={m} done={!!seen[m.id]} quiz={quizzes[m.id]} checks={countChecks(m)} />
+                ))}
+              </div>
+            </div>
           ))}
         </div>
       </Panel>

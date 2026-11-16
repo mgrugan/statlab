@@ -404,7 +404,7 @@ export default function Explainer({ moduleId }) {
               <span className="grid place-items-center size-14 rounded-full bg-white/95 text-slate-deep shadow-lg">
                 <Play className="size-6 ml-0.5" fill="currentColor" />
               </span>
-              <span className="text-[13px] font-semibold tracking-wide">Play the lecture · {fmt(duration)}</span>
+              <span className="text-[13px] font-semibold tracking-wide">Play the film · {fmt(duration)}</span>
             </span>
           </button>
         )}

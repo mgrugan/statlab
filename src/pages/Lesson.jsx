@@ -235,6 +235,11 @@ export default function Lesson({ id }) {
   const prev = ALL_MODULES[pos - 1];
   const next = ALL_MODULES[pos + 1];
 
+  /* number the module within its Part, not across the whole library — the
+     course is specified in Parts and "module 6 of 25" told you nothing */
+  const siblings = ALL_MODULES.filter((x) => x.part === m.part);
+  const inPart = siblings.findIndex((x) => x.id === m.id) + 1;
+
   useEffect(() => { markLessonRead(m.id); }, [m.id]);
 
   return (
@@ -244,7 +249,9 @@ export default function Lesson({ id }) {
       </a>
 
       <div className="mb-6">
-        <SectionLabel className="text-blue">{m.part} · Module {pos + 1} of {ALL_MODULES.length}</SectionLabel>
+        <SectionLabel className="text-blue">
+          {m.part}{siblings.length > 1 && ` · Module ${inPart} of ${siblings.length}`}
+        </SectionLabel>
         <h1 className="text-[26px] md:text-3xl font-semibold tracking-tight mt-1.5 leading-tight">{m.title}</h1>
         <p className="text-[14.5px] text-muted-foreground mt-2 leading-relaxed max-w-[70ch]">{m.summary}</p>
       </div>
