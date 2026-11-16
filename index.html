@@ -12,6 +12,60 @@
   </head>
   <body>
     <div id="root"></div>
+
+    <div id="boot-error" hidden style="font-family:ui-sans-serif,system-ui,sans-serif;max-width:34rem;margin:18vh auto;padding:0 1.5rem;color:#1e293b">
+      <div style="font:600 12px/1 ui-monospace,monospace;letter-spacing:.08em;color:#2563eb">STATLAB</div>
+      <h1 style="font-size:1.4rem;margin:.6rem 0 .5rem">This page was loaded from a stale cache.</h1>
+      <p style="font-size:.95rem;line-height:1.6;color:#475569;margin:0 0 1.25rem">
+        Your browser kept an old copy of the page, which points at files that no longer exist.
+        Nothing is wrong with your work or your progress &mdash; it is all stored locally and untouched.
+      </p>
+      <button id="boot-retry" style="font:600 .95rem ui-sans-serif,system-ui,sans-serif;background:#2563eb;color:#fff;border:0;border-radius:.4rem;padding:.6rem 1.1rem;cursor:pointer">
+        Load the current version
+      </button>
+    </div>
+
+    <script>
+      /* A white screen here is almost always a stale cached index.html asking
+         for a build asset that no longer exists. React never mounts and #root
+         stays empty, with nothing on screen to say so. Catch that, reload once
+         against a fresh URL, and if even that fails, say what happened. */
+      (function () {
+        var KEY = "statlab-boot-recovery";
+        var empty = function () {
+          var r = document.getElementById("root");
+          return !r || r.childElementCount === 0;
+        };
+        var fresh = function () {
+          location.replace(location.pathname + "?r=" + Date.now() + location.hash);
+        };
+        var recover = function () {
+          if (!empty()) return;
+          var tried;
+          try { tried = sessionStorage.getItem(KEY); } catch (e) { tried = null; }
+          if (!tried) {
+            try { sessionStorage.setItem(KEY, "1"); } catch (e) {}
+            fresh();
+          } else {
+            document.getElementById("boot-error").hidden = false;
+          }
+        };
+        /* a module script that 404s fires an error event on the element */
+        window.addEventListener("error", function (e) {
+          if (e.target && e.target.tagName === "SCRIPT") setTimeout(recover, 0);
+        }, true);
+        window.addEventListener("load", function () {
+          setTimeout(function () {
+            if (empty()) recover();
+            else { try { sessionStorage.removeItem(KEY); } catch (e) {} }
+          }, 2500);
+        });
+        document.addEventListener("click", function (e) {
+          if (e.target && e.target.id === "boot-retry") fresh();
+        });
+      })();
+    </script>
+
     <script type="module" src="/src/main.jsx"></script>
   </body>
 </html>
