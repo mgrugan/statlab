@@ -1,6 +1,7 @@
 import { BookOpen, Table2, GraduationCap, ArrowRight, CheckCircle2, Clock3, Trophy, Film } from "lucide-react";
 import { FINANCE_MODULES } from "@/data/finance/modules1";
 import { FINANCE_MODULES_2 } from "@/data/finance/modules2";
+import { FINANCE_MODULES_3 } from "@/data/finance/modules3";
 import { PANDAS_MODULES } from "@/data/finance/pandas";
 import { EXAM, EXAM_META } from "@/data/finance/exam";
 import { EXPLAINERS } from "@/data/finance/explainers";
@@ -11,7 +12,9 @@ import { Button } from "@/components/ui/button";
 import { Bar } from "@/components/shared";
 import { cn } from "@/lib/utils";
 
-export const FINANCE = [...FINANCE_MODULES, ...FINANCE_MODULES_2];
+/* Parts 1-5 are Midterm One; Parts 6-11 are Midterm Two. */
+export const FINANCE = [...FINANCE_MODULES_3, ...FINANCE_MODULES, ...FINANCE_MODULES_2];
+export const MIDTERM_TWO_PARTS = ["Part 6", "Part 7", "Part 8", "Part 9", "Part 10", "Part 11"];
 export const ALL_MODULES = [...FINANCE, ...PANDAS_MODULES];
 
 export function moduleById(id) { return ALL_MODULES.find((m) => m.id === id); }

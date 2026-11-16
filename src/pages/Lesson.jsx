@@ -9,6 +9,7 @@ import { Panel, SectionLabel, CodeFrame } from "@/components/shared";
 import { Rich, TeX } from "@/components/Math";
 import { Diagram } from "@/components/Diagram";
 import Explainer from "@/components/Explainer";
+import { EXPLAINERS } from "@/data/finance/explainers";
 import ModuleQuiz from "@/components/ModuleQuiz";
 import { markLessonRead, useProgress } from "@/lib/progress";
 import { ALL_MODULES, moduleById } from "@/pages/Study";
@@ -248,14 +249,19 @@ export default function Lesson({ id }) {
         <p className="text-[14.5px] text-muted-foreground mt-2 leading-relaxed max-w-[70ch]">{m.summary}</p>
       </div>
 
-      {/* the film comes first: watch the whole module, then read it */}
-      <Explainer key={`v-${m.id}`} moduleId={m.id} />
-
-      <div className="flex items-center gap-3 my-6">
-        <span className="h-px flex-1 bg-border" />
-        <span className="label-mono text-muted-foreground">or read it</span>
-        <span className="h-px flex-1 bg-border" />
-      </div>
+      {/* The film comes first: watch the whole module, then read it. The
+          Parts 6-11 modules have no film yet, so neither the player nor the
+          "or read it" divider should appear for them. */}
+      {EXPLAINERS[m.id] && (
+        <>
+          <Explainer key={`v-${m.id}`} moduleId={m.id} />
+          <div className="flex items-center gap-3 my-6">
+            <span className="h-px flex-1 bg-border" />
+            <span className="label-mono text-muted-foreground">or read it</span>
+            <span className="h-px flex-1 bg-border" />
+          </div>
+        </>
+      )}
 
       <div className="grid gap-4 min-w-0">
         {m.blocks.map((b, i) => <Block key={i} block={b} idx={i} />)}

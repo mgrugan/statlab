@@ -211,11 +211,11 @@ export default function Exam({ id }) {
     return (
       <div className="max-w-[760px]">
         <SectionLabel className="text-blue">Practice Exams</SectionLabel>
-        <h1 className="text-2xl font-semibold tracking-tight mt-1">Four full papers</h1>
+        <h1 className="text-2xl font-semibold tracking-tight mt-1">Practice Midterm Two</h1>
         <p className="text-[14px] text-muted-foreground mt-1.5 leading-relaxed max-w-[68ch]">
-          Last year's actual midterm, transcribed question for question with the professor's
-          own answer key, plus three original papers under the same rules. They cover the same
-          syllabus in the same proportions but test different angles, so all four are worth sitting.
+          A complete 33-question paper on <strong>Parts 6 through 11</strong> — the Poisson process,
+          mean models, maximum likelihood, properties of MLEs, model selection and the DEJD model —
+          under the same rules and the same format as the first midterm.
         </p>
 
         <div className="grid gap-3 mt-5">
@@ -275,15 +275,12 @@ export default function Exam({ id }) {
             {PRACTICE_EXAMS[0].meta.rules.map((r, i) => <li key={i} className="pl-1">{r}</li>)}
           </ul>
           <div className="mt-4 pt-4 border-t text-[13px] text-muted-foreground leading-relaxed">
-            <strong className="text-foreground">Real Midterm One — 2025</strong> is the paper as it
-            was sat: the questions, the choices and their order are transcribed unchanged, and the
-            key is the professor's own. Six of its questions offer three choices rather than four,
-            because that is how it was printed.
+            All 33 questions are <strong className="text-foreground">original</strong>, written against
+            Lectures 9 to 18 and the professor's own review sheet for this exam. Every question links
+            back to the module that covers it when you review.
             <br /><br />
-            The other 99 questions are <strong className="text-foreground">original</strong> —
-            written to match the topic mix, phrasing style and difficulty of the real midterm, not
-            to reproduce it. Each of those papers splits 8 / 7 / 7 / 6 / 5 across Parts 1 to 5, and
-            every question on all four links back to the module that covers it when you review.
+            The Midterm One papers (Parts 1-5, including last year's real exam) are no longer listed,
+            since that material is not on this exam. They remain in the repository.
           </div>
         </Panel>
       </div>
