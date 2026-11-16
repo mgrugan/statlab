@@ -3,6 +3,32 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <script>
+      /* Runs before anything else, so no error escapes unrecorded. If the app
+         fails to start, the page must say why rather than go white. */
+      window.__boot = { errors: [], t0: Date.now() };
+      (function () {
+        var note = function (kind, text, extra) {
+          if (window.__boot.errors.length < 8) {
+            window.__boot.errors.push(kind + ": " + text + (extra ? "  [" + extra + "]" : ""));
+          }
+        };
+        window.addEventListener("error", function (e) {
+          if (e.target && e.target.tagName) {
+            note("FAILED TO LOAD", e.target.tagName.toLowerCase(), e.target.src || e.target.href || "");
+          } else {
+            note("ERROR", e.message || String(e.error),
+                 (e.filename || "").split("/").pop() + ":" + e.lineno + ":" + e.colno);
+          }
+        }, true);
+        window.addEventListener("unhandledrejection", function (e) {
+          var r = e.reason;
+          note("PROMISE", (r && (r.message || r.name)) || String(r), r && r.stack ? String(r.stack).split("\n")[1] : "");
+        });
+      })();
+    </script>
+
     <title>StatLab — LeetCode for Statistical Computing</title>
     <meta name="description" content="Practice R and Python statistical computing: command drills and applied real-world problems." />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -13,23 +39,25 @@
   <body>
     <div id="root"></div>
 
-    <div id="boot-error" hidden style="font-family:ui-sans-serif,system-ui,sans-serif;max-width:34rem;margin:18vh auto;padding:0 1.5rem;color:#1e293b">
+    <div id="boot-error" hidden style="font-family:ui-sans-serif,system-ui,sans-serif;max-width:40rem;margin:10vh auto;padding:0 1.5rem;color:#1e293b;background:#fff">
       <div style="font:600 12px/1 ui-monospace,monospace;letter-spacing:.08em;color:#2563eb">STATLAB</div>
-      <h1 style="font-size:1.4rem;margin:.6rem 0 .5rem">This page was loaded from a stale cache.</h1>
-      <p style="font-size:.95rem;line-height:1.6;color:#475569;margin:0 0 1.25rem">
-        Your browser kept an old copy of the page, which points at files that no longer exist.
-        Nothing is wrong with your work or your progress &mdash; it is all stored locally and untouched.
+      <h1 style="font-size:1.4rem;margin:.6rem 0 .5rem">StatLab didn't start.</h1>
+      <p style="font-size:.95rem;line-height:1.6;color:#475569;margin:0 0 1rem">
+        The page loaded but the app failed to run. Your saved progress is stored in this
+        browser and is untouched. The details below say what went wrong &mdash; send them on
+        and they will identify it exactly.
       </p>
+      <pre id="boot-detail" style="font:12px/1.55 ui-monospace,SFMono-Regular,Menlo,monospace;white-space:pre-wrap;word-break:break-word;background:#f1f5f9;border:1px solid #e2e8f0;border-radius:.4rem;padding:.8rem;margin:0 0 1rem;color:#0f172a;user-select:all"></pre>
       <button id="boot-retry" style="font:600 .95rem ui-sans-serif,system-ui,sans-serif;background:#2563eb;color:#fff;border:0;border-radius:.4rem;padding:.6rem 1.1rem;cursor:pointer">
-        Load the current version
+        Try a clean reload
       </button>
     </div>
 
     <script>
-      /* A white screen here is almost always a stale cached index.html asking
-         for a build asset that no longer exists. React never mounts and #root
-         stays empty, with nothing on screen to say so. Catch that, reload once
-         against a fresh URL, and if even that fails, say what happened. */
+      /* Two failure modes to separate. A stale cached index.html asks for a
+         build asset that no longer exists, which one clean reload fixes. A
+         genuine runtime failure survives the reload, and then the only useful
+         thing this page can do is report what happened. */
       (function () {
         var KEY = "statlab-boot-recovery";
         var empty = function () {
@@ -37,31 +65,40 @@
           return !r || r.childElementCount === 0;
         };
         var fresh = function () {
+          try { sessionStorage.setItem(KEY, "1"); } catch (e) {}
           location.replace(location.pathname + "?r=" + Date.now() + location.hash);
         };
-        var recover = function () {
-          if (!empty()) return;
+        var report = function () {
+          var mod = document.querySelector('script[type="module"]');
+          var lines = [
+            "when      " + new Date().toISOString(),
+            "url       " + location.href,
+            "bundle    " + (mod ? mod.getAttribute("src") : "(no module script in page)"),
+            "mounted   no (#root empty " + (Date.now() - window.__boot.t0) + "ms after start)",
+            "browser   " + navigator.userAgent,
+            "",
+          ];
+          lines = lines.concat(
+            window.__boot.errors.length
+              ? window.__boot.errors
+              : ["(no JavaScript error was raised — the bundle never executed)"]
+          );
+          var el = document.getElementById("boot-detail");
+          if (el) el.textContent = lines.join("\n");
+          document.getElementById("boot-error").hidden = false;
+        };
+        var check = function () {
+          if (!empty()) { try { sessionStorage.removeItem(KEY); } catch (e) {} return; }
           var tried;
           try { tried = sessionStorage.getItem(KEY); } catch (e) { tried = null; }
-          if (!tried) {
-            try { sessionStorage.setItem(KEY, "1"); } catch (e) {}
-            fresh();
-          } else {
-            document.getElementById("boot-error").hidden = false;
-          }
+          if (tried) report(); else fresh();
         };
-        /* a module script that 404s fires an error event on the element */
-        window.addEventListener("error", function (e) {
-          if (e.target && e.target.tagName === "SCRIPT") setTimeout(recover, 0);
-        }, true);
-        window.addEventListener("load", function () {
-          setTimeout(function () {
-            if (empty()) recover();
-            else { try { sessionStorage.removeItem(KEY); } catch (e) {} }
-          }, 2500);
-        });
+        window.addEventListener("load", function () { setTimeout(check, 2500); });
         document.addEventListener("click", function (e) {
-          if (e.target && e.target.id === "boot-retry") fresh();
+          if (e.target && e.target.id === "boot-retry") {
+            try { sessionStorage.removeItem(KEY); } catch (err) {}
+            fresh();
+          }
         });
       })();
     </script>
