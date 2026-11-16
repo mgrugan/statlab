@@ -14,5 +14,14 @@ import f9 from "./films/f9";
 import f10 from "./films/f10";
 import f11 from "./films/f11";
 import f12 from "./films/f12";
+import f13 from "./films/f13";
+import f14 from "./films/f14";
+import f15 from "./films/f15";
+import f16 from "./films/f16";
+import f17 from "./films/f17";
+import f18 from "./films/f18";
 
-export const EXPLAINERS = { f1, f2, f3, f4, f5, f6, f7, f8, f9, f10, f11, f12 };
+export const EXPLAINERS = {
+  f1, f2, f3, f4, f5, f6, f7, f8, f9, f10, f11, f12,
+  f13, f14, f15, f16, f17, f18,
+};

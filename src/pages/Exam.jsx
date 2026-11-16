@@ -213,9 +213,10 @@ export default function Exam({ id }) {
         <SectionLabel className="text-blue">Practice Exams</SectionLabel>
         <h1 className="text-2xl font-semibold tracking-tight mt-1">Practice Midterm Two</h1>
         <p className="text-[14px] text-muted-foreground mt-1.5 leading-relaxed max-w-[68ch]">
-          A complete 33-question paper on <strong>Parts 6 through 11</strong> — the Poisson process,
+          Four complete 33-question papers on <strong>Parts 6 through 11</strong> — the Poisson process,
           mean models, maximum likelihood, properties of MLEs, model selection and the DEJD model —
-          under the same rules and the same format as the first midterm.
+          under the same rules and the same format as the first midterm. Sit them in order; they get
+          harder as they go.
         </p>
 
         <div className="grid gap-3 mt-5">
@@ -275,9 +276,12 @@ export default function Exam({ id }) {
             {PRACTICE_EXAMS[0].meta.rules.map((r, i) => <li key={i} className="pl-1">{r}</li>)}
           </ul>
           <div className="mt-4 pt-4 border-t text-[13px] text-muted-foreground leading-relaxed">
-            All 33 questions are <strong className="text-foreground">original</strong>, written against
-            Lectures 9 to 18 and the professor's own review sheet for this exam. Every question links
-            back to the module that covers it when you review.
+            Four papers, {PRACTICE_EXAMS.reduce((n, e) => n + e.questions.length, 0)} questions, all{" "}
+            <strong className="text-foreground">original</strong> and written against Lectures 9 to 18
+            and the professor's own review sheet for this exam. No question appears on two papers, each
+            paper covers all six Parts in the same proportions, and every question links back to the
+            module that covers it when you review. Paper C leans on reading code and output; Paper D is
+            the hardest.
             <br /><br />
             The Midterm One papers (Parts 1-5, including last year's real exam) are no longer listed,
             since that material is not on this exam. They remain in the repository.
