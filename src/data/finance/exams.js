@@ -10,6 +10,8 @@ import { EXAM_M2, EXAM_M2_META } from "./exam_m2";
 import { EXAM_M2B, EXAM_M2B_META } from "./exam_m2b";
 import { EXAM_M2C, EXAM_M2C_META } from "./exam_m2c";
 import { EXAM_M2D, EXAM_M2D_META } from "./exam_m2d";
+import { EXAM_GETREADY, EXAM_GETREADY_META, EXAM_GETREADY_FIGURES } from "./exam_getready";
+import { EXAM_FORMULA, EXAM_FORMULA_META } from "./exam_formula";
 import { EXAM_2025, EXAM_2025_META, EXAM_2025_FIGURES } from "./exam2025";
 import { EXAM, EXAM_META, EXAM_FIGURES } from "./exam";
 import { EXAM_B, EXAM_B_META, EXAM_B_FIGURES } from "./exam2";
@@ -20,6 +22,8 @@ export const EXAMS = [
   { id: "m2b", meta: EXAM_M2B_META, questions: EXAM_M2B, figures: {} },
   { id: "m2c", meta: EXAM_M2C_META, questions: EXAM_M2C, figures: {} },
   { id: "m2d", meta: EXAM_M2D_META, questions: EXAM_M2D, figures: {} },
+  { id: "ready",   meta: EXAM_GETREADY_META, questions: EXAM_GETREADY, figures: EXAM_GETREADY_FIGURES },
+  { id: "formula", meta: EXAM_FORMULA_META,  questions: EXAM_FORMULA,  figures: {} },
 ];
 
 /* Midterm One material — Parts 1 to 5. Off the list, not gone. */
