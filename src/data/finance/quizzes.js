@@ -26,7 +26,7 @@ f1: [
       "American options are traded on US exchanges; European options on European ones",
       "An American option can be exercised at any time up to expiration, so it is never worth less",
       "European options can be exercised early only when they are in the money",
-      "American options must be exercised at expiration; European ones expire automatically",
+      "American options must be exercised at expiration, while European ones simply expire automatically",
     ], answer: 1,
     why: "The distinction is *when* you may exercise, not geography. Early exercise is an extra right, and extra rights cannot reduce value — so an American option is worth at least as much as its European twin. European options are what Black-Scholes prices, precisely because removing that choice makes the math tractable." },
 
@@ -35,14 +35,14 @@ f1: [
       "Nothing — \\$20 is exactly $\\E\\big((P_T-K)^+\\big)$ in this case",
       "\\$20 over-states the value, because the option can expire worthless",
       "\\$20 under-states the value, because $x^+$ is convex and Jensen's inequality applies",
-      "The calculation is invalid unless $P_T$ is normally distributed",
+      "The calculation is invalid unless $P_T$ is exactly normally distributed, which it is not",
     ], answer: 2,
     why: "\\$20 is $\\big(\\E(P_T)-K\\big)^+$, and Jensen gives $\\E\\big((P_T-K)^+\\big)\\ge\\big(\\E(P_T)-K\\big)^+$ for the convex function $x^+$. “Over-states, because the option can expire worthless” is the intuitive-sounding trap: yes it *can* expire worthless, but the unbounded upside more than compensates in expectation." },
 
   { q: "A backtest of a momentum strategy on \"all S&P 500 stocks\" reports a 14% annual return. Why should you distrust it before looking at anything else?",
     choices: [
       "Because the S&P 500 is not stationary over such a long sample",
-      "Because momentum strategies require adjusting for the leverage effect",
+      "Because momentum strategies require adjusting for the leverage effect beforehand",
       "Because a 14% return exceeds the market return, which is impossible",
       "Because index membership changes, so the ticker list omits firms that failed",
     ], answer: 3,
@@ -100,7 +100,7 @@ f2: [
     choices: [
       "Zero, and yes — both $\\Phi$ terms vanish in the limit",
       "$\\E(P_t)$, and yes — both $\\Phi$'s go to 1, leaving $\\E(P_t)$",
-      "Infinity, and yes — the formula diverges in this limit",
+      "Infinity, and yes — the formula diverges outright in this limit",
       "$K$, and no — the formula fails badly in this limit",
     ], answer: 1,
     why: "With $K\\to0$ the option is certain to be exercised and the payoff becomes just $P_t$, so the value must approach $\\E(P_t)$. In the formula, $-\\log K\\to+\\infty$ drives both $\\Phi$ arguments to $+\\infty$, hence both $\\Phi\\to1$, and $K\\Phi(d_2)\\to0$. You are left with $\\exp(\\xi+\\tau^2/2)=\\E(P_t)$. Checking limiting cases like this is a fast way to verify you have written the formula down correctly." },
@@ -209,7 +209,7 @@ f5: [
       "A spiky curve with roughly one bump per observation — the estimator has high variance",
       "A flat line, because the bandwidth is below the resolution of the data itself",
       "A perfect reproduction of the true density, since small $h$ means low bias",
-      "A smooth unimodal curve, because 500 observations is plenty of data",
+      "A smooth unimodal curve, since 500 observations is plenty of data whatever the bandwidth",
     ], answer: 0,
     why: "With $h$ far smaller than the typical spacing between points, each kernel stays isolated and you essentially see the raw data back as spikes. That is **high variance**: resample the data and the picture changes completely. Bias is indeed low, but the estimate is useless — which is the point of the tradeoff." },
 
@@ -360,7 +360,7 @@ f8: [
   { q: "You apply `adfuller` to a series with an obvious upward linear trend using the default settings. What is the concern?",
     choices: [
       "The default `regression=\"c\"` fits only a constant, so a real trend is unmodelled",
-      "The default already handles trends, so there is nothing to worry about",
+      "The default already handles trends internally, so there is nothing here to worry about",
       "`adfuller` cannot legitimately be applied to trending data at all",
       "The default `regression=\"n\"` forces the series mean to be zero",
     ], answer: 0,
@@ -403,7 +403,7 @@ f9: [
       "$0.015$, i.e. 1.5% — volatility is horizon-free",
       "$0.015\\times252\\approx3.78$, i.e. 378%",
     ], answer: 0,
-    why: "Annualize the **variance** by 252 then square-root: $\\sqrt{252\\times0.015^2}=0.015\\sqrt{252}\\approx0.238$. In code this is `ldr.std() * np.sqrt(252)`. Scaling the SD by 252 directly (option a) is the standard blunder and gives a nonsensical answer." },
+    why: "Annualize the **variance** by 252 then square-root: $\\sqrt{252\\times0.015^2}=0.015\\sqrt{252}\\approx0.238$. In code this is `ldr.std() * np.sqrt(252)`. Scaling the standard deviation by 252 directly is the standard blunder and gives a nonsensical answer." },
 
   { q: "Two otherwise identical call options differ only in the volatility of the underlying: $\\sigma_A=0.2$, $\\sigma_B=0.6$. Which is worth more, and why?",
     choices: [
@@ -456,7 +456,7 @@ f10: [
   { q: "Which statement about an ARCH(1) process with $\\alpha_1<1$ is correct?",
     choices: [
       "It is nonstationary whenever $\\alpha_1>0$",
-      "It is autocorrelated at lag 1, with correlation $\\alpha_1$",
+      "It is autocorrelated at lag 1, with autocorrelation equal to $\\alpha_1$ at that lag",
       "It is white noise, so Corr$(X_t,X_{t+h})=0$ for $h\\ne0$, but it is not iid",
       "It is iid, since $\\epsilon_t$ is iid",
     ], answer: 2,
@@ -598,7 +598,7 @@ p2: [
 
   { q: "You want to read a CSV from GitHub directly into pandas. What must you use?",
     choices: [
-      "The ordinary `github.com/...` page URL works fine",
+      "The ordinary `github.com/...` page URL works perfectly well here",
       "The `raw.githubusercontent.com` (\"raw\") link, not the page URL",
       "A local download first; pandas cannot read from URLs",
       "`pd.read_html` in place of `pd.read_csv` here",
@@ -741,7 +741,7 @@ p5: [
     choices: [
       "It keeps the mean but shrinks the variance and weakens correlations",
       "It shifts the column's mean upward noticeably",
-      "It converts the whole column to dtype object",
+      "It converts the whole column to dtype object, so later arithmetic fails",
       "None at all — mean imputation is unbiased in every respect",
     ], answer: 0,
     why: "Every imputed value sits exactly at the centre, so the spread of the column falls and its relationships with other columns are diluted toward zero. The mean survives; almost nothing else does. Whether that trade is acceptable depends on *why* the data are missing." },
@@ -909,7 +909,7 @@ f12: [
   { q: "In the regression $\\Delta\\text{VIX}_t=\\beta_0+\\beta_1 r_t+\\beta_2\\big(r_t\\times\\mathbf{1}\\{r_t\\ge0\\}\\big)+\\epsilon_t$, what is the interaction term doing?",
     choices: [
       "Letting the **slope** differ between days with $r_t<0$ and days with $r_t\\ge0$",
-      "Letting the **intercept** differ between up days and down days",
+      "Letting the **intercept** differ between days with a negative return and days without",
       "Correcting for autocorrelation in the VIX series",
       "Testing whether the residuals are normally distributed",
     ], answer: 0,

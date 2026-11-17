@@ -271,7 +271,10 @@ export default function Lesson({ id }) {
       )}
 
       <div className="grid gap-4 min-w-0">
-        {m.blocks.map((b, i) => <Block key={i} block={b} idx={i} />)}
+        {/* Key by module as well as position. With a bare index, moving from one
+            module to the next reconciles block 7 onto block 7, and a Check — whose
+            answered state is local — stays answered in a lesson you never touched. */}
+        {m.blocks.map((b, i) => <Block key={`${m.id}-${i}`} block={b} idx={i} />)}
       </div>
 
       {/* keyed so moving between lessons resets the quiz — without it React
