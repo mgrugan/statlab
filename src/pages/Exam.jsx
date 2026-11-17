@@ -269,6 +269,15 @@ export default function Exam({ id }) {
                         <span className="text-muted-foreground">Not attempted yet</span>
                       )}
                     </p>
+                    {/* attempts recorded before answers were stored keep their score
+                        but cannot be reopened; say so rather than just omitting the
+                        button and leaving it looking broken */}
+                    {b && !b.last && (
+                      <p className="text-[12.5px] text-muted-foreground mt-1">
+                        Answers were not kept for that sitting — sit it again and the marked
+                        copy stays available.
+                      </p>
+                    )}
                   </div>
                   <div className="flex items-center gap-2 shrink-0">
                     {b?.last && (
