@@ -142,17 +142,22 @@ export function recordQuiz(moduleId, score, total) {
   });
 }
 
-/* Record a finished practice exam; keeps the best score. */
-export function recordExam(score, total, examId = "one") {
+/* Record a finished practice exam; keeps the best score.
+   `answers` is the submitted paper, kept so the marked attempt can be
+   reopened later — a review you can only see before navigating away is
+   not much of a review. */
+export function recordExam(score, total, examId = "one", answers = null) {
   const day = todayKey();
   const prev = cache.examBest;
   const better = !prev || score > prev.score;
   // per-paper best, so each practice midterm keeps its own record; examBest
   // stays as the best across all of them (and predates the multi-exam split)
   const prevThis = cache.exams?.[examId];
+  // the most recent attempt, whether or not it beat the best
+  const last = answers ? { answers, score, total, t: Date.now() } : prevThis?.last;
   const bestThis = !prevThis || score > prevThis.score
-    ? { score, total, t: Date.now(), attempts: (prevThis?.attempts || 0) + 1 }
-    : { ...prevThis, attempts: (prevThis.attempts || 0) + 1 };
+    ? { score, total, t: Date.now(), attempts: (prevThis?.attempts || 0) + 1, last }
+    : { ...prevThis, attempts: (prevThis.attempts || 0) + 1, last };
   commit({
     ...cache,
     examBest: better ? { score, total, t: Date.now() } : prev,

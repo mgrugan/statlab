@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useRef, useState } from "react";
-import { Clock3, Flag, ArrowRight, RotateCcw, FileText, Trophy } from "lucide-react";
+import { Clock3, Flag, ArrowRight, RotateCcw, FileText, Trophy, BookOpenCheck } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Panel, SectionLabel } from "@/components/shared";
 import { Rich } from "@/components/Math";
@@ -190,12 +190,13 @@ export default function Exam({ id }) {
     return () => clearInterval(timer.current);
   }, [phase]);
 
-  /* keep the graded result once we enter review */
+  /* keep the graded result once we enter review, and store the submitted
+     paper so the attempt can be reopened after leaving the page */
   const submittedRef = useRef(false);
   useEffect(() => {
     if (phase === "review" && !submittedRef.current) {
       submittedRef.current = true;
-      recordExam(score, EXAM.length, exam.id);
+      recordExam(score, EXAM.length, exam.id, answers);
     }
   }, [phase, score]);
 
@@ -203,6 +204,18 @@ export default function Exam({ id }) {
     if (pick) setExamId(pick);
     const m = (pick ? examById(pick) : exam).meta.minutes;
     setAnswers({}); setLeft(m * 60); submittedRef.current = false; setPhase("taking");
+  };
+
+  /* reopen a finished paper exactly as it was marked. submittedRef is set so
+     the effect above does not record the attempt a second time. */
+  const reviewSaved = (pick) => {
+    const saved = progress.exams?.[pick]?.last;
+    if (!saved) return;
+    setExamId(pick);
+    setAnswers(saved.answers || {});
+    setLeft(0);
+    submittedRef.current = true;
+    setPhase("review");
   };
 
   /* ---------- paper picker ---------- */
@@ -257,13 +270,26 @@ export default function Exam({ id }) {
                       )}
                     </p>
                   </div>
-                  <Button
-                    onClick={() => start(e.id)}
-                    data-act={`begin-${e.id}`}
-                    className={cn("rounded-md shrink-0", i === 0 ? "bg-slate-deep hover:bg-navy" : "bg-blue-bright hover:bg-blue")}
-                  >
-                    {b ? "Retake" : "Begin"} <ArrowRight className="size-3.5" />
-                  </Button>
+                  <div className="flex items-center gap-2 shrink-0">
+                    {b?.last && (
+                      <Button
+                        onClick={() => reviewSaved(e.id)}
+                        data-act={`review-${e.id}`}
+                        variant="outline"
+                        className="rounded-md bg-card"
+                        title={`Reopen your marked attempt from ${new Date(b.last.t).toLocaleString()}`}
+                      >
+                        <BookOpenCheck className="size-3.5" /> Review
+                      </Button>
+                    )}
+                    <Button
+                      onClick={() => start(e.id)}
+                      data-act={`begin-${e.id}`}
+                      className={cn("rounded-md", i === 0 ? "bg-slate-deep hover:bg-navy" : "bg-blue-bright hover:bg-blue")}
+                    >
+                      {b ? "Retake" : "Begin"} <ArrowRight className="size-3.5" />
+                    </Button>
+                  </div>
                 </div>
               </Panel>
             );
@@ -292,6 +318,12 @@ export default function Exam({ id }) {
   }
 
   const review = phase === "review";
+  /* the stored attempt's timestamp — set both for a paper just submitted and
+     for one reopened later, since in both cases it is the attempt on screen */
+  const savedTs = review ? progress.exams?.[exam.id]?.last?.t : null;
+  const savedAt = savedTs
+    ? new Date(savedTs).toLocaleString(undefined, { month: "short", day: "numeric", hour: "numeric", minute: "2-digit" })
+    : null;
 
   return (
     <div className="max-w-[820px]">
@@ -307,6 +339,11 @@ export default function Exam({ id }) {
                   ({Math.round(score / EXAM.length * 100)}%, {score * EXAM_META.pointsPer} pts)
                 </span>
               </span>
+              {savedAt && (
+                <span className="text-[12.5px] text-muted-foreground hidden sm:inline" data-attempt-at>
+                  attempt of {savedAt}
+                </span>
+              )}
               <span className="flex-1" />
               <Button onClick={() => start(exam.id)} size="sm" variant="outline" className="rounded-md bg-card" data-act="retake">
                 <RotateCcw className="size-3.5" /> Retake
