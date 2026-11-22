@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { LayoutDashboard, GraduationCap, Code2, Trophy, Zap, BookOpen, FileText } from "lucide-react";
+import { LayoutDashboard, GraduationCap, Code2, Trophy, Zap, BookOpen, FileText, HeartPulse } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useProgress } from "@/lib/progress";
 import { rankFor } from "@/lib/stats";
@@ -10,6 +10,9 @@ import Leaderboard from "@/pages/Leaderboard";
 import Study from "@/pages/Study";
 import Lesson from "@/pages/Lesson";
 import Exam from "@/pages/Exam";
+import WellStudy from "@/pages/WellStudy";
+import WellLesson from "@/pages/WellLesson";
+import WellExam from "@/pages/WellExam";
 
 /* Hash routing (#/learn, #/practice?q=ap12) — works on GitHub Pages
    with no server config. Old v1/v2 routes redirect to their successors. */
@@ -36,14 +39,18 @@ function useHashRoute() {
   return route;
 }
 
+/* `under` lists the sub-routes that should keep a nav item highlighted,
+   so reading a module does not leave the sidebar looking unselected. */
 const NAV = [
   { key: "",            label: "Dashboard",   icon: LayoutDashboard },
-  { key: "study",       label: "Study",       icon: BookOpen },
+  { key: "study",       label: "Study",       icon: BookOpen,     under: ["lesson"] },
   { key: "exam",        label: "Exam",        icon: FileText },
   { key: "learn",       label: "Learn",       icon: GraduationCap },
   { key: "practice",    label: "Practice",    icon: Code2 },
+  { key: "hyl",         label: "Wellbeing",   icon: HeartPulse,   under: ["hyl-lesson", "hyl-exam"] },
   { key: "leaderboard", label: "Leaderboard", icon: Trophy },
 ];
+const navActive = (item, path) => path === item.key || (item.under || []).includes(path);
 
 export default function App() {
   const route = useHashRoute();
@@ -75,18 +82,18 @@ export default function App() {
       <div className="flex flex-1 min-h-0">
         {/* sidebar */}
         <aside className="hidden md:flex flex-col w-56 shrink-0 border-r bg-card py-4 px-3 gap-1 sticky top-14 h-[calc(100vh-3.5rem)]">
-          {NAV.map(({ key, label, icon: Icon }) => (
+          {NAV.map((item) => (
             <a
-              key={key || "dash"}
-              href={`#/${key}`}
+              key={item.key || "dash"}
+              href={`#/${item.key}`}
               className={cn(
                 "flex items-center gap-3 px-3 py-2 rounded-md text-sm font-medium transition-colors duration-150",
-                route.path === key
+                navActive(item, route.path)
                   ? "bg-blue-bright text-white"
                   : "text-muted-foreground hover:text-foreground hover:bg-muted",
               )}
             >
-              <Icon className="size-4" strokeWidth={1.75} /> {label}
+              <item.icon className="size-4" strokeWidth={1.75} /> {item.label}
             </a>
           ))}
           <div className="mt-auto px-3 pb-1">
@@ -104,16 +111,19 @@ export default function App() {
 
         {/* mobile nav */}
         <nav className="md:hidden fixed bottom-0 inset-x-0 z-20 flex bg-card border-t">
-          {NAV.map(({ key, label, icon: Icon }) => (
+          {/* seven items on a phone: min-w-0 plus a truncating label keeps
+              them even instead of letting the longest one push the row wide */}
+          {NAV.map((item) => (
             <a
-              key={key || "dash"}
-              href={`#/${key}`}
+              key={item.key || "dash"}
+              href={`#/${item.key}`}
               className={cn(
-                "flex-1 flex flex-col items-center gap-0.5 py-2 text-[10px] font-medium",
-                route.path === key ? "text-blue-bright" : "text-muted-foreground",
+                "flex-1 min-w-0 flex flex-col items-center gap-0.5 py-2 px-0.5 text-[10px] font-medium",
+                navActive(item, route.path) ? "text-blue-bright" : "text-muted-foreground",
               )}
             >
-              <Icon className="size-4.5" strokeWidth={1.75} /> {label}
+              <item.icon className="size-4.5 shrink-0" strokeWidth={1.75} />
+              <span className="max-w-full truncate">{item.label}</span>
             </a>
           ))}
         </nav>
@@ -125,6 +135,9 @@ export default function App() {
             : route.path === "study" ? <Study />
             : route.path === "lesson" ? <Lesson id={route.params.id} />
             : route.path === "exam" ? <Exam id={route.params.id} />
+            : route.path === "hyl" ? <WellStudy />
+            : route.path === "hyl-lesson" ? <WellLesson id={route.params.id} />
+            : route.path === "hyl-exam" ? <WellExam id={route.params.id} />
             : <Dashboard />}
         </main>
       </div>
