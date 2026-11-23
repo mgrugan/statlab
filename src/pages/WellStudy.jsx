@@ -1,4 +1,4 @@
-import { BookOpen, Clock3, CheckCircle2, ArrowRight, FileText, Flag } from "lucide-react";
+import { BookOpen, Clock3, CheckCircle2, ArrowRight, FileText, Flag, Trophy } from "lucide-react";
 import { WB_MODULES, WB_EXAMS } from "@/data/wellbeing/course";
 import { useProgress } from "@/lib/progress";
 import { Panel, SectionLabel, Bar } from "@/components/shared";
@@ -16,7 +16,9 @@ export default function WellStudy() {
   const progress = useProgress();
   const seen = progress.lessons || {};
   const bests = progress.exams || {};
+  const quizzes = progress.quizzes || {};
   const done = WB_MODULES.filter((_, i) => seen[wbModuleId(i)]).length;
+  const passed = WB_MODULES.filter((_, i) => quizzes[wbModuleId(i)]?.passed).length;
 
   return (
     <div className="max-w-[860px] min-w-0">
@@ -25,7 +27,8 @@ export default function WellStudy() {
       <p className="text-[14px] text-muted-foreground mt-1.5 leading-relaxed max-w-[68ch]">
         Eighteen modules built from the lecture decks, the readings and the assigned talks. Each one
         opens with what is <strong className="text-foreground">most likely to be asked</strong> before
-        the reading starts, and none runs longer than about thirteen minutes.
+        the reading starts, closes with <strong className="text-foreground">five checkpoint
+        questions</strong>, and none runs longer than about thirteen minutes.
       </p>
 
       {/* what the exam looks like */}
@@ -98,7 +101,9 @@ export default function WellStudy() {
             <BookOpen className="size-4 text-emerald-deep" strokeWidth={1.75} />
             <h2 className="text-[15px] font-semibold">Modules</h2>
           </div>
-          <span className="text-[12px] text-muted-foreground tabular-nums">{done} / {WB_MODULES.length} read</span>
+          <span className="text-[12px] text-muted-foreground tabular-nums">
+            {done} / {WB_MODULES.length} read · {passed} checkpoint{passed === 1 ? "" : "s"} passed
+          </span>
         </div>
         <Bar pct={Math.round((done / WB_MODULES.length) * 100)} className="rounded-none" />
         <div className="divide-y">
@@ -121,6 +126,13 @@ export default function WellStudy() {
                   <span className="flex items-center gap-1 label-mono text-amber">
                     <Flag className="size-3" /> {m.keyFacts.length} exam facts
                   </span>
+                  {quizzes[wbModuleId(i)]?.passed ? (
+                    <span className="flex items-center gap-1 label-mono text-emerald-deep">
+                      <Trophy className="size-3" /> checkpoint passed
+                    </span>
+                  ) : (
+                    <span className="label-mono text-muted-foreground">5 checkpoint Qs</span>
+                  )}
                   <span className="label-mono text-muted-foreground truncate">{m.sources[0]}</span>
                 </span>
               </span>

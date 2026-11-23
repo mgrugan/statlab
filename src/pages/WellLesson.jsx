@@ -7,6 +7,8 @@ import { Rich as RichBase } from "@/components/Math";
    that, a pair of dollar amounts in one sentence renders as KaTeX. */
 const Rich = (props) => <RichBase {...props} tex={false} />;
 import { WB_MODULES } from "@/data/wellbeing/course";
+import { WB_CHECKS } from "@/data/wellbeing/checks";
+import ModuleQuiz from "@/components/ModuleQuiz";
 import { markLessonRead, useProgress } from "@/lib/progress";
 import { wbModuleId } from "@/pages/WellStudy";
 
@@ -157,6 +159,19 @@ export default function WellLesson({ id }) {
       <div className="mt-7">
         {m.body.map((b, k) => <Block key={`${mid}-${k}`} block={b} />)}
       </div>
+
+      {/* keyed on the module so moving between modules resets the quiz
+          rather than carrying the previous one's answers across */}
+      <ModuleQuiz
+        key={`chk-${mid}`}
+        moduleId={mid}
+        bank={WB_CHECKS[mid]}
+        tex={false}
+        label="Checkpoint"
+        blurb="Five questions on this module, reshuffled on every attempt."
+        nextHref={next != null ? `#/hyl-lesson?id=${next}` : "#/hyl-exam?id=0"}
+        nextLabel={next != null ? "Next module" : "Practice exam A"}
+      />
 
       {/* footer */}
       <Panel className="p-5 mt-8">

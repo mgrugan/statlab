@@ -20,9 +20,17 @@ function shuffled(arr, seed) {
   return a;
 }
 
-export default function ModuleQuiz({ moduleId, nextHref, nextLabel }) {
+/* `bank` lets a second course supply its own questions; without it the
+   finance bank is looked up by module id, as before. `tex={false}` is for
+   prose with no mathematics in it, where $5 and $20 in one sentence would
+   otherwise be read as an inline math span. */
+export default function ModuleQuiz({
+  moduleId, nextHref, nextLabel,
+  bank: bankProp, passMark, tex = true, label = "Module quiz", blurb,
+}) {
   const progress = useProgress();
-  const bank = QUIZZES[moduleId];
+  const bank = bankProp || QUIZZES[moduleId];
+  const PASS = passMark ?? QUIZ_PASS_MARK;
   const state = progress.quizzes?.[moduleId];
   const passed = !!state?.passed;
 
@@ -47,7 +55,7 @@ export default function ModuleQuiz({ moduleId, nextHref, nextLabel }) {
 
   const score = questions.reduce((s, q, i) => s + (picks[i] === q.answer ? 1 : 0), 0);
   const answered = Object.keys(picks).length;
-  const isPass = score === QUIZ_PASS_MARK;
+  const isPass = score === PASS;
 
   const start = () => { setPicks({}); setPhase("taking"); };
   const submit = () => {
@@ -68,16 +76,18 @@ export default function ModuleQuiz({ moduleId, nextHref, nextLabel }) {
           </span>
           <div className="min-w-0 flex-1">
             <h3 className="text-[16px] font-semibold">
-              {passed ? "Module quiz passed" : "Module quiz"}
+              {passed ? `${label} passed` : label}
             </h3>
             <p className="text-[13.5px] text-muted-foreground mt-1 leading-relaxed max-w-[62ch]">
               {passed
-                ? `You cleared all ${QUIZ_PASS_MARK} questions${state.attempts > 1 ? ` in ${state.attempts} attempts` : " first time"}. Retake it any time to keep it sharp.`
-                : <>Five questions, harder than the self-checks above. <strong className="text-foreground">You need all {QUIZ_PASS_MARK} correct to pass</strong> — anything less and you retake it with the questions reshuffled.</>}
+                ? `You cleared all ${PASS} questions${state.attempts > 1 ? ` in ${state.attempts} attempts` : " first time"}. Retake it any time to keep it sharp.`
+                : blurb
+                  ? <>{blurb} <strong className="text-foreground">You need all {PASS} correct to pass</strong> — anything less and you retake it with the questions reshuffled.</>
+                  : <>Five questions, harder than the self-checks above. <strong className="text-foreground">You need all {PASS} correct to pass</strong> — anything less and you retake it with the questions reshuffled.</>}
             </p>
             {state && !passed && (
               <p className="text-[12.5px] text-muted-foreground mt-2 tabular-nums">
-                Best so far: {state.best}/{QUIZ_PASS_MARK} · {state.attempts} attempt{state.attempts > 1 ? "s" : ""}
+                Best so far: {state.best}/{PASS} · {state.attempts} attempt{state.attempts > 1 ? "s" : ""}
               </p>
             )}
             <Button onClick={start} size="sm" data-act="start-quiz"
@@ -95,11 +105,11 @@ export default function ModuleQuiz({ moduleId, nextHref, nextLabel }) {
     <Panel className="p-5 md:p-6 mt-6" data-quiz={moduleId}>
       <div className="flex flex-wrap items-center gap-3 pb-4 mb-4 border-b">
         <SectionLabel className={phase === "graded" ? (isPass ? "text-emerald-deep" : "text-destructive") : "text-blue"}>
-          Module quiz
+          {label}
         </SectionLabel>
         {phase === "graded" ? (
           <span className={cn("text-[15px] font-semibold tabular-nums", isPass ? "text-emerald-deep" : "text-destructive")}>
-            {score} / {QUIZ_PASS_MARK} {isPass ? "— passed" : "— not passed"}
+            {score} / {PASS} {isPass ? "— passed" : "— not passed"}
           </span>
         ) : (
           <span className="text-[13px] text-muted-foreground tabular-nums">{answered} / {questions.length} answered</span>
@@ -121,8 +131,8 @@ export default function ModuleQuiz({ moduleId, nextHref, nextLabel }) {
         <div className={cn("rounded-md border px-4 py-3 mb-5 text-[13.5px] leading-relaxed",
           isPass ? "bg-emerald-soft border-emerald/30" : "bg-[#ffdad6]/50 border-destructive/30")}>
           {isPass
-            ? <><strong className="text-emerald-deep">Passed.</strong> All five correct — this module is done. Explanations are below if you want to confirm your reasoning.</>
-            : <><strong className="text-destructive">Not passed — {QUIZ_PASS_MARK}/{QUIZ_PASS_MARK} is required.</strong> Explanations for the ones you missed are below. Re-read those sections, then retake; the questions and answer positions will be reshuffled.</>}
+            ? <><strong className="text-emerald-deep">Passed.</strong> All {PASS} correct — this module is done. Explanations are below if you want to confirm your reasoning.</>
+            : <><strong className="text-destructive">Not passed — {PASS}/{PASS} is required.</strong> Explanations for the ones you missed are below. Re-read those sections, then retake; the questions and answer positions will be reshuffled.</>}
         </div>
       )}
 
@@ -140,7 +150,7 @@ export default function ModuleQuiz({ moduleId, nextHref, nextLabel }) {
                   {i + 1}
                 </span>
                 <div className="min-w-0 flex-1">
-                  <p className="text-[14.5px] leading-relaxed"><Rich text={q.q} /></p>
+                  <p className="text-[14.5px] leading-relaxed"><Rich text={q.q} tex={tex} /></p>
                   <div className="grid gap-2 mt-3">
                     {q.choices.map((c, ci) => {
                       const isAns = ci === q.answer;
@@ -165,7 +175,7 @@ export default function ModuleQuiz({ moduleId, nextHref, nextLabel }) {
                               : isPick ? "text-blue" : "text-muted-foreground")}>
                             {graded && isAns ? "✓" : graded && isPick ? "✗" : String.fromCharCode(97 + ci) + "."}
                           </span>
-                          <span><Rich text={c} /></span>
+                          <span><Rich text={c} tex={tex} /></span>
                         </button>
                       );
                     })}
@@ -174,7 +184,7 @@ export default function ModuleQuiz({ moduleId, nextHref, nextLabel }) {
                   {/* explanation: always on a pass, only for misses on a fail */}
                   {graded && (isPass || !right) && (
                     <p className="mt-2.5 text-[13px] leading-relaxed text-muted-foreground border-l-2 border-blue-bright pl-3">
-                      <Rich text={q.why} />
+                      <Rich text={q.why} tex={tex} />
                     </p>
                   )}
                 </div>
