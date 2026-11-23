@@ -1,5 +1,6 @@
 import { BookOpen, Clock3, CheckCircle2, ArrowRight, FileText, Flag, Trophy } from "lucide-react";
-import { WB_MODULES, WB_EXAMS } from "@/data/wellbeing/course";
+import { WB_MODULES } from "@/data/wellbeing/course";
+import { WB_PAPERS as WB_EXAMS } from "@/data/wellbeing/papers";
 import { useProgress } from "@/lib/progress";
 import { Panel, SectionLabel, Bar } from "@/components/shared";
 import { Badge } from "@/components/ui/badge";
@@ -10,7 +11,7 @@ const Rich = (props) => <RichBase {...props} tex={false} />;
 import { cn } from "@/lib/utils";
 
 export const wbModuleId = (i) => `w${String(i + 1).padStart(2, "0")}`;
-export const wbExamId = (i) => "hyl" + "abc"[i];
+export const wbExamId = (i) => "hyl" + "abcd"[i];
 
 export default function WellStudy() {
   const progress = useProgress();
@@ -60,7 +61,7 @@ export default function WellStudy() {
           <div className="flex items-center gap-2.5">
             <FileText className="size-4 text-emerald-deep" strokeWidth={1.75} />
             <h2 className="text-[15px] font-semibold">Practice exams</h2>
-            <Badge variant="outline" className="rounded-sm label-mono text-muted-foreground">3 papers</Badge>
+            <Badge variant="outline" className="rounded-sm label-mono text-muted-foreground">{WB_EXAMS.length} papers</Badge>
           </div>
         </div>
         <div className="divide-y">
@@ -71,7 +72,7 @@ export default function WellStudy() {
               <a key={e.title} href={`#/hyl-exam?id=${i}`} data-wbexam={i}
                  className="flex items-start gap-4 px-4 py-3.5 hover:bg-muted transition-colors duration-150 group">
                 <span className="grid place-items-center size-8 shrink-0 rounded-md label-mono bg-emerald-soft text-emerald-deep mt-0.5">
-                  {"ABC"[i]}
+                  {"ABCD"[i]}
                 </span>
                 <span className="min-w-0 flex-1">
                   <span className="block text-[14.5px] font-semibold">{e.title}</span>

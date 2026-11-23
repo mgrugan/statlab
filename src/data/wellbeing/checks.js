@@ -149,14 +149,14 @@ w03: [
     ], answer: 1,
     why: "A behavioural measure (**difficult GRE problems solved**), a physiological one (**salivary alpha-amylase**, not cortisol), and a real-world follow-up (**actual GRE scores at one to three months**). The cortisol option is the trap — it is the obvious stress hormone, and it is the one Creswell's values-affirmation study used, not this one." },
 
-  { q: "*I'm just not a maths person.* Which theory is that, and what does the course say moves it?",
+  { q: "*I'm just not a maths person* expresses an **entity theory**. What does Dweck's **incremental** alternative hold?",
     choices: [
-      "Entity theory — moved by effort, strategy, and help",
-      "Incremental theory — moved by repeated exposure to success",
-      "Entity theory — moved only by evidence of a changed test score",
-      "A stress mindset — moved by reappraising arousal as useful",
-    ], answer: 0,
-    why: "**Entity theory** is the fixed mindset: some people have it, some do not. The growth (**incremental**) alternative is that people can change things about themselves with **effort, strategy and help** — all three, not effort alone, which is the most common misreading of Dweck." },
+      "That ability is largely set, but effort can compensate for what you lack",
+      "That ability changes with effort, strategy and help",
+      "That ability grows on its own, given enough exposure and time",
+      "That ability is domain-specific, so being poor at maths implies nothing else",
+    ], answer: 1,
+    why: "**Entity theory** is the fixed mindset — some people have it, some do not. The **incremental** view is that people can change things about themselves with **effort, strategy and help**: all three, not effort alone. The first option is the most common misreading of Dweck, and it is still a fixed mindset — it keeps ability fixed and treats effort as what you fall back on when you lack it, which is exactly the belief that makes failure feel like a verdict." },
 ],
 
 /* ================================================================ w04 */
@@ -515,7 +515,7 @@ w11: [
     ], answer: 0,
     why: "**Giving, not receiving.** Receiving support was **not** linked to a longer life in this study — which is the counterintuitive part, and the reason the lecture frames helping as something you do *for* your own health rather than something you accept." },
 
-  { q: "Konrath et al. found volunteering predicted lower mortality only under one condition. Which, and what does it imply?",
+  { q: "Konrath et al. found volunteering predicted lower mortality only under one condition. Which?",
     choices: [
       "Only above 200 hours a year — below that the dose is too small to matter",
       "Only for other-oriented motives; self-oriented did not differ",
@@ -725,9 +725,9 @@ w15: [
     ], answer: 1,
     why: "The **paradox of work**. Free time was **52% apathy**, yet it is what people say they want more of. The practical reading: the activities that supply flow and the activities we *desire* come apart, so choosing by desire alone reliably underfills the day with the thing that engages you." },
 
-  { q: "Lyubomirsky, Sheldon and Schkade put rough numbers on what drives happiness. Which split is theirs, and which part does the course build on?",
+  { q: "Lyubomirsky, Sheldon and Schkade put rough numbers on what drives happiness. Which split is theirs?",
     choices: [
-      "50% genes, 40% circumstances, 10% activity — so circumstances are the lever",
+      "50% genes, 40% circumstances, 10% what you do",
       "50% genes and temperament, 10% circumstances, 40% what you do",
       "40% genes, 20% circumstances, 40% activity — split evenly between the two",
       "A third each, which is why the course covers all three equally",
@@ -803,7 +803,7 @@ w17: [
     ], answer: 1,
     why: "**The smallest effect came from the most popular practice.** Sending is what does the work, which fits Seligman et al. (2005), where the gratitude letter **delivered in person** gave the biggest boost of the exercises tested. The mechanism has three parts: **significance**, **coherence**, **connection** — and connection is the one that needs another person." },
 
-  { q: "Kumar and Epley asked people to write gratitude letters, then surveyed the recipients. What is the finding, and which course theme does it belong to?",
+  { q: "Kumar and Epley asked people to write gratitude letters, then surveyed the recipients. What did the recipients report, set against what the writers had predicted?",
     choices: [
       "Recipients valued the letters less than writers hoped — a self-enhancement bias",
       "Recipients were more surprised, more positive and less awkward than writers predicted",
@@ -821,7 +821,7 @@ w17: [
     ], answer: 1,
     why: "**Value affirmation blunted the cortisol response** to a speech-plus-arithmetic task in front of evaluators. Sherman et al. (2009) replicated it in the field with **urinary epinephrine** during a real midterm. Alpha-amylase is the Crum stress-mindset measure from Module 03 — easy to swap if you have not pinned each study to its marker." },
 
-  { q: "McAdams distinguishes **redemption** from **contamination** narratives. What is the distinction, and why does the lecture include it?",
+  { q: "McAdams distinguishes **redemption** from **contamination** narratives. What is the distinction?",
     choices: [
       "Redemption runs bad → good; contamination runs good → bad",
       "Redemption stories are about other people, contamination stories about oneself",

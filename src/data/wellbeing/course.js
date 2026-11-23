@@ -912,7 +912,7 @@ export const WB_EXAMS = [
     /* A3 */ {type:"mc", q:"In Mueller and Dweck (1998), children were praised for being smart or for working hard, then failed a very hard set of problems. On the final **easy** set, how did the smart-praised children do?", choices:[
       "They scored above their own earlier baseline",
       "They scored about the same as their baseline",
-      "They scored **below** their own earlier baseline, on easier problems",
+      "They scored **below** their own round-1 baseline",
       "They refused to attempt any further problem sets"
     ], answer:2, why:"The smart-praised children scored **below their own round-1 baseline**; the effort-praised children scored **above** it. Round 3 was deliberately as easy as round 1 so each child could be compared against themselves. The praise, not the ability, moved the performance."},
     /* A4 */ {type:"mc", q:"Haidt argues that teen mental health began to decline sharply during what he calls the **Great Rewiring** of childhood. When did it start?", choices:[
@@ -1078,7 +1078,7 @@ export const WB_EXAMS = [
       "Higher mortality, entirely explained by lower actual activity",
       "Lower mortality, through compensatory behaviour"
     ], answer:0, why:"The **belief predicted mortality beyond the behaviour it was a belief about** — a 71% higher risk after adjusting for actual activity. It is the mindset argument from Module 03 with a hard outcome, and it belongs in any essay about how beliefs shape physiological effects."},
-    /* B19 */ {type:"mc", q:"White and Dolan asked people to rate daily activities for **pleasure** and for **reward** (worthwhileness). Which pairing is correct?", choices:[
+    /* B19 */ {type:"mc", q:"White and Dolan asked people to rate daily activities for **pleasure** and for **reward** (worthwhileness). Which is correct?", choices:[
       "Watching TV scored highest on both",
       "TV scored **highest on pleasure, lowest on reward**",
       "Volunteering scored highest on both",
@@ -1099,7 +1099,7 @@ export const WB_EXAMS = [
       "Hedonic is measured by surveys, eudaimonic by behaviour",
       "Hedonic applies to individuals, eudaimonic to communities"
     ], answer:1, why:"**Hedonic** = pleasure over pain, feeling good. **Eudaimonic** = living well, with meaning and growth. The White & Dolan data makes the split concrete: watching TV is the most **pleasurable** activity and the least **worthwhile**; volunteering is the reverse. Duration is not the distinction — some pleasures last and some meaningful work is brief."},
-    /* C2 */ {type:"mc", q:"Both the exercise lecture and the discomfort lecture use a study where the **same physical dose** produced different outcomes depending on one variable. What is that variable, and which studies are they?", choices:[
+    /* C2 */ {type:"mc", q:"Both the exercise lecture and the discomfort lecture use a study where the **same physical dose** produced different outcomes depending on one variable. What is that variable?", choices:[
       "Intensity — Noetel and Schnohr",
       "Duration — Erickson and Ding",
       "**Choice** — Leasure & Jones's forced-running rats",

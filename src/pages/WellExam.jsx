@@ -6,7 +6,7 @@ import { Rich as RichBase } from "@/components/Math";
 /* This course has no mathematics in it, so the $…$ form is off: without
    that, a pair of dollar amounts in one sentence renders as KaTeX. */
 const Rich = (props) => <RichBase {...props} tex={false} />;
-import { WB_EXAMS } from "@/data/wellbeing/course";
+import { WB_PAPERS as WB_EXAMS } from "@/data/wellbeing/papers";
 import { wbExamId } from "@/pages/WellStudy";
 import { recordExam, useProgress } from "@/lib/progress";
 import { cn } from "@/lib/utils";
@@ -260,7 +260,7 @@ export default function WellExam({ id }) {
     return (
       <div className="max-w-[760px]">
         <a href="#/hyl" className="label-mono text-muted-foreground hover:text-foreground transition-colors">← Hack Your Life</a>
-        <SectionLabel className="text-emerald-deep mt-3">Practice exam {"ABC"[idx]}</SectionLabel>
+        <SectionLabel className="text-emerald-deep mt-3">Practice exam {"ABCD"[idx]}</SectionLabel>
         <h1 className="text-2xl font-semibold tracking-tight mt-1">{exam.title}</h1>
         <p className="text-[14px] text-muted-foreground mt-2 leading-relaxed max-w-[68ch]">
           <Rich text={exam.lede} />
@@ -301,7 +301,7 @@ export default function WellExam({ id }) {
             )}
             {WB_EXAMS.map((e, k) => k !== idx && (
               <Button key={k} asChild size="sm" variant="ghost" className="rounded-md text-muted-foreground">
-                <a href={`#/hyl-exam?id=${k}`}>Paper {"ABC"[k]}</a>
+                <a href={`#/hyl-exam?id=${k}`}>Paper {"ABCD"[k]}</a>
               </Button>
             ))}
           </div>
