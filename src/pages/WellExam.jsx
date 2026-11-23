@@ -260,7 +260,7 @@ export default function WellExam({ id }) {
     return (
       <div className="max-w-[760px]">
         <a href="#/hyl" className="label-mono text-muted-foreground hover:text-foreground transition-colors">← Hack Your Life</a>
-        <SectionLabel className="text-emerald-deep mt-3">Practice exam {"ABCD"[idx]}</SectionLabel>
+        <SectionLabel className="text-emerald-deep mt-3">Practice exam {"ABCDE"[idx]}</SectionLabel>
         <h1 className="text-2xl font-semibold tracking-tight mt-1">{exam.title}</h1>
         <p className="text-[14px] text-muted-foreground mt-2 leading-relaxed max-w-[68ch]">
           <Rich text={exam.lede} />
@@ -301,7 +301,7 @@ export default function WellExam({ id }) {
             )}
             {WB_EXAMS.map((e, k) => k !== idx && (
               <Button key={k} asChild size="sm" variant="ghost" className="rounded-md text-muted-foreground">
-                <a href={`#/hyl-exam?id=${k}`}>Paper {"ABCD"[k]}</a>
+                <a href={`#/hyl-exam?id=${k}`}>Paper {"ABCDE"[k]}</a>
               </Button>
             ))}
           </div>

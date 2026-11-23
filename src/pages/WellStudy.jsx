@@ -11,7 +11,7 @@ const Rich = (props) => <RichBase {...props} tex={false} />;
 import { cn } from "@/lib/utils";
 
 export const wbModuleId = (i) => `w${String(i + 1).padStart(2, "0")}`;
-export const wbExamId = (i) => "hyl" + "abcd"[i];
+export const wbExamId = (i) => "hyl" + "abcde"[i];
 
 export default function WellStudy() {
   const progress = useProgress();
@@ -72,7 +72,7 @@ export default function WellStudy() {
               <a key={e.title} href={`#/hyl-exam?id=${i}`} data-wbexam={i}
                  className="flex items-start gap-4 px-4 py-3.5 hover:bg-muted transition-colors duration-150 group">
                 <span className="grid place-items-center size-8 shrink-0 rounded-md label-mono bg-emerald-soft text-emerald-deep mt-0.5">
-                  {"ABCD"[i]}
+                  {"ABCDE"[i]}
                 </span>
                 <span className="min-w-0 flex-1">
                   <span className="block text-[14.5px] font-semibold">{e.title}</span>
