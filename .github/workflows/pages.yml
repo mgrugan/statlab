@@ -14,12 +14,15 @@ concurrency:
   group: pages
   cancel-in-progress: true
 
+# Build and deploy are separate jobs, as in GitHub's own Pages template.
+# They used to be one job, which broke on 2026-11-23: upload-pages-artifact
+# finished at 23:06:42.68 and deploy-pages asked for the artifact 340ms
+# later, got "Found 0 artifact(s)", and failed — twice, identically, with
+# Actions and Pages both reporting operational. The job boundary gives the
+# artifact time to become queryable.
 jobs:
-  deploy:
+  build:
     runs-on: ubuntu-latest
-    environment:
-      name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
@@ -32,5 +35,13 @@ jobs:
       - uses: actions/upload-pages-artifact@v3
         with:
           path: dist
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
       - id: deployment
         uses: actions/deploy-pages@v4
