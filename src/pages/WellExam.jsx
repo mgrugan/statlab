@@ -260,7 +260,7 @@ export default function WellExam({ id }) {
     return (
       <div className="max-w-[760px]">
         <a href="#/hyl" className="label-mono text-muted-foreground hover:text-foreground transition-colors">← Hack Your Life</a>
-        <SectionLabel className="text-emerald-deep mt-3">Practice exam {"ABCDE"[idx]}</SectionLabel>
+        <SectionLabel className="text-emerald-deep mt-3">Practice exam {"ABCDEF"[idx]}</SectionLabel>
         <h1 className="text-2xl font-semibold tracking-tight mt-1">{exam.title}</h1>
         <p className="text-[14px] text-muted-foreground mt-2 leading-relaxed max-w-[68ch]">
           <Rich text={exam.lede} />
@@ -268,7 +268,12 @@ export default function WellExam({ id }) {
 
         <Panel className="p-5 mt-5">
           <div className="grid sm:grid-cols-3 gap-3">
-            {[[scored.length, "scored questions"], [essays, "short essays"], [exam.questions.length, "questions in all"]].map(([n, lab]) => (
+            {/* a paper with no essays (the terms paper) shows its type mix
+                instead of an empty "0 short essays" tile */}
+            {(essays
+              ? [[scored.length, "scored questions"], [essays, "short essays"], [exam.questions.length, "questions in all"]]
+              : [[exam.questions.length, "questions in all"], [scored.length, "fill in the blank"], [0, "multiple choice — nothing to recognise"]]
+            ).map(([n, lab]) => (
               <div key={lab} className="rounded-md border bg-code-bg-light px-4 py-3">
                 <div className="text-[24px] font-semibold leading-none tabular-nums">{n}</div>
                 <div className="text-[12.5px] text-muted-foreground mt-1.5">{lab}</div>
@@ -276,10 +281,22 @@ export default function WellExam({ id }) {
             ))}
           </div>
           <p className="text-[13px] text-muted-foreground leading-relaxed mt-4 pt-4 border-t">
-            Multiple choice and fill-in-the-blank are marked for you; the essays are not, so your score
-            is out of <strong className="text-foreground">{scored.length}</strong> and the model answers
-            appear beside your own when you submit. Fill-in-the-blank marking ignores case, punctuation
-            and articles, and each question accepts several phrasings.
+            {essays ? (
+              <>
+                Multiple choice and fill-in-the-blank are marked for you; the essays are not, so your
+                score is out of <strong className="text-foreground">{scored.length}</strong> and the
+                model answers appear beside your own when you submit.{" "}
+              </>
+            ) : (
+              <>
+                Every question is marked, so your score is out of{" "}
+                <strong className="text-foreground">{scored.length}</strong>. With no options to
+                recognise or rule out, expect this to feel harder than the other papers at the same
+                level of knowledge.{" "}
+              </>
+            )}
+            Fill-in-the-blank marking ignores case, punctuation and articles, and each question
+            accepts several phrasings.
           </p>
           {b && (
             <p className="text-[13px] mt-3 tabular-nums">
@@ -301,7 +318,7 @@ export default function WellExam({ id }) {
             )}
             {WB_EXAMS.map((e, k) => k !== idx && (
               <Button key={k} asChild size="sm" variant="ghost" className="rounded-md text-muted-foreground">
-                <a href={`#/hyl-exam?id=${k}`}>Paper {"ABCDE"[k]}</a>
+                <a href={`#/hyl-exam?id=${k}`}>Paper {"ABCDEF"[k]}</a>
               </Button>
             ))}
           </div>
@@ -321,11 +338,13 @@ export default function WellExam({ id }) {
     ? new Date(savedTs).toLocaleString(undefined, { month: "short", day: "numeric", hour: "numeric", minute: "2-digit" })
     : null;
 
+  /* only the types this paper actually contains — a pure fill-in-the-blank
+     paper should not report "Multiple choice 0/0" */
   const byType = ["mc", "blank"].map((t) => {
     const qs = exam.questions.map((q, k) => [q, k]).filter(([q]) => q.type === t);
     const right = qs.filter(([q, k]) => (t === "mc" ? answers[k] === q.answer : blankOk(answers[k], q))).length;
     return { t, right, total: qs.length };
-  });
+  }).filter((r) => r.total > 0);
 
   return (
     <div className="max-w-[820px]">
@@ -375,16 +394,28 @@ export default function WellExam({ id }) {
                 </span>
               </div>
             ))}
-            <div className="flex items-center justify-between text-[13.5px] py-0.5">
-              <span>Short essays</span>
-              <span className="label-mono text-muted-foreground">self-marked</span>
-            </div>
+            {essays > 0 && (
+              <div className="flex items-center justify-between text-[13.5px] py-0.5">
+                <span>Short essays</span>
+                <span className="label-mono text-muted-foreground">self-marked</span>
+              </div>
+            )}
           </div>
           <p className="text-[13px] text-muted-foreground leading-relaxed mt-4 pt-4 border-t">
             <PenLine className="size-3 inline mr-1 -mt-0.5" />
-            The essays carry real weight on the real paper. Read the model answer under each one and check
-            you named a <strong className="text-foreground">mechanism</strong> for every practice you
-            recommended — that is where the marks are, not in length.
+            {essays > 0 ? (
+              <>
+                The essays carry real weight on the real paper. Read the model answer under each one and
+                check you named a <strong className="text-foreground">mechanism</strong> for every
+                practice you recommended — that is where the marks are, not in length.
+              </>
+            ) : (
+              <>
+                A term you half-knew here is a term you would have recognised on a multiple-choice paper
+                and still lost on a blank. Anything you missed is worth going back to the module for,
+                since the real paper asks for these cold.
+              </>
+            )}
           </p>
         </Panel>
       )}
