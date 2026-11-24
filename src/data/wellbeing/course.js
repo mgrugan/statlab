@@ -901,7 +901,7 @@ export const WB_EXAMS = [
       "One person talks far more than the other",
       "Neither person asks enough follow-up questions to keep the thread going",
       "People avoid disclosing anything personal",
-      "They are having different **kinds** of conversation"
+      "They are having different kinds of conversation"
     ], answer:3, why:"The **matching principle**. Conversations work when partners align on whether this is a **practical**, **emotional** or **identity** conversation. The classic failure is answering an emotional conversation with practical advice — helpful and useless at once. Too little talking, too few follow-ups and too little disclosure are all real problems, but they are not the one Duhigg singles out."},
     /* A2 */ {type:"mc", q:"In Ramirez and Beilock's *Science* study, test-anxious ninth graders wrote about their worries for 10 minutes before a biology final. Compared with anxious students who did not, they earned about…", choices:[
       "No measurable difference",
@@ -912,7 +912,7 @@ export const WB_EXAMS = [
     /* A3 */ {type:"mc", q:"In Mueller and Dweck (1998), children were praised for being smart or for working hard, then failed a very hard set of problems. On the final **easy** set, how did the smart-praised children do?", choices:[
       "They scored above their own earlier baseline",
       "They scored about the same as their baseline",
-      "They scored **below** their own round-1 baseline",
+      "They scored below their own round-1 baseline",
       "They refused to attempt any further problem sets"
     ], answer:2, why:"The smart-praised children scored **below their own round-1 baseline**; the effort-praised children scored **above** it. Round 3 was deliberately as easy as round 1 so each child could be compared against themselves. The praise, not the ability, moved the performance."},
     /* A4 */ {type:"mc", q:"Haidt argues that teen mental health began to decline sharply during what he calls the **Great Rewiring** of childhood. When did it start?", choices:[
@@ -925,7 +925,7 @@ export const WB_EXAMS = [
     /* A6 */ {type:"blank", q:"In the CMU study of first-year students wearing sleep trackers, each additional hour of average nightly sleep predicted end-of-term GPA changing by about how much? (A number.)", answer:"0.07", accept:["0.07", ".07", "0.07 GPA", "0.07 points"], why:"**0.07 of a GPA point per hour.** Creswell et al. (2023, PNAS) tracked over 500 first-year students at three universities. Average weeknight sleep was about **6 h 29 min**, and it was the **under-six-hour** sleepers whose GPA suffered. Note it is observational, not an experiment."},
     /* A7 */ {type:"blank", q:"In brief behavioural treatment for insomnia, which one thing should stay the same every single day, weekends included?", answer:"Wake time", accept:["wake time", "wake-up time", "waking time", "rise time", "time you wake up", "getting up time", "wake up time"], why:"**Wake time.** It is the body clock's strongest cue, it sets when you see morning light, and it builds tonight's sleep pressure. A bad night plus a normal wake time banks pressure for tonight — which is exactly why sleeping in to recover backfires."},
     /* A8 */ {type:"mc", q:"In *The Power of Habit*, Febreze flopped when it first launched. What finally turned it into a hit?", choices:[
-      "Repositioning it as a **reward** at the end of a cleaning routine",
+      "Repositioning it as a reward at the end of a cleaning routine",
       "Cutting the price and expanding distribution",
       "Proving in trials that it removed more odours than rivals",
       "Targeting pet owners and smokers directly"
@@ -933,13 +933,13 @@ export const WB_EXAMS = [
     /* A9 */ {type:"blank", q:"Killingsworth and Gilbert (2010) pinged people's phones at random moments. About what percentage of the time were their minds wandering? (A number.)", answer:"47%", accept:["47", "47%", "about 47", "47 percent", "around 47%"], why:"**About 47%.** And the second finding matters as much: people were **less happy when their minds wandered**, whatever they were doing. The wandering came first, so it is not simply that unpleasant activities cause wandering."},
     /* A10 */ {type:"mc", q:"Which instruction, given right before a stage exercise, made Second City improv students hold the focus longer and take more risks?", choices:[
       "Aim to make the audience laugh as often as possible",
-      "Treat **feeling awkward and uncomfortable as the goal**",
+      "Treat feeling awkward and uncomfortable as the goal",
       "Plan the scene carefully before starting",
       "Focus on your scene partner rather than on your own performance"
     ], answer:1, why:"Woolley & Fishbach (2022). Reframing **discomfort as the signal that it is working** — rather than something to minimise — made students persist longer and take more risks. It sits in the **mindsets** literature rather than the exposure-therapy one, because it changes the meaning of the discomfort rather than the dose."},
     /* A11 */ {type:"mc", q:"In the David Brooks article on thriving in the generative-AI age, which trait does he argue will separate people?", choices:[
       "Technical fluency with AI tools",
-      "**Need for cognition**",
+      "Need for cognition",
       "Emotional intelligence",
       "Tolerance for ambiguity"
     ], answer:1, why:"**Need for cognition** — how much someone engages in and enjoys effortful cognitive activity. Brooks's three types: **productive passengers** (low, diminished capacities), **reluctant optimizers** (medium, slowly diminished), and **mental marathoners** (high, retained). Kosmyna et al. (2025) supports it: brain-only writers showed the strongest, widest-ranging brain connectivity and could quote their own essays more accurately."},
@@ -951,19 +951,19 @@ export const WB_EXAMS = [
     ], answer:0, why:"**(b) and (e).** Replicating the testing environment works through **context-dependent memory** (Godden & Baddeley, 1975). Alternating between problem types is **interleaving**, one of the Bjorks' desirable difficulties. One long block is massed practice, rote memorisation is shallow processing, and an all-nighter sacrifices the consolidation sleep does."},
     /* A13 */ {type:"blank", q:"On the Consensus Sleep Diary you tracked how many minutes it took to fall asleep after getting into bed. Sleep medicine calls this period ____________.", answer:"Sleep onset latency", accept:["sleep onset latency", "sleep latency", "SOL", "onset latency"], why:"**Sleep onset latency** (SOL), also called sleep latency. The other diary terms worth knowing: **WASO** (wake after sleep onset), **TIB** (time in bed), **TST** (total sleep time), and **sleep efficiency** = TST ÷ TIB."},
     /* A14 */ {type:"mc", q:"In Dunn, Aknin and Norton's third study, participants were given $5 or $20 to spend on themselves or on someone else. What happened?", choices:[
-      "Others beat self, and the **amount made no difference**",
+      "Others beat self, and the amount made no difference",
       "$20 on others produced the biggest boost; $5 made no difference",
       "Spending on self produced more happiness, as participants predicted",
       "Neither condition changed evening happiness"
     ], answer:0, why:"Evening happiness was **+0.18** spending on others against **−0.19** on self, and **$5 worked as well as $20**. The forecasting failure is the other half of the finding: **63%** of students predicted spending on themselves would feel better, and **86%** predicted $20 would beat $5."},
     /* A15 */ {type:"mc", q:"In the Lindsay et al. dismantling trial, 153 stressed adults used a phone app for 14 days in one of three conditions. Which reduced cortisol reactivity?", choices:[
       "Both meditation conditions, equally",
-      "**Monitor Only** only",
+      "Monitor Only only",
       "Neither — only the control changed",
-      "**Monitor + Accept** only"
+      "Monitor + Accept only"
     ], answer:3, why:"Only **Monitor + Accept**. Attention-monitoring skills alone sharpen attention; it is **monitoring plus equanimity/acceptance** that reduces stress and improves health. The PNAS follow-up (2019) found the same pattern for loneliness, with Monitor + Accept producing about **two extra social interactions a day**. **Acceptance is the active ingredient.**"},
     /* A16 */ {type:"mc", q:"In the Copenhagen City Heart Study, which sport was associated with the most extra years of life?", choices:[
-      "**Tennis**",
+      "Tennis",
       "Jogging",
       "Swimming",
       "Going to the gym"
@@ -972,11 +972,11 @@ export const WB_EXAMS = [
       "Predictions were accurate",
       "Actual happiness was far lower than they had predicted, and stayed low",
       "Only people who initiated the breakup recovered",
-      "Actual happiness was about the **same as before** the breakup"
+      "Actual happiness was about the same as before the breakup"
     ], answer:3, why:"In a relationship: **5.27**. Predicted after a breakup: **3.89**. Actual: **5.42** — slightly *higher* than before. The same pattern held for being denied tenure and losing an election. The explanation is the **psychological immune system**: we manufacture **synthetic happiness** and do not believe in advance that we can."},
     /* A18 */ {type:"blank", q:"In Coles et al.'s 34-country study of six gratitude practices, which practice produced the **largest** effect on happiness?", answer:"Write a message and send it", accept:["write a message and send it", "send it", "sending it", "writing and sending a message", "write and send", "send a gratitude message", "send the letter", "write a message, and send it"], why:"**Writing a message and sending it.** The study covered **10,696 people in 34 countries**. The **smallest** effect came from **listing five things you're grateful for** — which is also the most popular practice. Sending is what does the work, consistent with Seligman et al. (2005), where the letter **delivered in person** gave the biggest boost."},
     /* A19 */ {type:"mc", q:"Pham and Taylor (1999) had students picture either getting the A or the process of studying before a midterm. What happened?", choices:[
-      "Picturing **studying** produced more study hours and higher exam scores",
+      "Picturing studying produced more study hours and higher exam scores",
       "Picturing the A raised study hours, and scores rose with them",
       "Both simulations worked equally well",
       "Neither changed behaviour"
@@ -984,7 +984,7 @@ export const WB_EXAMS = [
     /* A20 */ {type:"mc", q:"Leasure and Jones compared rats that ran voluntarily with rats forced to run the same amount. What did they find?", choices:[
       "Forced runners had less muscle gain but equivalent brain changes",
       "Forced runners did better on every measure",
-      "Bodies were identical; forced runners were **more anxious**",
+      "Bodies were identical; forced runners were more anxious",
       "There were no differences on any measure"
     ], answer:2, why:"No significant differences in weight, belly fat, muscle or stress hormones — but forced runners spent **4.8 seconds** in the open-field centre against 13.8 (voluntary) and 15.6 (sedentary), and produced three times as many fecal pellets. **Choice, not exertion, is the variable.** In humans, the same pace chosen yourself raises energy and enjoyment more than the identical pace set for you."},
     /* A21 */ {type:"essay", q:"Maya wants to start exercising. Every time she has tried before, she started strong and quit within a couple of weeks. Using the behaviour change material and Duhigg's *The Power of Habit*, recommend **three evidence-based practices** to help her make exercise a habit, and explain why each one works.", why:"<p>Any **three** of the four, each with its mechanism — the marks come from the *why*, not from length.</p><ul><li>**A stable cue** — same time, place, or prior action. Habits fire from **context, not willpower**, which is why relying on motivation fails in week two.</li><li>**A reward she craves** — something she genuinely enjoys right afterwards. **Craving is what powers Duhigg's loop**; a cue and a reward alone are not enough, as Febreze showed.</li><li>**Expect it to take around 66 days** — automaticity takes roughly two months, so expecting it to feel easy within a fortnight guarantees quitting at exactly the wrong moment.</li><li>**A plan for the miss** — one missed day does not undo a habit, but without a plan one missed day becomes several.</li></ul><p>Strong answers often add the exercise-specific evidence: **choose it** rather than having it imposed (Leasure & Jones), make it **social** (Copenhagen), and **discount the first few minutes**, since we judge the whole workout by its worst part (Ruby et al., forecasting myopia).</p>"},
@@ -997,7 +997,7 @@ export const WB_EXAMS = [
   questions:[
     /* B1 */ {type:"mc", q:"In Kardas, Kumar and Epley's deep-conversation experiments, what is the systematic error people make?", choices:[
       "They overestimate how much the other person will disclose",
-      "They **overestimate awkwardness** and **underestimate** the connection they will feel",
+      "They overestimate awkwardness and underestimate the connection they will feel",
       "They underestimate how long the conversation will take",
       "They overestimate how much they will enjoy shallow small talk"
     ], answer:1, why:"The error runs in one direction: we expect deep conversations to be more awkward than they are, and we underestimate the connection, care and happiness they produce. The consequence is that we have **shallower conversations than we would actually prefer** — and better calibration makes people more willing to go deep."},
@@ -1019,24 +1019,24 @@ export const WB_EXAMS = [
       "It raised GPA by a full point across all schools",
       "It had no significant effect anywhere",
       "It worked only in high-achieving schools",
-      "It raised ninth-grade GPA by about **0.10**"
+      "It raised ninth-grade GPA by about 0.10"
     ], answer:3, why:"**+0.10 cumulative GPA** at the end of ninth grade — real, modest, and conditional. Effects were largest in **lowest- and middle-achieving schools** and **not significant in high-achieving ones**, and were bigger where **peer norms** supported a growth mindset. Naming those conditions is what separates a strong answer from a slogan."},
     /* B7 */ {type:"mc", q:"Which of these is the strongest counterargument to Haidt's case about smartphones and adolescent mental health?", choices:[
       "Teen mental health has not actually declined since 2010, by any measure",
       "Smartphones were not widely adopted until 2020",
       "Social media use is higher among adults than teens",
-      "Orben and Przybylski found **minimal correlation** with well-being"
+      "Orben and Przybylski found minimal correlation with well-being"
     ], answer:3, why:"The lecture presents both sides deliberately. **Orben and Przybylski** applied specification-curve analysis across large datasets and found the screen-time/well-being association to be very small. Outcomes also vary enormously with the **context and behaviours** of individual use. The honest position: the mental-health trends are real, the correlation with smartphone adoption is real, and the **causal** claim is contested."},
     /* B8 */ {type:"blank", q:"In the *Dial D for Distracted* episode, what is the name for the brain's ability to miss things that are right in front of us?", answer:"Inattentional blindness", accept:["inattentional blindness", "inattention blindness", "inattentional"], why:"**Inattentional blindness.** The episode pairs it with **Liz Dunn's** finding that the **mere presence of a phone** during a social gathering reduces enjoyment, and **Catherine Price**, founder of Screen/Life Balance and author of *How to Break Up With Your Phone*."},
     /* B9 */ {type:"mc", q:"Ji and Wilson (2007) recorded a rodent's hippocampus after it ran a maze. What did they observe during slow-wave sleep?", choices:[
       "Random firing unrelated to the maze",
       "Complete suppression of hippocampal activity until waking",
-      "The same firing sequence from the maze, replaying in order — **neural replay**",
+      "The same firing sequence from the maze, replaying in order — neural replay",
       "Activity only in response to external sounds"
     ], answer:2, why:"**Neural replay.** The same sequence of place cells fires again, in order, during slow-wave sleep. It is the clearest physical evidence that sleep performs consolidation work rather than simply resting — and it supports Wagner et al. (2004), where sleep improved **insight** and problem-solving."},
     /* B10 */ {type:"mc", q:"Craik and Lockhart's levels-of-processing framework predicts that which question produces the best memory for a word?", choices:[
       "Is the word in capital letters?",
-      "**Does the word apply to you?**",
+      "Does the word apply to you?",
       "Does the word rhyme with *train*?",
       "How many letters does the word have?"
     ], answer:1, why:"The deepest, most **semantic** and self-relevant processing produces the best memory — this was the in-class demonstration. Memory is a **by-product of how deeply you processed something**, not of how long you looked at it. The practical translation: make meaning and connect to what you already know, rather than brute-force repetition."},
@@ -1049,7 +1049,7 @@ export const WB_EXAMS = [
     /* B12 */ {type:"mc", q:"In McBain et al.'s study comparing large language models with expert suicidologists, what was found?", choices:[
       "All three models matched expert judgement closely",
       "The models consistently rated responses as less appropriate than the experts did",
-      "All three rated responses as **more appropriate** than the experts",
+      "All three rated responses as more appropriate than the experts",
       "Only one model differed from the experts"
     ], answer:2, why:"Both halves matter. Being confidently **different from the experts** is the concerning part, not simply differing. The benchmark comparisons were also uneven — ChatGPT-4o around a master's-level counsellor, Claude 3.5 Sonnet exceeding mental-health professionals, Gemini 1.5 Pro around untrained K-12 school staff — which is itself the point that *AI* is not one thing."},
     /* B13 */ {type:"blank", q:"Rousmaniere and colleagues describe an ethical problem with AI mental-health tools using a phrase about companies providing a service while disclaiming liability. Complete it: *offering therapy but denying ____________.*", answer:"Responsibility", accept:["responsibility", "legal responsibility", "liability"], why:"*Offering therapy but denying **responsibility**.* It is the first of three barriers: **legal responsibility**, **data security and confidentiality**, and **training data that may not generalise** — taught as widening circles from CMU students out to everyone in the US, with fit degrading as the user population diverges from the training population."},
@@ -1057,7 +1057,7 @@ export const WB_EXAMS = [
       "Receiving support from a spouse",
       "Both equally",
       "Neither, once health was controlled",
-      "**Giving** support to others"
+      "Giving support to others"
     ], answer:3, why:"**Giving** support predicted nearly **60% lower risk of dying**; **receiving** support showed **no** association with longer life. Konrath et al. (2012) adds the qualifier: motive matters. **Other-oriented** volunteers had 1.6% four-year mortality; **self-oriented** volunteers had 4.0% — essentially the same as non-volunteers at 4.3%."},
     /* B15 */ {type:"mc", q:"Which combination describes the three skills trained in mindfulness meditation?", choices:[
       "Relaxation, visualisation, breathing",
@@ -1073,14 +1073,14 @@ export const WB_EXAMS = [
       "All treatments were statistically equivalent to each other"
     ], answer:0, why:"Dance **0.96**, walking/jogging **0.62**, yoga **0.55**, CBT **0.55**, strength training 0.49, mixed aerobic 0.43, tai chi 0.42, **SSRIs 0.26**. Several forms of exercise match or beat both gold-standard treatments — the headline claim of the exercise lecture."},
     /* B18 */ {type:"mc", q:"Zahrt and Crum followed 61,141 US adults for up to 21 years. What did believing you were *less active than your peers* predict?", choices:[
-      "A **71% higher mortality risk**",
+      "A 71% higher mortality risk",
       "No effect once actual activity was controlled",
       "Higher mortality, entirely explained by lower actual activity",
       "Lower mortality, through compensatory behaviour"
     ], answer:0, why:"The **belief predicted mortality beyond the behaviour it was a belief about** — a 71% higher risk after adjusting for actual activity. It is the mindset argument from Module 03 with a hard outcome, and it belongs in any essay about how beliefs shape physiological effects."},
     /* B19 */ {type:"mc", q:"White and Dolan asked people to rate daily activities for **pleasure** and for **reward** (worthwhileness). Which is correct?", choices:[
       "Watching TV scored highest on both",
-      "TV scored **highest on pleasure, lowest on reward**",
+      "TV scored highest on pleasure, lowest on reward",
       "Volunteering scored highest on both",
       "Working scored highest on pleasure and lowest on reward"
     ], answer:1, why:"The two rankings nearly invert. Watching TV: **3.89 pleasure (1st), 2.20 reward (last)**. Volunteering: 3.38 pleasure but **4.82 reward (1st)**. Working was **last on pleasure (2.20)** and second on reward (4.26). This is the hedonic/eudaimonic distinction with numbers attached."},
@@ -1095,14 +1095,14 @@ export const WB_EXAMS = [
   questions:[
     /* C1 */ {type:"mc", q:"Which distinction between **hedonic** and **eudaimonic** happiness is correct?", choices:[
       "Hedonic is short-term, eudaimonic is long-term",
-      "Hedonic is **feeling good**, eudaimonic is **living well**",
+      "Hedonic is feeling good, eudaimonic is living well",
       "Hedonic is measured by surveys, eudaimonic by behaviour",
       "Hedonic applies to individuals, eudaimonic to communities"
     ], answer:1, why:"**Hedonic** = pleasure over pain, feeling good. **Eudaimonic** = living well, with meaning and growth. The White & Dolan data makes the split concrete: watching TV is the most **pleasurable** activity and the least **worthwhile**; volunteering is the reverse. Duration is not the distinction — some pleasures last and some meaningful work is brief."},
     /* C2 */ {type:"mc", q:"Both the exercise lecture and the discomfort lecture use a study where the **same physical dose** produced different outcomes depending on one variable. What is that variable?", choices:[
       "Intensity — Noetel and Schnohr",
       "Duration — Erickson and Ding",
-      "**Choice** — Leasure & Jones's forced-running rats",
+      "Choice — Leasure & Jones's forced-running rats",
       "Social context — the Copenhagen tennis players and Woolley"
     ], answer:2, why:"**Choice.** Forced-running rats had bodies indistinguishable from voluntary runners — same weight, belly fat, muscle and stress hormones — but showed **more anxiety-like behaviour than even sedentary rats** (4.8 seconds in the open-field centre vs 13.8 and 15.6). The discomfort lecture's third rule is the same variable: a challenging dose you can handle, enough in the tank, and **chosen, not forced**."},
     /* C3 */ {type:"mc", q:"Which of the following are **desirable difficulties** as the Bjorks use the term?", sub:["Spacing practice out over time", "Rereading your notes until they feel familiar", "Testing yourself rather than reviewing", "Varying the conditions of practice", "Studying in one long uninterrupted block"], choices:[
@@ -1116,10 +1116,10 @@ export const WB_EXAMS = [
       "The Harvard Study found relationship satisfaction at 50 predicted health at 80 better than cholesterol at 50",
       "Holt-Lunstad's meta-analysis found 50% greater odds of survival with strong relationships across 148 studies",
       "Brown et al. found giving support predicted nearly 60% lower mortality",
-      "Dunn's Study 3 **randomly assigned** people to spend money on others, and it raised evening happiness"
+      "Dunn's Study 3 randomly assigned people to spend money on others, and it raised evening happiness"
     ], answer:3, why:"Only the third is an **experiment**. The lecture explicitly ranked its own evidence: randomised experiments (Dunn Study 3, Whillans, Schreier) at the top, then daily diary, then prospective cohorts (Brown, Sneed & Cohen, Konrath, Poulin), then cross-sectional, then personal stories. The Harvard Study and Holt-Lunstad are powerful but observational — which is exactly the student's objection."},
     /* C6 */ {type:"mc", q:"Why did the lecture describe Ristow et al.'s antioxidant study as evidence for **hormesis**?", choices:[
-      "Antioxidants **blocked the adaptation**",
+      "Antioxidants blocked the adaptation",
       "Antioxidants improved exercise adaptation beyond exercise alone",
       "Antioxidants had no effect on either signal or adaptation",
       "Antioxidants reduced injury rates without affecting fitness"
@@ -1128,23 +1128,23 @@ export const WB_EXAMS = [
       "Under heavy stress",
       "Only in clinical populations",
       "Equally in all conditions",
-      "**When life is going well**, not under heavy stress"
+      "When life is going well, not under heavy stress"
     ], answer:3, why:"**When life is going well**, and there was **no link under heavy stress**. The mechanism: valuing happiness → expecting to feel great → being disappointed in how you actually feel → feeling less happy. Under real stress, there is an obvious external explanation for not feeling great, so the disappointment loop does not fire. The hack is **don't grade your feelings**; what works instead is getting absorbed in something and doing things with and for people."},
     /* C8 */ {type:"blank", q:"Which sleep stage dominates the **early** part of the night, and which dominates the **late** part? Give both, in order.", answer:"Deep sleep early, REM late", accept:["deep sleep early rem late", "deep early rem late", "deep sleep then rem", "deep sleep early, rem late", "n3 early rem late", "slow wave early rem late"], why:"**Deep sleep early, REM late**, across roughly **90-minute cycles** containing four stages. This is why cutting the last two hours of sleep disproportionately costs REM, while a very short night costs deep sleep — and why *catching up* at the weekend does not simply replace what was lost."},
     /* C9 */ {type:"mc", q:"Which pair correctly matches a sleeper profile to the lever that fixes it?", choices:[
-      "**Drifter** → arousal; **Wired** → body clock",
-      "**Deprived** → arousal; **Drifter** → opportunity",
-      "**Drifter** → body clock; **Wired** → arousal and hyperarousal",
-      "**Wired** → opportunity; **Deprived** → body clock"
+      "Drifter → arousal; Wired → body clock",
+      "Deprived → arousal; Drifter → opportunity",
+      "Drifter → body clock; Wired → arousal and hyperarousal",
+      "Wired → opportunity; Deprived → body clock"
     ], answer:2, why:"**Drifter** (weekend wake 2+ hours later, bedtime all over) is a **body clock** problem — fix with the same wake time all week plus morning light. **Wired** (lots of time in bed, efficiency under 80%, awake and frustrated) is an **arousal** problem — fix with stimulus control: bed for sleep only, up if awake 15–20 minutes. **Deprived** is an **opportunity** problem — protect the window with a *go to bed* alarm."},
     /* C10 */ {type:"mc", q:"Csikszentmihalyi gives four reasons money does not buy much happiness. Which is **not** one of them?", choices:[
-      "**Diminishing marginal utility**",
+      "Diminishing marginal utility",
       "Rising expectations as income grows",
       "Hijacked attention",
       "Relative deprivation"
     ], answer:0, why:"His four are **rising expectations** (each raise becomes the new normal), **hijacked attention** (chasing money crowds out everything else), **relative deprivation** (we compare ourselves to the richest) and **capitalist values** (dollars become the measure of a life). The first three sit *in our heads*; the fourth sits *in our culture*. Diminishing marginal utility is a real economic idea but not one of his four."},
     /* C11 */ {type:"mc", q:"In the Tetris study, which version did people enjoy most, and what does it demonstrate?", choices:[
-      "**Speed matched to the player** — demonstrating **flow**",
+      "Speed matched to the player — demonstrating flow",
       "Slow and steady — showing that low challenge is relaxing",
       "Fast and faster — showing that maximum challenge drives engagement",
       "All three equally — showing enjoyment is unrelated to difficulty"
@@ -1153,12 +1153,12 @@ export const WB_EXAMS = [
       "Any volunteering reduced mortality equally",
       "Self-oriented volunteers had the lowest mortality",
       "Volunteering slightly increased mortality risk among older adults",
-      "Volunteers with **other-oriented** motives had lower mortality"
+      "Volunteers with other-oriented motives had lower mortality"
     ], answer:3, why:"**1.6%** four-year mortality for other-oriented motives, **4.0%** for self-oriented — essentially identical to non-volunteers at **4.3%**. Doing the behaviour is not sufficient. This is why the lecture's rules for giving are **choose it, connect, see the impact** and **ask what would help** — the match-the-support-to-the-need idea carried over from the conversations lectures."},
     /* C13 */ {type:"blank", q:"McAdams distinguishes two narrative shapes people use to tell their life stories. One runs bad → good. What is that one called?", answer:"Redemption", accept:["redemption", "redemption story", "redemptive", "redemption stories"], why:"**Redemption** stories run bad → good; **contamination** stories run good → bad. The same events told two ways predict different outcomes, which is the bridge from *meaning often comes from doing hard things* to the value-affirmation exercise and the gratitude letter."},
     /* C14 */ {type:"mc", q:"Creswell et al. (2005) had participants affirm their important personal values before a lab stressor. What did they measure, and what happened?", choices:[
       "Heart rate variability, which increased",
-      "**Salivary cortisol**, whose response was **blunted**",
+      "Salivary cortisol, whose response was blunted",
       "Salivary alpha-amylase, which rose sharply",
       "Urinary epinephrine, which was unaffected"
     ], answer:1, why:"**Salivary cortisol**, and affirming values **blunted** the response to a speech-and-mental-arithmetic stressor in front of evaluators. Sherman et al. (2009) replicated it during a **real midterm** using **urinary epinephrine**. Note the contrast with Crum's stress-mindset work, which used **salivary alpha-amylase** — easy to confuse on an exam."},
@@ -1176,7 +1176,7 @@ export const WB_EXAMS = [
     ], answer:3, why:"**(a), (c) and (d).** It does not directly determine total sleep time — that depends on bedtime too — and the lecture never claims it is the easiest change; weekend drift is precisely the hard part. The payoff line: a bad night plus a normal wake time equals **pressure banked for tonight**."},
     /* C17 */ {type:"mc", q:"Gilbert et al. (2009) compared two ways of predicting how much you would enjoy a date. What did they find?", choices:[
       "The profile was more accurate, and people correctly preferred it",
-      "One stranger's report was **49% more accurate**",
+      "One stranger's report was 49% more accurate",
       "Both methods were equally accurate",
       "Neither method beat chance"
     ], answer:1, why:"Forecast error was **22.4** after reading the profile and **11.4** after hearing how one stranger's date went. The uncomfortable part is the second number: **75% still trusted the profile more**. We over-trust our own simulations and under-use other people's experience — which is why the hack for this blindspot is **ask someone who's been there**."},
@@ -1184,11 +1184,11 @@ export const WB_EXAMS = [
     /* C19 */ {type:"mc", q:"Which claim about the Harvard Study of Adult Development is accurate?", choices:[
       "It followed 724 Harvard undergraduates only",
       "It ran for 50 years and concluded in the 1980s",
-      "It began in 1938 and followed **two** groups of young men",
+      "It began in 1938 and followed two groups of young men",
       "Its main finding was that income at 50 predicted health at 80"
     ], answer:2, why:"**724 young men in two groups**, begun in **1938**, now **88 years** and over 1,300 descendants. The headline finding: **relationship satisfaction at 50** predicted health at 80 better than **cholesterol at 50** did. The two-group design matters — it is part of why the finding is not simply about privilege."},
     /* C20 */ {type:"mc", q:"Thiessen described a *misleading fluency effect*. What is the practical danger?", choices:[
-      "Feeling fluent is mistaken for having **learned**",
+      "Feeling fluent is mistaken for having learned",
       "Students who study fluently learn too quickly to retain material",
       "Fluent readers skip important details",
       "Fluency measures are unreliable across languages"

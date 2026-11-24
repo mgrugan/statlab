@@ -625,7 +625,7 @@ p2: [
 
   { q: "For a price Series indexed by date, should you export with `index=False`?",
     choices: [
-      "No — the dates *are* the index, so you would lose the time information",
+      "No — the dates are the index, so you would lose the time information",
       "It makes no practical difference for a time series",
       "Yes, because the dates are stored in a separate metadata block",
       "Yes — `index=False` is always the right default to use",
@@ -657,7 +657,7 @@ p3: [
       "Raises a TypeError as soon as it hits that column",
       "Converts the column to numeric automatically first",
       "Includes it anyway, showing the mean and std as NaN",
-      "Excludes it by default; use `include=\"all\"` to see it",
+      "Excludes it by default; use include=\"all\" to see it",
     ], answer: 3,
     why: "`describe()` restricts itself to numeric columns unless told otherwise. With `include=\"all\"` it adds the categorical summary — count, number of unique values, most frequent value and its frequency — which is genuinely useful for auditing a text column." },
 
@@ -733,7 +733,7 @@ p5: [
       "The column was not actually of dtype string to begin with",
       "`.lower()` would require `inplace=True` in order to work",
       "The `.str` accessors are read-only in pandas by design",
-      "Most pandas methods return a **copy**; assign it back",
+      "Most pandas methods return a copy; assign it back",
     ], answer: 3,
     why: "Non-mutating-by-default is the pandas convention. Write `df[\"Make\"] = df[\"Make\"].str.lower()`. This is the single most common source of \"my code ran but nothing happened\" — and it applies to `rename`, `drop`, `fillna`, `sort_values` and most of the rest." },
 
@@ -749,7 +749,7 @@ p5: [
   { q: "`df.drop(\"Price\", axis=1)` versus `df.drop(\"Price\", axis=0)` — what is the difference?",
     choices: [
       "`axis=1` drops the first column regardless of its name",
-      "`axis=1` drops the column; `axis=0` looks for a **row** labelled `Price`",
+      "`axis=1` drops the column; `axis=0` looks for a row labelled `Price`",
       "They are exactly equivalent; `axis` only affects the performance",
       "`axis=0` drops the column while `axis=1` drops the row",
     ], answer: 1,
@@ -787,7 +787,7 @@ p6: [
   { q: "What is the difference between `df.groupby(\"g\").size()` and `df.groupby(\"g\").count()`?",
     choices: [
       "They are completely identical in every case",
-      "`size()` counts rows; `count()` counts **non-null** values",
+      "`size()` counts rows; `count()` counts non-null values",
       "`count()` includes the group key as an extra row",
       "`size()` only works on numeric data columns",
     ], answer: 1,
@@ -861,7 +861,7 @@ p7: [
   { q: "`monthly = prices.resample(\"ME\").last()` then `np.log(monthly).diff()`. Which identity does this illustrate?",
     choices: [
       "That monthly returns are the product of that month's daily returns",
-      "That the monthly log return is the **sum** of the daily log returns",
+      "That the monthly log return is the sum of the daily log returns",
       "That resampling actually changes the whole distribution of returns",
       "That `.last()` and `.mean()` are fully interchangeable in this case",
     ], answer: 1,
@@ -908,8 +908,8 @@ f12: [
 
   { q: "In the regression $\\Delta\\text{VIX}_t=\\beta_0+\\beta_1 r_t+\\beta_2\\big(r_t\\times\\mathbf{1}\\{r_t\\ge0\\}\\big)+\\epsilon_t$, what is the interaction term doing?",
     choices: [
-      "Letting the **slope** differ between days with $r_t<0$ and days with $r_t\\ge0$",
-      "Letting the **intercept** differ between days with a negative return and days without",
+      "Letting the slope differ between days with $r_t<0$ and days with $r_t\\ge0$",
+      "Letting the intercept differ between days with a negative return and days without",
       "Correcting for autocorrelation in the VIX series",
       "Testing whether the residuals are normally distributed",
     ], answer: 0,

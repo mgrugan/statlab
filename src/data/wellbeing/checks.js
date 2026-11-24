@@ -662,7 +662,7 @@ w14: [
   { q: "Devyn's pain had spread everywhere and her test results were normal. What does the avoidance loop predict happens next, if nothing changes?",
     choices: [
       "The pain plateaus, since there is no tissue damage to worsen",
-      "Avoidance brings relief now, and the brain learns *danger*",
+      "Avoidance brings relief now, and the brain learns danger",
       "The pain migrates to whichever area is used most in daily activity",
       "Medication becomes effective once the underlying anxiety is treated",
     ], answer: 1,
@@ -700,7 +700,7 @@ w15: [
 
   { q: "Silver medallists look less happy than bronze. What is the mechanism, and which number is attached to it?",
     choices: [
-      "Silver compares upward (*if only*); 0% of 2004 Olympic judo silver medallists smiled",
+      "Silver compares upward (if only); 0% of 2004 Olympic judo silver medallists smiled",
       "Bronze expected less, so exceeded expectations; 93% of bronzes smiled",
       "Silver medallists are more exhausted, having competed in the final itself",
       "Bronze is a relief from fourth place; silver and gold smiled at equal rates",

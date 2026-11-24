@@ -237,10 +237,10 @@ export const EXAM = [
 { id: "x21", ref: "f11", topic: "Implied volatility",
   q: "For a traded option, how does the **implied** volatility typically compare with the **historical (realized)** volatility of the underlying?",
   choices: [
-    "Implied is typically **higher**, because the market price also compensates for the risk of extreme moves",
-    "Implied is typically **lower**, because option markets are more liquid than the underlying",
+    "Implied is typically higher, because the market price also compensates for the risk of extreme moves",
+    "Implied is typically lower, because option markets are more liquid than the underlying",
     "They are equal by construction, since both are estimates of the same underlying $\\sigma$",
-    "Implied is typically **lower**, because realized volatility is measured with error and biased upward",
+    "Implied is typically lower, because realized volatility is measured with error and biased upward",
   ], answer: 0,
   why: "Realized volatility is the actual observed variability of past log returns, computed under the **real-world measure** $\\mathbb{P}$. Implied volatility is backed out of the **market price**, and that price must include compensation for the risk of extreme fluctuations — real investors are risk-averse even though the pricing model pretends otherwise. A higher price inverts to a higher volatility, so $\\text{IV}>\\text{HV}$." },
 

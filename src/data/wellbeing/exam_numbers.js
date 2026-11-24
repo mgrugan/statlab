@@ -20,7 +20,7 @@ export const WB_EXAM_NUMBERS = {
     choices:[
       "Mrazek et al. (2013) — the two-week mindfulness training study",
       "Ji & Wilson (2007) — the sleep lecture's neural-replay study",
-      "Killingsworth & Gilbert (2010, *Science*) — the attention-economy lecture",
+      "Killingsworth & Gilbert (2010, Science) — the attention-economy lecture",
       "Orben & Przybylski — the specification-curve counterargument to Haidt",
     ], answer:2,
     why:"**Killingsworth & Gilbert (2010, *Science*)**, from the **attention economy** lecture, using an iPhone app that pinged people at random moments. Two findings, and the second is the one people forget: minds wander about **47%** of the time, **and** people were **less happy when their minds wandered**, whatever they were doing. The figure returns in the **meditation** module as the case for training concentration." },
@@ -106,7 +106,7 @@ export const WB_EXAM_NUMBERS = {
   { type:"mc", q:"**92%** said they kept exercising because of how good it made them feel, and **67%** for a craved sense of accomplishment, in a 2002 study of 266 regular exercisers. Where does the course meet those figures?",
     choices:[
       "The exercise lecture, as evidence that enjoyment predicts adherence",
-      "Duhigg, *The Power of Habit*, ch. 2 — supporting evidence for craving",
+      "Duhigg, The Power of Habit, ch. 2 — supporting evidence for craving",
       "The Copenhagen City Heart Study, as the mechanism behind social sports",
       "Woolley & Fishbach (2017), the New Year's resolution study",
     ], answer:1,

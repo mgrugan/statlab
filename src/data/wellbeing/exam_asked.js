@@ -36,7 +36,7 @@ export const WB_EXAM_ASKED = {
   { type:"mc", q:"**Trivia 1.** Duhigg argues in *Supercommunicators* that many conversations go wrong for one main reason. What is it?",
     choices:[
       "Neither person asks enough follow-up questions to keep it going",
-      "The two people are having different **kinds** of conversation",
+      "The two people are having different kinds of conversation",
       "One person talks far more than the other",
       "People avoid disclosing anything personal",
     ], answer:1,
@@ -53,7 +53,7 @@ export const WB_EXAM_ASKED = {
 
   { type:"mc", q:"**Trivia 3.** Kids praised for being smart or for working hard then failed a very hard set. On the final **easy** set, how did the smart-praised kids do?",
     choices:[
-      "They scored **below** their own earlier baseline",
+      "They scored below their own earlier baseline",
       "They scored about the same as their baseline",
       "They scored above their own earlier baseline",
       "They refused to attempt any further problems",
@@ -86,7 +86,7 @@ export const WB_EXAM_ASKED = {
       "Cutting the price and expanding distribution",
       "Targeting pet owners and smokers directly",
       "Proving in trials that it removed more odours than rivals",
-      "Repositioning it as a **reward** at the end of a cleaning routine",
+      "Repositioning it as a reward at the end of a cleaning routine",
     ], answer:3,
     why:"Repositioned as a **craved reward at the end of an existing routine**, with **more perfume added**, and the line changed from *gets bad smells out of fabrics* to *cleans life's smells*. It had flopped for want of a **cue** — people cannot smell their own homes. The 29 Sept reading quiz asked the companion question: the chapter's two products are **Pepsodent** and **Febreze**." },
 
@@ -96,7 +96,7 @@ export const WB_EXAM_ASKED = {
 
   { type:"mc", q:"**Trivia 10.** Which instruction, given right before a stage exercise, made Second City improv students hold the focus longer and take more risks?",
     choices:[
-      "Treat **feeling awkward and uncomfortable as the goal**",
+      "Treat feeling awkward and uncomfortable as the goal",
       "Focus on your scene partner rather than on yourself",
       "Aim to make the audience laugh as often as possible",
       "Plan the scene carefully before starting",
@@ -107,7 +107,7 @@ export const WB_EXAM_ASKED = {
     choices:[
       "Tolerance for ambiguity",
       "Emotional intelligence",
-      "**Need for cognition**",
+      "Need for cognition",
       "Technical fluency with AI tools",
     ], answer:2,
     why:"**Need for cognition** — how much someone engages in and *enjoys* effortful thinking. It sorts his three types: **productive passengers** (low), **reluctant optimizers** (medium), **mental marathoners** (high, capacities retained). The 22 Sept reading quiz came from the same article." },
@@ -333,7 +333,7 @@ export const WB_EXAM_ASKED = {
 
   { type:"mc", q:"**Reading quiz, 19 Nov.** In the Introduction, what first inspired Waitzkin to study Tai Chi Chuan seriously?",
     choices:[
-      "Reading the *Tao Te Ching* and feeling drawn to its ideas of inner tranquility",
+      "Reading the Tao Te Ching and feeling drawn to its ideas of inner tranquility",
       "Seeing elderly people practising slow movements in Central Park",
       "Meeting a Chinese monk while travelling abroad",
       "Watching a Bruce Lee movie",

@@ -73,7 +73,7 @@ export const EXAM_C = [
 { id: "c5", ref: "f4", topic: "Returns",
   q: "How does the **log** return compare with the **simple** return over the same period?",
   choices: [
-    "They are close for small moves; the log return is slightly **smaller**",
+    "They are close for small moves; the log return is slightly smaller",
     "They are identical, since $r_t$ and $R_t$ are two notations for one quantity",
     "The log return is always the larger of the two, whatever the move",
     "They agree exactly whenever the period's return is negative",
@@ -228,7 +228,7 @@ export const EXAM_C = [
     "At the drift observed in historical market data, since that is what actually happened",
     "At zero, since risk-neutral investors are indifferent to the outcome",
     "At the volatility $\\sigma$, which sets the scale of the price movements",
-    "At the **risk-free rate** $r$ — any other rate would create an arbitrage opportunity",
+    "At the risk-free rate $r$ — any other rate would create an arbitrage opportunity",
   ], answer: 3,
   why: "Risk-neutrality asks: if investors had no concern for risk, at what rate should the price grow? The answer is the risk-free rate, to prevent **arbitrage** — trivial ways to make money. So on the price scale $\\mu=r$, and since $\\mu=\\nu+\\sigma^2/2$ the log-scale drift is $\\nu=r-\\sigma^2/2$. Calibrating to the drift actually observed in market data is the **real-world** measure $\\mathbb{P}$, the alternative approach." },
 

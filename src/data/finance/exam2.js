@@ -86,7 +86,7 @@ export const EXAM_B = [
   q: "Why does the standard deviation of a $k$-period log return scale with $\\sqrt{k}$ rather than with $k$?",
   choices: [
     "Because volatility is estimated with error, and that estimation error grows steadily over time",
-    "Because the **variances** of independent returns add, not the standard deviations",
+    "Because the variances of independent returns add, not the standard deviations",
     "Because log returns are bounded below, which dampens the growth over longer horizons",
     "Because the mean return also grows with $\\sqrt{k}$, so the two quantities must match",
   ], answer: 1,
@@ -230,7 +230,7 @@ export const EXAM_B = [
     "It is unchanged, because the company's total value is unchanged",
     "It doubles, because there are now twice as many shares",
     "It is unchanged, because the index divisor absorbs the split entirely",
-    "It is **halved**, even though the company's total value is unchanged",
+    "It is halved, even though the company's total value is unchanged",
   ], answer: 3,
   why: "Under price weighting a firm's weight is its **share price**, which is an essentially arbitrary number. A 2-for-1 split halves the price overnight while the business is worth exactly the same, so its influence halves for no economic reason — the major criticism of the DJIA. Market-cap weighting (price × shares outstanding), used by the **S&P 500**, is immune: the share count doubles and the product is unchanged." },
 
@@ -259,7 +259,7 @@ export const EXAM_B = [
   choices: [
     "The average implied volatility across all individual US equities",
     "The spread between the S&P 500 and the Dow Jones Industrial Average",
-    "The **implied volatility** of options written on the S&P 500 index",
+    "The implied volatility of options written on the S&P 500 index",
     "The realized volatility of the S&P 500 over the preceding 30 days",
   ], answer: 2,
   why: "The CBOE sells options whose underlying “asset” is the value of the S&P 500 itself, and the VIX tracks their **implied** volatility. Because the index is broad-based, that says something about the future variability investors anticipate for **the market as a whole** — so it is **forward-looking**, which is why it is nicknamed the *fear index*. Realized volatility over past data is the backward-looking quantity it is most often confused with." },
@@ -341,7 +341,7 @@ export const EXAM_B = [
   choices: [
     "Converting the volatility from a daily basis to an annual one",
     "Correcting for the skewness of the lognormal distribution",
-    "**Discounting** the expected payoff back to what it is worth today",
+    "Discounting the expected payoff back to what it is worth today",
     "Adjusting for the possibility that the option expires worthless",
   ], answer: 2,
   why: "$\\E\\big((P_t-K)^+\\big)$ is what you expect to receive **at time $t$**, but you pay for the option **today** — and that money could otherwise have been put into a risk-free investment returning $r$. Multiplying by $e^{-rt}$ converts the future amount to its value today. The chance of expiring worthless is already inside the expectation, via the positive part." },
