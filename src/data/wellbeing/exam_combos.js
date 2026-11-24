@@ -188,14 +188,14 @@ export const WB_EXAM_COMBOS = {
 
   { type:"mc", q:"Which of these does the CaPS lecture recommend when talking with a struggling peer?",
     sub:[
+      "Match their emotional intensity so they feel understood",
       "Focus on observations about behaviour",
       "Use open-ended questions to encourage disclosure",
-      "Name the condition you think they may have",
+      "Use closed-ended questions to de-escalate and ground",
       "Avoid *why* questions",
-      "Match their emotional intensity so they feel understood",
     ],
-    choices:["(a), (b), (c)","(a), (b), (d)","(b), (d), (e)","(a), (b), (d), (e)"], answer:1,
-    why:"**(a), (b), (d).** (c) is outside what a peer should do — observations about behaviour, not guesses at a diagnosis. (e) inverts the lecture's line: **emotions are contagious, so act calm**. Use *how come?* in place of *why*, which elicits defensiveness." },
+    choices:["(a), (b), (c), (e)","(b), (c), (d), (e)","(b), (c), (e)","(a), (d), (e)"], answer:1,
+    why:"**(b), (c), (d), (e)** — and the pairing in (c) and (d) is the point. The lecture recommends **both** kinds of question, for different jobs: **open-ended** ones *encourage disclosure* (*what happened then? how have you dealt with that?*), while **closed-ended** ones *de-escalate and ground* (*have you eaten today? would you like a drink of water?*). Planning is grounding too. So the question to ask yourself is not which kind is better but which job you need doing right now. (a) inverts the lecture's line — **emotions are contagious, so act calm**. Naming a condition would be the remaining wrong answer, since a peer works from observations about behaviour, not guesses at a diagnosis. And use *how come?* in place of *why*, which elicits defensiveness." },
 
   { type:"mc", q:"Which of these claims from the exercise lecture are correct?",
     sub:[
