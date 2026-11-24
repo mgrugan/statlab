@@ -102,7 +102,11 @@ function Question({ q, n, value, onChange, review }) {
             <ol className="grid gap-1.5 mt-3 text-[14px] leading-relaxed">
               {q.sub.map((s, i) => (
                 <li key={i} className="flex gap-2.5">
-                  <span className="label-mono text-muted-foreground shrink-0 mt-0.5">({String.fromCharCode(97 + i)})</span>
+                  {/* lower-case, because the answer combinations refer to
+                      "(b), (e)" while the options themselves are A–D — the
+                      same two-level labelling the exam-prep slide used.
+                      label-mono upper-cases, so override it here. */}
+                  <span className="font-mono text-[11px] font-medium tracking-[0.08em] text-muted-foreground shrink-0 mt-1">({String.fromCharCode(97 + i)})</span>
                   <span className="min-w-0"><Rich text={s} /></span>
                 </li>
               ))}
@@ -260,7 +264,7 @@ export default function WellExam({ id }) {
     return (
       <div className="max-w-[760px]">
         <a href="#/hyl" className="label-mono text-muted-foreground hover:text-foreground transition-colors">← Hack Your Life</a>
-        <SectionLabel className="text-emerald-deep mt-3">Practice exam {"ABCDEF"[idx]}</SectionLabel>
+        <SectionLabel className="text-emerald-deep mt-3">Practice exam {"ABCDEFG"[idx]}</SectionLabel>
         <h1 className="text-2xl font-semibold tracking-tight mt-1">{exam.title}</h1>
         <p className="text-[14px] text-muted-foreground mt-2 leading-relaxed max-w-[68ch]">
           <Rich text={exam.lede} />
@@ -318,7 +322,7 @@ export default function WellExam({ id }) {
             )}
             {WB_EXAMS.map((e, k) => k !== idx && (
               <Button key={k} asChild size="sm" variant="ghost" className="rounded-md text-muted-foreground">
-                <a href={`#/hyl-exam?id=${k}`}>Paper {"ABCDEF"[k]}</a>
+                <a href={`#/hyl-exam?id=${k}`}>Paper {"ABCDEFG"[k]}</a>
               </Button>
             ))}
           </div>
